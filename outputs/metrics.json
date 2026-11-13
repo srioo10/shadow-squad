@@ -1450,9 +1450,9 @@
   },
   "trajectory": {
    "two_season_vectors": 5884,
-   "lsh_pairs": 5401406,
-   "lsh_pair_share": 0.9646046525416252,
-   "lsh_recall_top10": 0.999,
+   "lsh_pairs": 3857972,
+   "lsh_pair_share": 0.6889720455332036,
+   "lsh_recall_top10": 0.88,
    "spearman_traj_vs_dtw": 0.42879192215283013,
    "median_rank_true_signing_traj_sim": 40.5,
    "median_rank_true_signing_dtw": 40.0,
@@ -1505,13 +1505,13 @@
    ]
   },
   "runtime_s": {
-   "value at t": 3.57,
-   "discrete-time hazard, Spark LR, 6 refits": 14.02,
-   "pair features": 2.41,
-   "trajectory LSH self-join": 19.9,
+   "value at t": 3.54,
+   "discrete-time hazard, Spark LR, 6 refits": 14.35,
+   "pair features": 2.48,
+   "trajectory LSH self-join": 6.68,
    "DTW on in-pool events": 0.22,
-   "LGBMRanker walk-forward": 0.52,
-   "Spark GBTClassifier walk-forward": 53.75
+   "LGBMRanker walk-forward": 0.45,
+   "Spark GBTClassifier walk-forward": 46.88
   }
  },
  "phase5": {
@@ -1605,7 +1605,7 @@
      "n": 219
     }
    ],
-   "calibration_mean_abs_gap": 0.022437394332069736
+   "calibration_mean_abs_gap": 0.02243739433206974
   },
   "conformal": {
    "movers": [

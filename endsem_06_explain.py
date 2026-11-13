@@ -20,7 +20,7 @@ for Y in (2020, 2021, 2022, 2023):
     X = PF[(PF['t'] == Y) & PF['q_in_pool'] & PF['candidate']]; parts.append((shap.TreeExplainer(models[Y])(X[E.FEATS]).values, X))
 SV = np.vstack([p[0] for p in parts]); XA = pd.concat([p[1] for p in parts]); imp = pd.Series(np.abs(SV).mean(0), index=E.FEATS).sort_values()
 dirn = {f: float(np.corrcoef(XA[f].fillna(XA[f].median()), SV[:, i])[0, 1]) for i, f in enumerate(E.FEATS)}
-fig, ax = plt.subplots(figsize=(6, 3.2)); ax.barh([viz.NICE[f] for f in imp.index], imp.values, color=['#d95f02' if dirn[f] > 0 else '#1f77b4' for f in imp.index]); ax.set_xlabel('mean |SHAP| on unseen events (orange: higher value raises the rank, blue: lowers it)'); ax.tick_params(labelsize=7)
+fig, ax = plt.subplots(figsize=(6, 3.2)); ax.barh([viz.NICE[f] for f in imp.index], imp.values, color=['#d95f02' if dirn[f] > 0 else '#1f77b4' for f in imp.index]); ax.set_xlabel('mean |SHAP|, unseen events (orange raises rank, blue lowers)'); ax.tick_params(labelsize=7)
 plt.tight_layout(); plt.savefig('outputs/figs/p6_shap_global.png', dpi=160); plt.close()
 M['shap_global'] = {'mean_abs_shap': imp.round(4).to_dict(), 'direction_corr': {k: round(v, 3) for k, v in dirn.items()}, 'rows': len(XA)}; print(M['shap_global']['mean_abs_shap'])
 
