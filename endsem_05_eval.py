@@ -10,7 +10,7 @@ import matplotlib; matplotlib.use('Agg'); import matplotlib.pyplot as plt
 from common import *
 import engine as E
 M = {}; rng = np.random.default_rng(SEED); KS = (5, 10, 25, 50); TEST = (2020, 2021, 2022, 2023)
-def savefig(name): plt.tight_layout(); plt.savefig(f'outputs/figs/{name}.png', dpi=160); plt.close()
+def savefig(name): plt.tight_layout(); plt.savefig(f'outputs/figs/{name}.png'); plt.close()
 PF = pd.read_parquet('lake/pairs.parquet'); T = PF[PF['q_in_pool'] & PF['t'].isin(TEST)].copy(); qids = np.array(sorted(T['qid'].unique()))
 def true_rank(df, col, asc=False):
     """Rank of the best-placed real signing in each query (ties get the average rank; missing scores go last)."""
@@ -57,7 +57,7 @@ for mth in show:
     if 'LambdaMART' in mth or 'young' in mth: ax[0].fill_between(KS, lo, hi, alpha=.12)
 ax[0].set_xticks(KS); ax[0].set_xlabel('K (length of the list)'); ax[0].set_ylabel('share of events whose real signing is in the top K'); ax[0].legend(fontsize=6.5); ax[0].set_title(f'Replacement recall@K, {len(qids)} unseen events (bands: 95% bootstrap)', fontsize=9)
 ab = ['Shadow Squad (LambdaMART, all scores)'] + ['Ablation: ' + a for a in E.ABLATIONS]; y = [S.loc[a, 'recall@10'] for a in ab]
-ax[1].bar(range(len(ab)), y, yerr=[[v - S.loc[a, 'recall@10_lo'] for a, v in zip(ab, y)], [S.loc[a, 'recall@10_hi'] - v for a, v in zip(ab, y)]], capsize=3, color=['#d95f02'] + ['#7f8fa6'] * 4)
+ax[1].bar(range(len(ab)), y, yerr=[[v - S.loc[a, 'recall@10_lo'] for a, v in zip(ab, y)], [S.loc[a, 'recall@10_hi'] - v for a, v in zip(ab, y)]], capsize=3, color=[ORANGE] + [GREY] * 4)
 ax[1].set_xticks(range(len(ab)), ['all scores'] + list(E.ABLATIONS), fontsize=7); ax[1].set_ylabel('recall@10'); ax[1].set_title('Ablation: one score removed at a time', fontsize=9); savefig('p5_recall_ablation')
 
 # %% [markdown]
@@ -99,9 +99,9 @@ for a in ALPHAS:
     q = cq(frac[calm], a); conf_b.append({'alpha': a, 'target': 1 - a, 'list_share_of_pool': float(q), 'list_length_for_mean_pool': float(q * n_q[tstm].mean()), 'coverage': float((frac[tstm] <= q).mean()), 'calibration_events': int(calm.sum()), 'test_events': int(tstm.sum())})
 M['conformal'] = {'movers': conf_a, 'replacement': conf_b}; display(pd.DataFrame(conf_a).round(3)); display(pd.DataFrame(conf_b).round(3))
 fig, ax = plt.subplots(1, 3, figsize=(12, 3.5))
-ax[0].plot(cal['pred'], cal['obs'], 'o-'); ax[0].plot([0, cal['pred'].max()], [0, cal['pred'].max()], ':', color='grey'); ax[0].set_xlabel('predicted 12-month hazard (decile mean)'); ax[0].set_ylabel('observed move-up rate'); ax[0].set_title('Hazard calibration, walk-forward', fontsize=9)
+ax[0].plot(cal['pred'], cal['obs'], 'o-'); ax[0].plot([0, cal['pred'].max()], [0, cal['pred'].max()], ':', color=GREY); ax[0].set_xlabel('predicted 12-month hazard (decile mean)'); ax[0].set_ylabel('observed move-up rate'); ax[0].set_title('Hazard calibration, walk-forward', fontsize=9)
 for d, lab_ in ((conf_a, 'movers caught by the hazard list'), (conf_b, 'real signing inside the ranked list')): ax[1].plot([r['target'] for r in d], [r['coverage'] for r in d], 'o-', label=lab_)
-ax[1].plot([.5, .9], [.5, .9], ':', color='grey'); ax[1].set_xlabel('promised coverage (1 - alpha)'); ax[1].set_ylabel('coverage on later seasons'); ax[1].legend(fontsize=7); ax[1].set_title('Conformal coverage check', fontsize=9)
+ax[1].plot([.5, .9], [.5, .9], ':', color=GREY); ax[1].set_xlabel('promised coverage (1 - alpha)'); ax[1].set_ylabel('coverage on later seasons'); ax[1].legend(fontsize=7); ax[1].set_title('Conformal coverage check', fontsize=9)
 for d, lab_ in ((conf_a, 'hazard list (share of feeders)'), (conf_b, 'replacement list (share of pool)')): ax[2].plot([r['target'] for r in d], [r['list_share_of_pool'] for r in d], 'o-', label=lab_)
 ax[2].set_xlabel('promised coverage'); ax[2].set_ylabel('list size needed, as a share of the pool'); ax[2].legend(fontsize=7); ax[2].set_title('The price of a guarantee', fontsize=9); savefig('p5_calibration_coverage')
 _ = put_metrics('phase5', M)

@@ -1,0 +1,118 @@
+--[3] [club tiers + clean transfers] 29.7 s
+
+--[3] 166,335 transfers; 23,100 loan departures and 30,564 loan returns removed. Table rebuilt from results agrees with the mid-sem table on 99.1% of club-seasons (100.0% on top-6 membership).
+
+--[5] [transfer outcome] 2.3 s
+
+
+
+--[5] moves inferred from league minutes for players with no transfer record: 1417 moves, 750 players
+feeder-seasons whose player has at least one transfer (recorded or inferred): 96.0% (127 without any; their label is 'no move')
+
+--[5] transfer tier (first permanent move, 24 months)     0    1   2    3
+mid-sem tier (club row in t+1..t+2)                                
+0.0                                              1414    6   2   23
+1.0                                                48  116   0    5
+2.0                                                22    9  42    1
+3.0                                                75    9   9  185
+--[5] transfer moved up (any permanent move in 24 months)  False  True 
+mid-sem moved up                                                 
+False                                                 1413     32
+True                                                   132    389
+--[5] labelled feeders compared: 1966; agreement on moved-up yes/no: 91.7%; mid-sem only: 132, transfer only: 32
+mid-sem "moves" with no permanent transfer (loan returns, loans, same-name players):
+
+--[5] 4984   Ainsley Maitland-Niles       West Brom  2020        3.0        NaN   
+7270                 Ola Aina          Torino  2018        1.0        NaN   
+1480              Terem Moffi         Lorient  2021        2.0       Nice   
+2198            Adrien Tameze            Nice  2017        3.0        NaN   
+6906                    Cucho        Mallorca  2019        1.0        NaN   
+10496            Matt Targett     Aston Villa  2020        3.0  Newcastle   
+4579             Divock Origi       Wolfsburg  2017        3.0        NaN   
+11423             Rémi Walter          Troyes  2017        2.0        NaN   
+5838      Aurélien Tchouaméni        Bordeaux  2019        3.0        NaN   
+1788           Assane Dioussé   Saint-Étienne  2017        1.0        NaN   
+3065        Cristiano Biraghi      Fiorentina  2017        3.0        NaN   
+1907       Ruben Loftus-Cheek  Crystal Palace  2017        3.0        NaN   
+
+4984                  True  
+7270                  True  
+1480                  True  
+2198                  True  
+6906                  True  
+10496                 True  
+4579                  True  
+11423                 True  
+5838                  True  
+1788                  True  
+3065                  True  
+1907                  True  
+--[5] of the 132 mid-sem-only moves, 2 belong to players with no transfer record at all (a gap in the Transfermarkt dump, not a real disagreement)
+
+--[5] yr                                      
+2017      378     0.201  0.138      True
+2018      405     0.195  0.148      True
+2019      358     0.176  0.117      True
+2020      401     0.229  0.130      True
+2021      424     0.262  0.163      True
+2022      381     0.220  0.150      True
+2023      391     0.284  0.192      True
+2024      403     0.156  0.114     False
+--[7]      at_risk  events  hazard
+dur                         
+1       1840     211   0.115
+2        753     113   0.150
+3        247      39   0.158
+4         73      13   0.178
+5         25       6   0.240
+6          8       0   0.000
+7          1       0   0.000
+--[7] person-period rows: 2947 for 1840 players; events: 382; rows from 2022 and 2023 (unusable under the mid-sem label): 1072
+
+--[9] [replacement events] 1.8 s
+
+
+events (C, t, S, N): 593; distinct queries (C, t, S): 429; distinct signings: 479
+signings inside the candidate pool: 24.0% (115 of 479); from a five-league club at all: 75.4%
+
+--[9] t                                 
+2017        43    0.233      0.860
+2018        49    0.367      0.755
+2019        40    0.175      0.700
+2020        48    0.167      0.729
+2021        72    0.250      0.833
+2022        70    0.214      0.800
+2023        68    0.221      0.691
+2024        89    0.270      0.685
+--[9] reason
+five-league club, but elite / too old / under 900 min / unmatched    246
+club outside the five leagues                                        118
+Name: count, dtype: int64
+--[9] 20 events for a manual check against known transfers:
+
+--[9] 261         Dortmund  2017  ST  Pierre-Emerick Aubameyang   1416           0       Paco Alcácer      FC Barcelona         NaN      False
+101       Hoffenheim  2017  ST                   Mark Uth   2177           0     Ishak Belfodil  SV Werder Bremen         NaN       True
+298           Monaco  2017  AM               Thomas Lemar   2378           0  Aleksandr Golovin       CSKA Moscow  30000000.0      False
+390           Monaco  2017  CM              João Moutinho   2803           0      Cesc Fàbregas        Chelsea FC         NaN      False
+550  Atlético Madrid  2018  FB                Filipe Luís   2030           0    Kieran Trippier         Tottenham  22000000.0      False
+362    Saint-Étienne  2018  FB              Gabriel Silva   1429         230     Sergi Palencia         Barcelona   2000000.0       True
+30            Rennes  2019  CB               Jérémy Morel   1806           0       Nayef Aguerd             Dijon   4000000.0       True
+424       Villarreal  2019  FB             Xavi Quintillà   1573          90   Pervis Estupiñán           Watford  16400000.0       True
+227   Eint Frankfurt  2020  ST                André Silva   2760           0        Sam Lammers          Atalanta         0.0      False
+177             Lyon  2020  FB          Mattia De Sciglio   1467           0            Emerson           Chelsea         0.0      False
+451             Lyon  2020  CB                    Marcelo   2907         180    Damien Da Silva     Stade Rennais         0.0      False
+563        Paris S-G  2020  FB                Colin Dagba   1357         166      Achraf Hakimi             Inter  68000000.0      False
+76              Nice  2021  ST               Amine Gouiri   2754         228     Gaëtan Laborde     Stade Rennais  15000000.0      False
+353          Sevilla  2021  CB               Diego Carlos   2957           0     Tanguy Nianzou     Bayern Munich  16000000.0      False
+55          Atalanta  2022  ST               Duván Zapata   1390         113  Gianluca Scamacca          West Ham  28000000.0       True
+301       Leverkusen  2022   W             Mitchel Bakker   1659           0       Nathan Tella       Southampton  23300000.0      False
+184  Atlético Madrid  2023  ST              Álvaro Morata   1904           0  Alexander Sørloth        Villarreal  32000000.0      False
+408        Stuttgart  2023  CB                 Hiroki Ito   2228           0     Ramon Hendriks         Feyenoord   1000000.0      False
+488  Atlético Madrid  2024   W                Samuel Lino   1552           0      Thiago Almada          Botafogo  21000000.0      False
+29         Marseille  2024  CB            Derek Cornelius   1420          57     Facundo Medina              Lens         0.0       True
+--[9] in-pool events: 138; in-pool queries: 128; by season: {2017: 12, 2018: 18, 2019: 7, 2020: 8, 2021: 18, 2022: 18, 2023: 20, 2024: 27}; by position: {'AM': 5, 'CB': 34, 'CM': 13, 'DM': 7, 'FB': 25, 'ST': 23, 'W': 21}
+
+--[11] [all-signings events] 1.3 s
+all-signings events: 1,941 signings, 1,657 (club, season, position) queries; by season {2017: 289, 2018: 259, 2019: 177, 2020: 195, 2021: 287, 2022: 250, 2023: 245, 2024: 239}; by an elite club: 760; elite replacements among them: 299
+fee recorded and above zero: 51.5%; median positive fee EUR 13.0m
+

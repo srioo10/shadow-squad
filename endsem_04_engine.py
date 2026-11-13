@@ -11,11 +11,11 @@ from pyspark.sql import functions as F, Window as W
 from common import *
 import engine as E
 sp = spark(); RT, M = {}, {}
-def savefig(name): plt.tight_layout(); plt.savefig(f'outputs/figs/{name}.png', dpi=160); plt.close()
+def savefig(name): plt.tight_layout(); plt.savefig(f'outputs/figs/{name}.png'); plt.close()
 
 # %% [markdown]
 # ## 1. Market value at t and the hazard score (inputs the engine reads from the lake)
-# Value = last Transfermarkt valuation dated on or before 15 June after season t. Hazard = discrete-time survival model: Spark logistic regression on person-period rows, refitted for every season t on rows whose 12-month outcome was already known (seasons up to t-1).
+# Value = last Transfermarkt valuation dated before 1 June after season t, the day the transfer window used for the events opens, so no valuation can react to the signing it is used to predict. Hazard = discrete-time survival model: Spark logistic regression on person-period rows, refitted for every season t on rows whose 12-month outcome was already known (seasons up to t-1).
 
 # %%
 from pyspark.ml.classification import LogisticRegression
@@ -25,7 +25,7 @@ from pyspark.ml.functions import vector_to_array
 with timed('value at t', RT):
     ft = sp.read.parquet('lake/features').select('player_id', 'yr')
     v = sp.read.parquet('lake/tm_valuations').select('player_id', 'date', F.col('market_value_in_eur').cast('double').alias('value'))
-    val = (ft.join(v, (ft.player_id == v.player_id) & (v.date <= F.make_date(ft.yr + 1, F.lit(6), F.lit(15)))).select(ft.player_id, 'yr', 'date', 'value')
+    val = (ft.join(v, (ft.player_id == v.player_id) & (v.date < F.make_date(ft.yr + 1, F.lit(6), F.lit(1)))).select(ft.player_id, 'yr', 'date', 'value')
              .withColumn('r', F.row_number().over(W.partitionBy('player_id', 'yr').orderBy(F.desc('date')))).filter('r = 1').drop('r', 'date'))
     val.toPandas().to_parquet('lake/value_at_t.parquet', index=False)
 lake = E.Lake(); FT = lake.F
@@ -36,13 +36,13 @@ for i, L_ in enumerate(LEAGUES[1:], start=1): X['L_' + str(i)] = (X['comp'] == L
 PP = pd.read_parquet('lake/person_period.parquet')[['player_id', 'yr', 'event']]
 xs = sp.createDataFrame(X[['player_id', 'yr'] + HF].fillna(0)).cache(); pp = sp.createDataFrame(PP).join(xs, ['player_id', 'yr']).cache()
 pipe = lambda: Pipeline(stages=[VectorAssembler(inputCols=HF, outputCol='raw'), StandardScaler(inputCol='raw', outputCol='features', withMean=True), LogisticRegression(labelCol='event', regParam=0.05)])
-hz = []
-with timed('discrete-time hazard, Spark LR, 6 refits', RT):
-    for t in range(2018, 2024):
-        mdl = pipe().fit(pp.filter(F.col('yr') <= t - 1)); hz.append(mdl.transform(xs.filter(F.col('yr') == t)).select('player_id', 'yr', vector_to_array('probability')[1].alias('hazard')).toPandas())
+hz, HM = [], {'features': HF}
+with timed('discrete-time hazard, Spark LR, 7 refits', RT):
+    for t in range(2018, 2025):
+        mdl = pipe().fit(pp.filter(F.col('yr') <= t - 1)); HM[t] = (mdl.stages[1].mean.toArray(), mdl.stages[1].std.toArray(), mdl.stages[2].coefficients.toArray(), float(mdl.stages[2].intercept)); hz.append(mdl.transform(xs.filter(F.col('yr') == t)).select('player_id', 'yr', vector_to_array('probability')[1].alias('hazard')).toPandas())
 mdl.transform(xs).select('probability').explain()
-HZ = pd.concat(hz); HZ.to_parquet('lake/hazard.parquet', index=False); lake = E.Lake(); FT = lake.F
-print(f"value known for {lake.VAL.notna().sum():,} of {len(FT):,} player-seasons; hazard scored for {len(HZ):,} player-seasons (2018-2023; no earlier season to learn from for 2017)")
+HZ = pd.concat(hz); HZ.to_parquet('lake/hazard.parquet', index=False); pickle.dump(HM, open('lake/hazard_models.pkl', 'wb'))      # coefficients kept so the red-team notebook can re-score altered profiles; lake = E.Lake(); FT = lake.F
+print(f"value known for {FT['value'].notna().sum():,} of {len(FT):,} player-seasons; hazard scored for {len(HZ):,} player-seasons (2018-2024; no earlier season to learn from for 2017)")
 
 # %% [markdown]
 # ## 2. Style translation, checked on players who really changed club
@@ -54,7 +54,7 @@ mvr = A.merge(B, on=['player_id', 'yr'], suffixes=('', '_n')); mvr = mvr[(mvr['s
 prev = FT.groupby(['comp', 'squad', 'yr'])[['x_dom', 'x_press']].first(); known = [prev.index.isin([k])[0] if False else (k in prev.index) for k in zip(mvr['comp_n'], mvr['squad_n'], mvr['yr'])]
 xd = np.array([prev.loc[k, 'x_dom'] if ok else 0.0 for k, ok in zip(zip(mvr['comp_n'], mvr['squad_n'], mvr['yr']), known)]); xp = np.array([prev.loc[k, 'x_press'] if ok else 0.0 for k, ok in zip(zip(mvr['comp_n'], mvr['squad_n'], mvr['yr']), known)])
 act = mvr[[r + '_n' for r in E.RAW]].to_numpy(); pa = mvr[E.RAW].to_numpy(); pb = mvr[E.AF].to_numpy()
-pc = lake.translate(pb, mvr['pos_group'].to_numpy(), xd, xp, mvr['comp_n'].to_numpy()); pc_or = lake.translate(pb, mvr['pos_group'].to_numpy(), mvr['x_dom_n'].to_numpy(), mvr['x_press_n'].to_numpy(), mvr['comp_n'].to_numpy())
+pc = lake.translate(pb, mvr['pos_group'].to_numpy(), xd, xp, mvr['comp_n'].to_numpy(), mvr['yr'].to_numpy()); pc_or = lake.translate(pb, mvr['pos_group'].to_numpy(), mvr['x_dom_n'].to_numpy(), mvr['x_press_n'].to_numpy(), mvr['comp_n'].to_numpy(), mvr['yr'].to_numpy())
 scale = FT[E.RAW].std().to_numpy(); err = {k: np.abs(p - act) / scale for k, p in (('a_raw', pa), ('b_neutral', pb), ('c_translated', pc), ('c_oracle_style', pc_or))}
 tabs = []
 for g in ('DF', 'MF', 'FW', 'all'):
@@ -85,6 +85,7 @@ with timed('pair features', RT): PF = lake.pair_features(Q)
 CA = pd.read_parquet('lake/candidates.parquet')[['qid', 'player_id', 'dist', 'candidate', 'in_brp', 'in_minhash']]; PF = PF.merge(CA, on=['qid', 'player_id'], how='left'); PF['candidate'] = PF['candidate'].fillna(False).astype(bool)
 pos_ = EV[EV['N_in_pool']][['qid', 'N']].drop_duplicates().assign(y=1).rename(columns={'N': 'player_id'}); PF = PF.merge(pos_, on=['qid', 'player_id'], how='left'); PF['y'] = PF['y'].fillna(0).astype(int)
 PF['q_in_pool'] = PF.groupby('qid')['y'].transform('max') == 1; PF.to_parquet('lake/pairs.parquet', index=False)
+M['value_cutoff'] = 'last valuation before 1 June after season t'
 M['pairs'] = {'rows': len(PF), 'queries': int(PF['qid'].nunique()), 'in_pool_queries': int(PF[PF['q_in_pool']]['qid'].nunique()), 'positives': int(PF['y'].sum()), 'positives_in_candidate_set': int(PF[PF['candidate']]['y'].sum()),
               'traj_available': float(PF['traj_sim'].notna().mean()), 'traj_age_aligned_share': float(PF['traj_age_aligned'].mean()), 'value_missing': float(PF['value'].isna().mean()), 'hazard_missing': float(PF['hazard'].isna().mean()),
               'mean_feature_pos_vs_neg': {f: [float(PF[PF['q_in_pool'] & (PF['y'] == 1)][f].mean()), float(PF[PF['q_in_pool'] & (PF['y'] == 0)][f].mean())] for f in E.FEATS + ['sim_raw', 'sim_neutral']}}
@@ -118,14 +119,30 @@ M['trajectory'] = {'two_season_vectors': len(two), 'lsh_pairs': int(n_lsh), 'lsh
 print(M['trajectory'])
 
 # %% [markdown]
+# ### The large event set: every summer signing by a five-league club
+# Query = (club, season, position). The reference profile is what the club fielded at that position that season (minutes-weighted), and the candidates are all 900-minute players of that position at other clubs.
+
+# %%
+SA = pd.read_parquet('lake/signing_events'); QA = SA[['qid', 'C', 't', 'P', 'league', 'club']].drop_duplicates('qid')
+with timed('pair features, all signings', RT): PA = lake.pair_features_club(QA)
+PA = PA.merge(SA[['qid', 'N']].drop_duplicates().assign(y=1).rename(columns={'N': 'player_id'}), on=['qid', 'player_id'], how='left'); PA['y'] = PA['y'].fillna(0).astype(int); PA['q_in_pool'] = PA.groupby('qid')['y'].transform('max') == 1
+PA = PA[PA['q_in_pool']].drop(columns=[c for c in PA.columns if c.startswith('tr_')]); PA.to_parquet('lake/pairs_all.parquet', index=False)
+M['pairs_all'] = {'rows': len(PA), 'queries': int(PA['qid'].nunique()), 'positives': int(PA['y'].sum()), 'mean_candidates': float(PA.groupby('qid').size().mean()), 'reference_profile_missing': float(PA['sim_translated'].isna().mean())}; print(M['pairs_all'])
+
+# %% [markdown]
 # ## 4. Fusion: learning to rank
 # One query per replacement event, label 1 for the player actually signed, 0 for the other LSH candidates. Walk-forward: the model that ranks events of season Y is trained on events up to Y-1. In-course: Spark `GBTClassifier` (pointwise). Out of course: LightGBM `LGBMRanker` (LambdaMART), which optimises the order inside each query.
 
 # %%
 from pyspark.ml.classification import GBTClassifier
-TEST = (2020, 2021, 2022, 2023)
+TEST = (2020, 2021, 2022, 2023, 2024)
 with timed('LGBMRanker walk-forward', RT): LG, models = E.walk_forward(PF, E.FEATS, TEST, keep_models=True)
-allq = PF[PF['candidate'] & PF['q_in_pool']]; models['all'] = E.fit_ranker(allq, E.FEATS); pickle.dump(models, open('lake/models.pkl', 'wb'))
+allq = PF[PF['candidate'] & PF['q_in_pool']]; models['all'] = E.fit_ranker(allq, E.FEATS); pickle.dump(models, open('lake/models_replacement_only.pkl', 'wb'))
+with timed('LGBMRanker trained on all signings, walk-forward', RT):
+    LA, models_a = E.walk_forward(PA, E.FEATS, TEST, keep_models=True, use_candidates=False)                       # all-signings events ranked by a model trained on earlier all-signings events
+    LV, models_v = E.walk_forward(PF, E.FEATS, TEST, keep_models=True, train_pairs=PA, use_candidates=False)       # replacement queries ranked by that same kind of model: far more training events
+models_v['all'] = E.fit_ranker(PA, E.FEATS); pickle.dump(models_v, open('lake/models.pkl', 'wb')); models_rep, models = models, models_v
+LA.to_parquet('lake/scores_all_signings.parquet', index=False); LV.to_parquet('lake/scores_lgbm_v2.parquet', index=False)
 sdf = sp.createDataFrame(PF[['qid', 'player_id', 't', 'y', 'candidate', 'q_in_pool'] + E.FEATS].fillna(-1.0)).cache(); gb = []
 with timed('Spark GBTClassifier walk-forward', RT):
     for Y in TEST:
@@ -138,8 +155,8 @@ def quick(R):
     R = R[R.groupby('qid')['y'].transform('max') == 1].copy(); R['r'] = R.groupby('qid')['score'].rank(ascending=False, method='average'); r = R[R['y'] == 1].groupby('qid')['r'].min()
     return {'queries': len(r), 'median_rank': float(r.median()), **{f'recall@{k}': float((r <= k).mean()) for k in (5, 10, 25)}}
 LG.to_parquet('lake/scores_lgbm.parquet', index=False); GB.drop(columns='candidate').to_parquet('lake/scores_gbt.parquet', index=False)
-imp = pd.Series(models['all'].booster_.feature_importance('gain'), index=E.FEATS); imp = (imp / imp.sum()).sort_values(ascending=False)
-M['fusion'] = {'test_seasons': list(TEST), 'train_queries_first_fold': int(PF[(PF['t'] <= TEST[0] - 1) & PF['q_in_pool']]['qid'].nunique()), 'lgbm': quick(LG), 'gbt_spark': quick(GB), 'gain_share_all_events_model': imp.round(4).to_dict(), 'features': E.FEATS}
+imp = pd.Series(models_rep['all'].booster_.feature_importance('gain'), index=E.FEATS); imp = (imp / imp.sum()).sort_values(ascending=False)
+M['fusion'] = {'test_seasons': list(TEST), 'train_queries_first_fold': int(PF[(PF['t'] <= TEST[0] - 1) & PF['q_in_pool']]['qid'].nunique()), 'lgbm': quick(LG), 'lgbm_trained_on_all_signings': quick(LV), 'all_signings_task': quick(LA), 'gbt_spark': quick(GB), 'train_queries_first_fold_all_signings': int(PA[PA['t'] <= TEST[0] - 1]['qid'].nunique()), 'gain_share_all_events_model': imp.round(4).to_dict(), 'features': E.FEATS}
 print(M['fusion'])
 ex = EV[(EV['N_in_pool']) & (EV['t'] >= 2020)].iloc[0]; top = E.rank(lake, models, ex['C'], ex['t'], ex['S'], ex['P'], top=10)
 print(f"example: {ex['club']} {ex['t']}-{str(ex['t'] + 1)[2:]}, replacing {ex['S_name']} ({ex['P']}); real signing {ex['N_name']}; model {top['model_used'][0]}"); display(top[['player', 'squad', 'age_num', 'value', 'sim_translated', 'traj_sim', 'hazard', 'score']].round(3))

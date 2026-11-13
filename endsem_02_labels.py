@@ -30,6 +30,16 @@ with timed('club tiers + clean transfers', RT):
     t = (sp.table('tm_transfers').filter((F.col('from_club_id') != F.col('to_club_id')) & (F.col('transfer_date') <= F.lit(DATA_END)))
          .select('player_id', F.col('transfer_date').alias('d'), F.col('from_club_id').cast('int').alias('f'), F.col('to_club_id').cast('int').alias('c'), F.col('from_club_name').alias('fn'), F.col('to_club_name').alias('tn'),
                  F.col('transfer_fee').cast('double').alias('fee'), F.col('market_value_in_eur').cast('double').alias('mv')).dropDuplicates(['player_id', 'd', 'f', 'c']))
+    # players with no transfer record at all in the dump: read their moves from league minutes (main club changes between consecutive seasons)
+    cmn = sp.table('tm_club_minutes').join(sp.table('player_xref').select('player_id').distinct(), 'player_id').join(t.select('player_id').distinct(), 'player_id', 'left_anti')
+    main = cmn.withColumn('r', F.row_number().over(W.partitionBy('player_id', 'season').orderBy(F.desc('minutes')))).filter('r = 1')
+    cnames = sp.read.csv('data/transfermarkt/clubs.csv', header=True, inferSchema=True).select(F.col('club_id').cast('int').alias('cid'), F.col('name').alias('cname'))
+    inf = (main.withColumn('pc', F.lag('club_id').over(W.partitionBy('player_id').orderBy('season'))).withColumn('ps', F.lag('season').over(W.partitionBy('player_id').orderBy('season')))
+               .filter((F.col('pc') != F.col('club_id')) & (F.col('season') - F.col('ps') == 1))
+               .select('player_id', F.make_date('season', F.lit(7), F.lit(1)).alias('d'), F.col('pc').cast('int').alias('f'), F.col('club_id').cast('int').alias('c')))
+    inf = (inf.join(cnames.withColumnRenamed('cid', 'f').withColumnRenamed('cname', 'fn'), 'f', 'left').join(cnames.withColumnRenamed('cid', 'c').withColumnRenamed('cname', 'tn'), 'c', 'left')
+              .select('player_id', 'd', 'f', 'c', 'fn', 'tn', F.lit(None).cast('double').alias('fee'), F.lit(None).cast('double').alias('mv'))).cache()
+    n_inf, n_inf_players = inf.count(), inf.select('player_id').distinct().count(); t = t.unionByName(inf)
     def mark_loans(g):   # walk one player's moves in date order; a move that undoes the open previous move within 18 months closes a loan
         g = g.sort_values('d').reset_index(drop=True); out = np.zeros(len(g), bool); ret = np.zeros(len(g), bool); fee = g['fee'].to_numpy(copy=True); open_i = None; i = 0
         days = lambda x, y: (g.d[x] - g.d[y]).days
@@ -75,7 +85,8 @@ with timed('transfer outcome', RT):
 mv.explain()
 LB = pd.read_parquet('lake/labels_v2'); FE = LB[LB['feeder'] & LB['player_id'].notna()].copy()
 has_tr = set(tc.select('player_id').distinct().toPandas()['player_id']); FE['has_transfer_record'] = FE['player_id'].isin(has_tr)
-print(f"feeder-seasons whose player has at least one Transfermarkt transfer record: {FE['has_transfer_record'].mean():.1%} ({(~FE['has_transfer_record']).sum()} without any; their label is 'no move')")
+print(f"moves inferred from league minutes for players with no transfer record: {n_inf} moves, {n_inf_players} players")
+print(f"feeder-seasons whose player has at least one transfer (recorded or inferred): {FE['has_transfer_record'].mean():.1%} ({(~FE['has_transfer_record']).sum()} without any; their label is 'no move')")
 cmp_ = FE[FE['labeled']]
 conf = pd.crosstab(cmp_['best_tier'].rename('mid-sem tier (club row in t+1..t+2)'), cmp_['tier_tm'].rename('transfer tier (first permanent move, 24 months)')); display(conf)
 conf_up = pd.crosstab((cmp_['best_tier'] >= 1).rename('mid-sem moved up'), (cmp_['up_tier'] >= 1).rename('transfer moved up (any permanent move in 24 months)')); display(conf_up)
@@ -140,18 +151,39 @@ display(EV.sample(20, random_state=SEED).sort_values(['t', 'club'])[['club', 't'
 inq = EV[EV['N_in_pool']]
 print(f"in-pool events: {len(inq)}; in-pool queries: {inq['query'].nunique()}; by season: {inq.groupby('t')['query'].nunique().to_dict()}; by position: {inq.groupby('P')['query'].nunique().to_dict()}")
 
+# %% [markdown]
+# ## 5. All signings by any five-league club (the large evaluation set)
+# Elite replacements are few. The same question can be asked of every summer signing: club C bought a player of position P who had played 900+ league minutes in the five leagues the season before. Query = (club, season, position); the candidates are all such players at other clubs. Elite replacements are a flagged subset.
+
+# %%
+with timed('all-signings events', RT):
+    sp.sql("SELECT player_id, player, squad, comp, yr, age_num, min_num, fine_pos, club_id, elite_club FROM fs WHERE player_id IS NOT NULL AND fine_pos IS NOT NULL").createOrReplaceTempView('allp')
+    sp.table('allp').write.mode('overwrite').parquet('lake/pool_all')
+    sg_all = sp.sql("""
+      SELECT t.c AS C, x.squad AS club, x.comp AS league, year(t.d) - 1 AS t, q.fine_pos AS P, t.player_id AS N, q.player AS N_name, q.squad AS N_from, q.comp AS N_from_league, q.age_num AS N_age, t.fee, t.mv AS N_value, t.d AS N_date,
+             coalesce(k0.elite_club, false) AS C_elite, q.elite_club AS N_from_elite
+      FROM tc t JOIN club_xref x ON x.club_id = t.c JOIN club_season k ON k.club_id = t.c AND k.season = year(t.d)
+      JOIN allp q ON q.player_id = t.player_id AND q.yr = year(t.d) - 1 AND q.club_id <> t.c
+      LEFT JOIN club_season k0 ON k0.club_id = t.c AND k0.season = year(t.d) - 1
+      WHERE month(t.d) BETWEEN 6 AND 10 AND NOT (month(t.d) = 10 AND day(t.d) > 10) AND NOT t.loan_return AND NOT t.from_youth""").dropDuplicates(['C', 't', 'N'])
+    rep = sp.read.parquet('lake/replacement_events').select('C', 't', F.col('N')).distinct().withColumn('elite_replacement', F.lit(True))
+    sg_all = sg_all.join(rep, ['C', 't', 'N'], 'left').fillna(False, ['elite_replacement']).withColumn('qid', F.concat_ws('_', 'C', 't', 'P')); sg_all.write.mode('overwrite').parquet('lake/signing_events')
+SA = pd.read_parquet('lake/signing_events')
+print(f"all-signings events: {len(SA):,} signings, {SA['qid'].nunique():,} (club, season, position) queries; by season {SA.groupby('t').size().to_dict()}; by an elite club: {int(SA['C_elite'].sum())}; elite replacements among them: {int(SA['elite_replacement'].sum())}")
+print(f"fee recorded and above zero: {(SA['fee'] > 0).mean():.1%}; median positive fee EUR {SA.loc[SA['fee'] > 0, 'fee'].median() / 1e6:.1f}m")
+
 # %%
 import matplotlib; matplotlib.use('Agg'); import matplotlib.pyplot as plt
 fig, ax = plt.subplots(1, 2, figsize=(10, 3.2))
-c = conf.reindex(index=range(4), columns=range(4), fill_value=0); im = ax[0].imshow(np.log1p(c.values), cmap='Blues')
+c = conf.reindex(index=range(4), columns=range(4), fill_value=0); im = ax[0].imshow(np.log1p(c.values), cmap=SEQ, vmax=np.log1p(c.values).max() * 1.6); ax[0].grid(False)
 for i in range(4):
     for j in range(4): ax[0].text(j, i, int(c.values[i, j]), ha='center', va='center', fontsize=9)
 ax[0].set_xlabel('transfer-based tier'); ax[0].set_ylabel('mid-sem tier'); ax[0].set_xticks(range(4)); ax[0].set_yticks(range(4)); ax[0].set_title('Label v1 vs v2 (labelled feeders)')
 ax[1].bar(cov.index - .2, cov['from_top5'], .4, label='from a five-league club'); ax[1].bar(cov.index + .2, cov['in_pool'], .4, label='inside candidate pool'); ax[1].set_ylim(0, 1); ax[1].legend(fontsize=8); ax[1].set_title('Coverage of real replacement signings'); ax[1].set_xlabel('season t')
-fig.tight_layout(); fig.savefig('outputs/figs/p2_labels_events.png', dpi=160); 
-_ = put_metrics('phase2', {'runtime_s': RT, 'transfers_clean': n_t, 'loan_out_removed': n_loan, 'loan_return_removed': n_ret, 'table_agreement': tab_agree, 'top6_agreement': top6_agree,
+fig.tight_layout(); fig.savefig('outputs/figs/p2_labels_events.png'); 
+_ = put_metrics('phase2', {'runtime_s': RT, 'transfers_clean': n_t, 'inferred_moves': n_inf, 'inferred_move_players': n_inf_players, 'loan_out_removed': n_loan, 'loan_return_removed': n_ret, 'table_agreement': tab_agree, 'top6_agreement': top6_agree,
     'feeders_with_transfer_record': float(FE['has_transfer_record'].mean()), 'label_midsem_only_no_record': int((~only_old['has_transfer_record']).sum()), 'label_compare_n': len(cmp_), 'label_agreement_up': float(((cmp_['best_tier'] >= 1) == (cmp_['up_tier'] >= 1)).mean()), 'label_midsem_only': len(only_old), 'label_transfer_only': len(only_new),
-    'confusion_tier': conf.to_dict(), 'moved_up_rate_v1': float((cmp_['best_tier'] >= 1).mean()), 'moved_up_rate_v2_same_rows': float((cmp_['up_tier'] >= 1).mean()), 'moved_up_rate_v2_all_seasons': float((FE['up_tier'] >= 1).mean()),
+    'confusion_tier': conf.to_dict(), 'moved_up_rate_v1': float((cmp_['best_tier'] >= 1).mean()), 'moved_up_rate_v2_same_rows': float((cmp_['up_tier'] >= 1).mean()), 'moved_up_rate_v2_all_seasons': float((FE[FE['observed24']]['up_tier'] >= 1).mean()), 'all_signings': len(SA), 'all_signing_queries': int(SA['qid'].nunique()), 'all_signings_by_season': {int(k): int(v) for k, v in SA.groupby('t').size().items()}, 'all_signings_elite_club': int(SA['C_elite'].sum()), 'all_signings_fee_positive_share': float((SA['fee'] > 0).mean()),
     'rate_v2_by_season': rate_v2.reset_index().to_dict('records'), 'person_period_rows': len(PP), 'person_period_players': int(PP['player_id'].nunique()), 'person_period_events': int(PP['event'].sum()),
     'person_period_rows_2022_23': int((PP['yr'] >= 2022).sum()), 'hazard_by_duration': haz.reset_index().to_dict('records'),
     'events': len(EV), 'queries': int(EV['query'].nunique()), 'signings': len(sg), 'signings_in_pool': int(sg['N_in_pool'].sum()), 'in_pool_share': float(sg['N_in_pool'].mean()),

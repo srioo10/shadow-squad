@@ -1,0 +1,252 @@
+--[3] lake/fbref_raw: 21,097 rows
+
+--[3] lake/tm_transfers: 168,248 rows
+
+--[3] lake/tm_valuations: 615,190 rows
+
+--[3] lake/tm_players: 50,149 rows
+
+--[3] lake/tm_club_minutes: 38,935 rows
+
+--[3] lake/tm_tables: 1,366 rows
+[write lake] 19.8 s
+
+
+
+--[5] [entity resolution] 8.5 s
+
+
+
+--[5] 149 FBref clubs mapped one-to-one to Transfermarkt clubs (lowest vote share 0.82); 19,166 of 19,507 outfield player-club-seasons linked
+
+--[7] lake/fbref: 11,792 rows
+[walk-forward style model] 3.5 s
+player-seasons: 11,792 (1,437 from 2024-25); raw per-90 identical to the mid-sem table on 100% of metrics; walk-forward neutral values correlate 0.996 with the mid-sem all-season fit
+2023-24 overlap of the two FBref sources (1600 players): lowest per-metric correlation 1.000; supported elasticities by cut-off: {2017: 31, 2018: 40, 2019: 42, 2020: 42, 2021: 48, 2022: 50, 2023: 47, 2024: 47}
+
+--[9] match rate, all outfield rows
+
+--[9] yr               2017   2018   2019   2020   2021   2022   2023   2024
+comp                                                                  
+Bundesliga      1.000  0.995  1.000  0.998  0.946  0.993  1.000  0.998
+La Liga         0.998  0.971  0.976  0.980  0.879  0.990  0.983  0.989
+Ligue 1         0.994  0.986  0.998  0.998  0.908  0.994  0.998  0.985
+Premier League  0.996  0.991  0.969  0.996  0.974  1.000  1.000  0.996
+Serie A         0.998  0.986  0.955  0.992  0.923  0.998  0.998  0.995
+--[9] match rate, rows with >= 900 minutes (the modelling population)
+
+--[9] yr               2017   2018   2019   2020   2021   2022   2023   2024
+comp                                                                  
+Bundesliga      1.000  0.996  1.000  1.000  0.996  0.988  1.000  1.000
+La Liga         1.000  0.997  0.990  0.984  0.997  0.994  0.994  0.997
+Ligue 1         1.000  1.000  1.000  0.997  0.987  1.000  1.000  1.000
+Premier League  0.997  1.000  0.990  0.997  0.994  1.000  1.000  1.000
+Serie A         1.000  1.000  0.994  0.994  0.997  1.000  1.000  1.000
+--[9] 30 random matches for a manual check:
+
+--[9] 17012               Nadiem Amiri            Nadiem Amiri         Mainz 05   
+16006             Franck Tabanou          Franck Tabanou         Guingamp   
+344                Morgan Sanson           Morgan Sanson        Marseille   
+7671              Xaver Schlager          Xaver Schlager        Wolfsburg   
+2225           Christian Eriksen       Christian Eriksen   Manchester Utd   
+3886                  Papu Gómez              Papu Gómez         Atalanta   
+8674               Kyle Naughton           Kyle Naughton     Swansea City   
+4580         Bartosz Bereszyński     Bartosz Bereszyński           Napoli   
+2616          Soumaïla Coulibaly      Soumaïla Coulibaly            Brest   
+4391                   Hugo Duro               Hugo Duro           Getafe   
+12558            Marc Albrighton         Marc Albrighton   Leicester City   
+7066          Gian Marco Ferrari      Gian Marco Ferrari         Sassuolo   
+980             Simone Missiroli        Simone Missiroli             SPAL   
+10502             Niels Nkounkou          Niels Nkounkou          Everton   
+13667            Valentin Rosier         Valentin Rosier             Nice   
+11317             Mohamed Camara             Mady Camara             Roma   
+16115        Prince-Désir Gouano           Prince Gouano           Amiens   
+6027            Bartosz Kapustka        Bartosz Kapustka         Freiburg   
+7268   Victor Bernth Kristiansen      Victor Kristiansen   Leicester City   
+828           Dominik Szoboszlai      Dominik Szoboszlai        Liverpool   
+13761               Cengiz Ünder            Cengiz Ünder             Roma   
+14130              Michael Keane           Michael Keane          Everton   
+3461              Luca Siligardi          Luca Siligardi            Parma   
+16076         David Datro Fofana      David Datro Fofana          Chelsea   
+12885            Patrick Cutrone         Patrick Cutrone           Empoli   
+15643             Clemens Riedel          Clemens Riedel     Darmstadt 98   
+14632           Nicolás Otamendi        Nicolás Otamendi  Manchester City   
+18441          Paul-Georges Ntep       Paul-Georges Ntep        Wolfsburg   
+10124     Pasquale Schiattarella  Pasquale Schiattarella             SPAL   
+1153                Andrea Conti            Andrea Conti            Parma   
+
+17012  2024  1996.0      1996.0    Central Midfield  1.000000       1.000  
+16006  2018  1989.0      1989.0           Left-Back  1.000000       1.000  
+344    2020  1994.0      1994.0    Central Midfield  1.000000       1.000  
+7671   2019  1997.0      1997.0    Central Midfield  1.000000       1.000  
+2225   2023  1992.0      1992.0  Attacking Midfield  1.000000       1.000  
+3886   2020  1988.0      1988.0         Left Winger  1.000000       0.900  
+8674   2017  1988.0      1988.0          Right-Back  1.000000       1.000  
+4580   2022  1992.0      1992.0          Right-Back  1.000000       1.000  
+2616   2024  2003.0      2003.0         Centre-Back  1.000000       1.000  
+4391   2018  1999.0      1999.0      Centre-Forward  1.000000       0.900  
+12558  2022  1989.0      1989.0      Right Midfield  1.000000       0.900  
+7066   2019  1992.0      1992.0         Centre-Back  1.000000       1.000  
+980    2018  1986.0      1986.0    Central Midfield  1.000000       1.000  
+10502  2020  2000.0      2000.0           Left-Back  1.000000       1.000  
+13667  2023  1996.0      1996.0          Right-Back  1.000000       1.000  
+11317  2022  1997.0      1997.0    Central Midfield  0.924675       0.955  
+16115  2018  1993.0      1993.0         Centre-Back  0.900000       0.940  
+6027   2017  1996.0      1996.0  Attacking Midfield  1.000000       0.900  
+7268   2022  2002.0      2002.0           Left-Back  0.900000       0.940  
+828    2024  2000.0      2000.0  Attacking Midfield  1.000000       1.000  
+13761  2018  1997.0      1997.0        Right Winger  1.000000       1.000  
+14130  2019  1993.0      1993.0         Centre-Back  1.000000       1.000  
+3461   2018  1988.0      1988.0        Right Winger  1.000000       1.000  
+16076  2022  2002.0      2002.0      Centre-Forward  1.000000       1.000  
+12885  2021  1998.0      1998.0      Centre-Forward  1.000000       1.000  
+15643  2023  2003.0      2003.0         Centre-Back  1.000000       1.000  
+14632  2018  1988.0      1988.0         Centre-Back  1.000000       1.000  
+18441  2017  1992.0      1992.0         Left Winger  1.000000       1.000  
+10124  2017  1987.0      1987.0  Defensive Midfield  1.000000       1.000  
+1153   2020  1994.0      1994.0          Right-Back  1.000000       1.000  
+--[9] pass 3 (no name resemblance) added 85 rows, 34 players:
+
+--[9] 237    José Luis García Vayá            Pepelu        Valencia  2024  1998.0   
+329           Jesús Santiago    Yellu Santiago          Getafe  2023  2004.0   
+373           Nelson Sissoko     Alpha Sissoko   Saint-Étienne  2020  1997.0   
+551               Kasim Nuhu       Kasim Adams      Hoffenheim  2020  1995.0   
+593           Simeon Nwankwo              Simy     Salernitana  2023  1992.0   
+1139           Ndombe Mubele     Firmin Mubele        Toulouse  2018  1994.0   
+1298        Souleymane Touré       Isaak Touré         Udinese  2024  2003.0   
+1461              Guy Ngosso       Guy N'Gosso          Amiens  2017  1985.0   
+1582         Musa Al-Taamari      Mousa Tamari     Montpellier  2024  1997.0   
+1746        Javier Hernández        Chicharito        West Ham  2017  1988.0   
+2140   Isaac Palazón Camacho       Isi Palazón  Rayo Vallecano  2022  1994.0   
+2518            Samir Santos     Samir Caetano         Udinese  2021  1994.0   
+2670                   Sergi   Sergio González         Leganés  2024  1992.0   
+2708    Hianga Mananga Mbock    Hianga'a Mbock           Brest  2020  1999.0   
+2899            Jonny Castro        Jonny Otto      Celta Vigo  2017  1994.0   
+2937             Raúl García      Raúl Carnero          Girona  2018  1989.0   
+3598        Carlos Benavídez  Carlos Protesoni          Alavés  2024  1998.0   
+3633          Emanuel Emegha   Emmanuel Emegha      Strasbourg  2024  2003.0   
+3671          Anthony Lozano      Choco Lozano           Cádiz  2021  1993.0   
+4066          Chuky san jose             Chuki      Valladolid  2024  2004.0   
+4208        Boubakar Kouyaté      Kiki Kouyaté            Metz  2020  1997.0   
+4209             Mihai Dobre   Alexandru Dobre           Dijon  2020  1998.0   
+4642           Mohamed Meité       Kader Meïté          Rennes  2024  2007.0   
+6239              José Ángel              Cote           Eibar  2019  1989.0   
+6371                    Koka      Ahmed Hassan        Le Havre  2024  1993.0   
+7207           Obite N'Dicka       Evan Ndicka            Roma  2024  1999.0   
+7586           Mamadou Mbaye        Momo Mbaye           Cádiz  2022  1998.0   
+7871       Mathias Jørgensen             Zanka    Huddersfield  2017  1990.0   
+8970         Nathan N'Goumou    Nathan Ngoumou        Gladbach  2023  2000.0   
+9503         Nicolas Nkoulou  Nicolas N'Koulou          Torino  2017  1990.0   
+9720            Igor Carioca        Igor Silva         Lorient  2022  1996.0   
+10974               John Joe      John Patrick           Reims  2024  2003.0   
+13486               Kialonda            Gaspar           Lecce  2024  1997.0   
+16151         Samu Omorodion     Samu Aghehowa          Alavés  2023  2004.0   
+
+237       1742        1731  
+329        656         657  
+373        474         472  
+551        987         987  
+593        686         681  
+1139       465         457  
+1298       733         736  
+1461       610         608  
+1582      1116        1117  
+1746      1548        1543  
+2140      2965        2991  
+2518      1421        1426  
+2670      2957        2961  
+2708       458         455  
+2899      3202        3204  
+2937       850         854  
+3598       487         478  
+3633      2293        2307  
+3671      1672        1675  
+4066       728         727  
+4208      1964        1961  
+4209       529         516  
+4642       544         537  
+6239      2360        2131  
+6371       851         855  
+7207      3420        3420  
+7586       760         754  
+7871      3420        3420  
+8970      1385        1382  
+9503      3258        3259  
+9720       456         457  
+10974      545         542  
+13486     2144        2145  
+16151     1918        1924  
+--[9] 20 lowest-confidence matches:
+
+--[9] 237   José Luis García Vayá            Pepelu        Valencia  2024  1998.0   
+329          Jesús Santiago    Yellu Santiago          Getafe  2023  2004.0   
+373          Nelson Sissoko     Alpha Sissoko   Saint-Étienne  2020  1997.0   
+551              Kasim Nuhu       Kasim Adams      Hoffenheim  2020  1995.0   
+593          Simeon Nwankwo              Simy     Salernitana  2023  1992.0   
+1139          Ndombe Mubele     Firmin Mubele        Toulouse  2018  1994.0   
+1179         Simeon Nwankwo              Simy         Crotone  2020  1992.0   
+1298       Souleymane Touré       Isaak Touré         Udinese  2024  2003.0   
+1461             Guy Ngosso       Guy N'Gosso          Amiens  2017  1985.0   
+1582        Musa Al-Taamari      Mousa Tamari     Montpellier  2024  1997.0   
+1746       Javier Hernández        Chicharito        West Ham  2017  1988.0   
+2140  Isaac Palazón Camacho       Isi Palazón  Rayo Vallecano  2022  1994.0   
+2518           Samir Santos     Samir Caetano         Udinese  2021  1994.0   
+2670                  Sergi   Sergio González         Leganés  2024  1992.0   
+2708   Hianga Mananga Mbock    Hianga'a Mbock           Brest  2020  1999.0   
+2899           Jonny Castro        Jonny Otto      Celta Vigo  2017  1994.0   
+2937            Raúl García      Raúl Carnero          Girona  2018  1989.0   
+3598       Carlos Benavídez  Carlos Protesoni          Alavés  2024  1998.0   
+3633         Emanuel Emegha   Emmanuel Emegha      Strasbourg  2024  2003.0   
+3671         Anthony Lozano      Choco Lozano           Cádiz  2021  1993.0   
+
+237       1998.0  Defensive Midfield  0.142857         0.5  
+329       2004.0    Central Midfield  0.142857         0.5  
+373       1997.0          Right-Back  0.642857         0.5  
+551       1995.0         Centre-Back  0.181818         0.5  
+593       1992.0      Centre-Forward  0.214286         0.5  
+1139      1994.0      Centre-Forward  0.153846         0.5  
+1179      1992.0      Centre-Forward  0.214286         0.5  
+1298      2003.0         Centre-Back  0.437500         0.5  
+1461      1985.0  Defensive Midfield  0.181818         0.5  
+1582      1997.0        Right Winger  0.666667         0.5  
+1746      1988.0      Centre-Forward  0.125000         0.5  
+2140      1994.0      Second Striker  0.476190         0.5  
+2518      1994.0         Centre-Back  0.230769         0.5  
+2670      1992.0         Centre-Back  0.333333         0.5  
+2708      1999.0    Central Midfield  0.600000         0.5  
+2899      1994.0          Right-Back  0.166667         0.5  
+2937      1989.0           Left-Back  0.583333         0.5  
+3598      1998.0  Defensive Midfield  0.000000         0.5  
+3633      2003.0      Centre-Forward  0.266667         0.5  
+3671      1993.0      Centre-Forward  0.642857         0.5  
+--[9] unmatched feeders: 13 of 3154 feeder-seasons (full list in outputs/unmatched_feeders.csv)
+
+--[9] 1009  Alejandro Pozo Pozo        Mallorca         La Liga  2019    True   
+998          Samir Santos         Udinese         Serie A  2019    True   
+1266  Alejandro Pozo Pozo           Eibar         La Liga  2020    True   
+1388          Yunus Musah        Valencia         La Liga  2020    True   
+1533     Vagner Gonçalves            Metz         Ligue 1  2020    True   
+1915         Nico Ribaudo        Espanyol         La Liga  2021    True   
+1582      Conor Gallagher  Crystal Palace  Premier League  2021    True   
+1728        Armando Broja     Southampton  Premier League  2021    True   
+2242        Agustín Rogel      Hertha BSC      Bundesliga  2022    True   
+2346        Márton Dárdai      Hertha BSC      Bundesliga  2022    True   
+2157  Alejandro Pozo Pozo         Almería         La Liga  2022    True   
+2286         Nico Ribaudo        Espanyol         La Liga  2022    True   
+2732  Alejandro Pozo Pozo         Almería         La Liga  2023    True   
+
+1009     20.0     1498        NaN  
+998      24.0     1546        NaN  
+1266     21.0     2190        NaN  
+1388     17.0     1530        NaN  
+1533     24.0      967        NaN  
+1915     20.0     1116        NaN  
+1582     21.0     2845        NaN  
+1728     19.0     1975        NaN  
+2242     24.0     1426        NaN  
+2346     20.0      947        NaN  
+2157     23.0     1880        NaN  
+2286     21.0     1248        NaN  
+2732     24.0      976        NaN  
+--[9] Transfermarkt ids carrying more than one FBref spelling: 13; FBref names that are really several players: 39
+

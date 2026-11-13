@@ -14,17 +14,17 @@ from common import *
 sp = spark(packages='io.graphframes:graphframes-spark4_2.13:0.10.0'); RT, M = {}, {}
 AF = MID['active_features']; MET = [f[:-4] for f in AF]; ZC = ['z_' + m for m in MET]; TC = ['hi_' + m for m in MET]; T0 = MID['TRAIN_LAST_T0']
 POS = ['CB', 'FB', 'DM', 'CM', 'AM', 'W', 'ST']
-def savefig(name): plt.tight_layout(); plt.savefig(f'outputs/figs/{name}.png', dpi=160); plt.close()
+def savefig(name): plt.tight_layout(); plt.savefig(f'outputs/figs/{name}.png'); plt.close()
 dist2 = lambda a, b: F.sqrt(F.aggregate(F.zip_with(a, b, lambda x, y: (x - y) * (x - y)), F.lit(0.0), lambda acc, x: acc + x))
 
 # %% [markdown]
 # ## 0. Feature table
-# Style-neutral per-90 values (team style and league removed, from the mid-sem `adj_team` and league offsets) are logged and standardised inside each fine position. Binary traits mark a top-quartile percentile.
+# Style-neutral per-90 values (walk-forward style model from notebook 01) are logged and standardised inside each fine position, using only seasons up to the row's own. Binary traits mark a top-quartile percentile.
 
 # %%
 xr = sp.read.parquet('lake/player_xref').select('player', 'squad', 'yr', 'player_id', 'fine_pos', 'club_id')
 base = sp.read.parquet('lake/fbref').drop('season', 'league').join(xr, ['player', 'squad', 'yr']).filter(F.col('fine_pos').isNotNull() & F.col('pos_group').isin('DF', 'MF', 'FW'))
-w = W.partitionBy('fine_pos')
+w = W.partitionBy('fine_pos').orderBy('yr').rangeBetween(W.unboundedPreceding, 0)      # mean and SD from seasons up to the row's own season only
 for f, m in zip(AF, MET):
     lg_ = F.log(F.col(f) + F.lit(MID['EPS_C'][f]))
     base = base.withColumn('z_' + m, (lg_ - F.mean(lg_).over(w)) / F.stddev(lg_).over(w)).withColumn('hi_' + m, (F.col(f + '_pct') >= 75).cast('double'))
@@ -74,7 +74,7 @@ M['lsh'] = {'grid': grid.to_dict('records'), 'chosen': best.to_dict(), 'exact_pa
 print({k: (round(v, 3) if isinstance(v, float) else v) for k, v in M['lsh'].items() if k not in ('grid', 'chosen')}); print('chosen:', best.round(3).to_dict())
 fig, ax = plt.subplots(figsize=(5.2, 3.4))
 for B, g in grid.groupby('bucketLength'): ax.plot(g['set_share'], g['recall_top25'], 'o-', label=f'top-25 neighbours kept, bucket {B:g}'); ax.plot(g['set_share'], g['signing_recall'], 's--', label=f'real signings kept, bucket {B:g}')
-ax.plot([0, 1], [0, 1], ':', color='grey'); ax.set_xlabel('share of same-position pairs compared'); ax.set_ylabel('recall'); ax.set_title('Euclidean LSH: work saved vs recall'); ax.legend(fontsize=7); savefig('p3_lsh_tradeoff')
+ax.plot([0, 1], [0, 1], ':', color=GREY); ax.set_xlabel('share of same-position pairs compared'); ax.set_ylabel('recall'); ax.set_title('Euclidean LSH: work saved vs recall'); ax.legend(fontsize=7); savefig('p3_lsh_tradeoff')
 
 # %% [markdown]
 # ## 2. Sequential pattern mining: PrefixSpan
@@ -87,7 +87,7 @@ ab = F.create_map(*[F.lit(x) for kv in {'Premier League': 'PL', 'La Liga': 'LL',
 rows = feat.select('player_id', 'yr', F.array(F.when(F.col('elite_club'), 'club=elite').when(F.col('table_pos') <= 12, 'club=mid').otherwise('club=low'), F.concat(F.lit('lg='), ab[F.col('comp')]),
                    F.when(F.col('min_num') >= 1800, 'role=starter').otherwise('role=rotation'),
                    F.when(F.col('composite_perf_index') >= 60, 'form=high').when(F.col('composite_perf_index') <= 40, 'form=low').otherwise('form=mid')).alias('items'))
-lab = sp.read.parquet('lake/labels_v2').filter('feeder and player_id is not null').select('player_id', F.col('yr').alias('yr0'), (F.col('up_tier') >= 1).cast('int').alias('up'))
+lab = sp.read.parquet('lake/labels_v2').filter('feeder and player_id is not null and observed24').select('player_id', F.col('yr').alias('yr0'), (F.col('up_tier') >= 1).cast('int').alias('up'))
 with timed('PrefixSpan', RT):
     seqs = (lab.join(rows, (lab.player_id == rows.player_id) & (rows.yr <= lab.yr0) & (rows.yr >= lab.yr0 - 3)).groupBy(lab.player_id, 'yr0', 'up')
                .agg(F.sort_array(F.collect_list(F.struct('yr', 'items'))).alias('s')).withColumn('sequence', F.col('s.items')).drop('s')).cache()
@@ -114,37 +114,42 @@ M['prefixspan'] = {'train_sequences': len(TR), 'test_sequences': len(TE), 'frequ
                    'top': keep.head(8)[['pattern', 'n_train', 'lift_train', 'n_test', 'lift_test']].round(2).to_dict('records'), 'top_multi_season': multi.head(8)[['pattern', 'n_train', 'lift_train', 'n_test', 'lift_test']].round(2).to_dict('records')}
 print({k: v for k, v in M['prefixspan'].items() if not k.startswith('top')}); pd.set_option('display.max_colwidth', 120); display(multi.head(8)[['pattern', 'n_train', 'lift_train', 'n_test', 'lift_test']].round(2))
 top = (multi if len(multi) >= 5 else keep).head(10).iloc[::-1]; fig, ax = plt.subplots(figsize=(8, 3.6)); y = np.arange(len(top))
-ax.barh(y - .2, top['lift_train'], .4, label=f'train (t <= {T0})'); ax.barh(y + .2, top['lift_test'], .4, label='later seasons'); ax.axvline(1, color='grey', ls=':'); ax.set_yticks(y, top['pattern'], fontsize=6); ax.set_xlabel('lift for moving up'); ax.legend(fontsize=7); ax.set_title('Career sequences that precede a move up'); savefig('p3_prefixspan')
+ax.barh(y - .2, top['lift_train'], .4, label=f'train (t <= {T0})'); ax.barh(y + .2, top['lift_test'], .4, label='later seasons'); ax.axvline(1, color=GREY, ls=':'); ax.set_yticks(y, top['pattern'], fontsize=6); ax.set_xlabel('lift for moving up'); ax.legend(fontsize=7); ax.set_title('Career sequences that precede a move up'); savefig('p3_prefixspan')
 
 # %% [markdown]
 # ## 3. Clustering: bisecting k-means per fine position
 # **What it does.** Bisecting k-means starts with one cluster and keeps splitting the cluster with the largest error in two with 2-means, which gives a hierarchy and is less sensitive to the starting points than plain k-means.
-# **Why here.** Mid-sem archetypes were cut inside three coarse groups (DF/MF/FW). With Transfermarkt positions the split is made inside each of seven fine positions, so a full-back is never compared with a centre-back.
+# **Why here.** Mid-sem archetypes were cut inside three coarse groups (DF/MF/FW). With Transfermarkt positions the split is made inside each of seven fine positions, so a full-back is never compared with a centre-back. The number of clusters is chosen on seasons up to 2019-20 and the model is refitted at every season cut-off on past seasons only.
 
 # %%
 from pyspark.ml.clustering import BisectingKMeans
-sil, parts = [], []; ce = ClusteringEvaluator(featuresCol='zv')
-with timed('BisectingKMeans (7 positions x k=2..6)', RT):
+sil, parts = [], []; ce = ClusteringEvaluator(featuresCol='zv'); kbest = {}
+with timed('BisectingKMeans (k chosen on seasons <= 2019, then one refit per season cut-off)', RT):
     for P in POS:
-        d = feat.filter(F.col('fine_pos') == P).select('player_id', 'yr', 'fine_pos', 'zv', *ZC).cache(); fits = {}
+        d = feat.filter(F.col('fine_pos') == P).select('player_id', 'yr', 'fine_pos', 'zv', *ZC).cache(); early = d.filter(F.col('yr') <= T0); best = (-1, None)
         for k in range(2, 7):
-            mdl = BisectingKMeans(k=k, seed=SEED, featuresCol='zv', minDivisibleClusterSize=30).fit(d); pr = mdl.transform(d); s = ce.evaluate(pr); fits[k] = (s, pr); sil.append({'fine_pos': P, 'k': k, 'silhouette': s})
-        kb = max(range(3, 7), key=lambda k: fits[k][0]); parts.append(fits[kb][1].select('player_id', 'yr', 'fine_pos', F.col('prediction').alias('cl'), *ZC).toPandas()); d.unpersist()
-fits[kb][1].explain()
-sil = pd.DataFrame(sil); AR = pd.concat(parts); AR['archetype'] = AR['fine_pos'] + AR['cl'].astype(str)
+            s_ = ce.evaluate(BisectingKMeans(k=k, seed=SEED, featuresCol='zv', minDivisibleClusterSize=30).fit(early).transform(early)); sil.append({'fine_pos': P, 'k': k, 'silhouette': s_})
+            if k >= 3 and s_ > best[0]: best = (s_, k)
+        kbest[P] = best[1]
+        for c in range(2017, 2025):      # the model of cut-off c is fitted on seasons <= c and labels every row, so later signings can be read in the vocabulary of that cut-off
+            pr = BisectingKMeans(k=kbest[P], seed=SEED, featuresCol='zv', minDivisibleClusterSize=30).fit(d.filter(F.col('yr') <= c)).transform(d)
+            parts.append(pr.select('player_id', 'yr', 'fine_pos', F.col('prediction').alias('cl'), *(ZC if c == 2024 else [])).toPandas().assign(cutoff=c))
+        d.unpersist()
+pr.explain()
+sil = pd.DataFrame(sil); AW = pd.concat(parts); AW['archetype'] = AW['fine_pos'] + AW['cl'].astype(str); AW[['player_id', 'yr', 'fine_pos', 'cutoff', 'archetype']].to_parquet('lake/archetypes_wf.parquet', index=False)
+AW[AW['yr'] == AW['cutoff']][['player_id', 'yr', 'fine_pos', 'archetype']].to_parquet('lake/archetypes.parquet', index=False)       # what the engine uses: a player's archetype as known at the end of his own season
+AR = AW[AW['cutoff'] == 2024].copy()      # description only (table and figure below): the last model's labels for all seasons
 cen = AR.groupby('archetype')[ZC].mean(); desc = cen.apply(lambda r: ', '.join(f"{c[2:]} {v:+.1f}" for c, v in r.sort_values(ascending=False).head(3).items()), axis=1)
-AR[['player_id', 'yr', 'fine_pos', 'archetype']].to_parquet('lake/archetypes.parquet', index=False)
-LB = pd.read_parquet('lake/labels_v2'); LB = LB[LB['feeder'] & LB['player_id'].notna()].assign(up=lambda d: (d['up_tier'] >= 1).astype(int)).merge(AR[['player_id', 'yr', 'archetype']], on=['player_id', 'yr'])
+LB = pd.read_parquet('lake/labels_v2'); LB = LB[LB['feeder'] & LB['player_id'].notna() & LB['observed24']].assign(up=lambda d: (d['up_tier'] >= 1).astype(int)).merge(AR[['player_id', 'yr', 'archetype']], on=['player_id', 'yr'])
 ct = pd.crosstab(LB['archetype'], LB['up']); chi2, p_chi = stats.chi2_contingency(ct)[:2]; cv = float(np.sqrt(chi2 / (ct.values.sum() * (min(ct.shape) - 1))))
 arch = pd.DataFrame({'n': AR.groupby('archetype').size(), 'feeders': ct.sum(1), 'move_up_rate': (ct[1] / ct.sum(1)).round(3), 'defining traits (mean z)': desc}); display(arch)
-kbest = AR.groupby('fine_pos')['archetype'].nunique().to_dict()
 M['bisecting'] = {'silhouette': sil.round(4).to_dict('records'), 'k_chosen': kbest, 'archetypes': int(AR['archetype'].nunique()), 'silhouette_chosen_mean': float(np.mean([sil[(sil.fine_pos == P) & (sil.k == k)]['silhouette'].iloc[0] for P, k in kbest.items()])),
                   'chi2': float(chi2), 'chi2_p': float(p_chi), 'cramers_v': cv, 'table': arch.reset_index().to_dict('records')}
 print(f"{AR['archetype'].nunique()} archetypes {kbest}; archetype vs moving up: chi-square p = {p_chi:.4f}, Cramer's V = {cv:.3f}")
 fig, ax = plt.subplots(1, 2, figsize=(11, 3.6), gridspec_kw={'width_ratios': [1, 1.6]})
 for P, g in sil.groupby('fine_pos'): ax[0].plot(g['k'], g['silhouette'], 'o-', label=P)
 ax[0].set_xlabel('k'); ax[0].set_ylabel('silhouette (squared Euclidean)'); ax[0].legend(fontsize=7, ncol=2); ax[0].set_title('Bisecting k-means: choosing k')
-im = ax[1].imshow(cen.values.T, cmap='RdBu_r', vmin=-1.5, vmax=1.5, aspect='auto'); ax[1].set_xticks(range(len(cen)), cen.index, rotation=90, fontsize=6); ax[1].set_yticks(range(len(MET)), MET, fontsize=6); ax[1].set_title('Archetype centroids (z within position)'); fig.colorbar(im, ax=ax[1]); savefig('p3_bisecting')
+im = ax[1].imshow(cen.values.T, cmap=DIV, vmin=-1.5, vmax=1.5, aspect='auto'); ax[1].set_xticks(range(len(cen)), cen.index, rotation=90, fontsize=6); ax[1].set_yticks(range(len(MET)), MET, fontsize=6); ax[1].set_title('Archetype centroids (z within position)'); fig.colorbar(im, ax=ax[1]); savefig('p3_bisecting')
 
 # %% [markdown]
 # ## 4. Link analysis: PageRank on the transfer graph, and power-iteration clustering
@@ -164,8 +169,8 @@ def pagerank(edges):
     v = edges.select(F.col('src').alias('id')).union(edges.select('dst')).distinct()
     return GraphFrame(v, edges).pageRank(resetProbability=0.15, maxIter=10).vertices
 prs = []
-with timed('GraphFrames PageRank (7 seasons x 2 directions)', RT):
-    for t in range(2017, 2024):
+with timed('GraphFrames PageRank (8 seasons x 2 directions)', RT):
+    for t in range(2017, 2025):
         e = senior(tcl.filter(F.col('d') < F.make_date(F.lit(t + 1), F.lit(6), F.lit(1)))).cache()
         pipe = pagerank(e.select(F.col('c').alias('src'), F.col('f').alias('dst'))).withColumnRenamed('pagerank', 'pr_pipe')        # buyer -> seller: rank flows to clubs whose players are bought
         dest = pagerank(e.select(F.col('f').alias('src'), F.col('c').alias('dst'))).withColumnRenamed('pagerank', 'pr_dest')        # seller -> buyer: destination prestige
@@ -174,9 +179,9 @@ with timed('GraphFrames PageRank (7 seasons x 2 directions)', RT):
 pipe.explain()
 PR = pd.concat(prs).rename(columns={'id': 'club_id'}); PR['club'] = PR['club_id'].map(names); PR.to_parquet('lake/club_pagerank.parquet', index=False)
 from sklearn.metrics import roc_auc_score
-LBp = LB.merge(PR, left_on=['club_id', 'yr'], right_on=['club_id', 't'], how='left'); ok = LBp['pr_pipe'].notna()
+LBp = LB.assign(up=(LB['up_tier'] >= 1).astype(int)).merge(PR, left_on=['club_id', 'yr'], right_on=['club_id', 't'], how='left'); ok = LBp['pr_pipe'].notna()
 cl = LBp[ok].groupby(['club_id', 'yr']).agg(n=('up', 'size'), rate=('up', 'mean'), pr=('pr_pipe', 'first'), sales=('sales', 'first')).query('n >= 3')
-top_pipe = PR[PR['t'] == 2023].nlargest(15, 'pr_pipe')[['club', 'pr_pipe', 'pr_dest', 'sales']]; display(top_pipe.round(2))
+top_pipe = PR[PR['t'] == 2024].nlargest(15, 'pr_pipe')[['club', 'pr_pipe', 'pr_dest', 'sales']]; display(top_pipe.round(2))
 with timed('PowerIterationClustering', RT):
     und = (tcl.select(F.least('f', 'c').alias('src'), F.greatest('f', 'c').alias('dst')).groupBy('src', 'dst').agg(F.count('*').cast('double').alias('weight')))
     dg = und.select(F.col('src').alias('id'), 'weight').union(und.select('dst', 'weight')).groupBy('id').agg(F.sum('weight').alias('deg')).filter('deg >= 30')
@@ -195,8 +200,8 @@ M['graph'] = {'edges': int(tcl.count()), 'clubs': int(len(names)), 'auc_pipeline
               'club_seasons': len(cl), 'top_pipeline_2023': top_pipe.round(3).to_dict('records'), 'pic_clubs': len(pic), 'pic_k': 8, 'pic_maxIter_chosen': best_it, 'pic_modularity_by_maxIter': {str(k): v[0] for k, v in pic_grid.items()}, 'pic_modularity': modularity, 'pic_country_purity': purity, 'pic_known_clubs': len(known),
               'pic_sizes': pic['cluster'].value_counts().sort_index().to_dict()}
 print({k: (round(v, 3) if isinstance(v, float) else v) for k, v in M['graph'].items() if k != 'top_pipeline_2023'})
-fig, ax = plt.subplots(1, 2, figsize=(11, 3.8)); tp = top_pipe.iloc[::-1]; ax[0].barh(tp['club'], tp['pr_pipe']); ax[0].set_title('Talent-pipeline PageRank, transfers up to June 2024'); ax[0].tick_params(labelsize=7)
-im = ax[1].imshow(np.log1p(comp_tab.values), cmap='Blues', aspect='auto'); ax[1].set_xticks(range(comp_tab.shape[1]), comp_tab.columns, rotation=90, fontsize=6); ax[1].set_yticks(range(len(comp_tab)), [f'community {i}' for i in comp_tab.index], fontsize=7)
+fig, ax = plt.subplots(1, 2, figsize=(11, 3.8)); tp = top_pipe.iloc[::-1]; ax[0].barh(tp['club'], tp['pr_pipe']); ax[0].set_title('Talent-pipeline PageRank, transfers up to June 2025'); ax[0].tick_params(labelsize=7)
+im = ax[1].imshow(np.log1p(comp_tab.values), cmap=SEQ, aspect='auto'); ax[1].set_xticks(range(comp_tab.shape[1]), comp_tab.columns, rotation=90, fontsize=6); ax[1].set_yticks(range(len(comp_tab)), [f'community {i}' for i in comp_tab.index], fontsize=7)
 ax[1].set_title(f'PIC transfer communities by league (purity {purity:.0%}, modularity {modularity:.2f})'); savefig('p3_graph')
 
 # %% [markdown]
@@ -206,21 +211,21 @@ ax[1].set_title(f'PIC transfer communities by league (purity {purity:.0%}, modul
 
 # %%
 from pyspark.ml.recommendation import ALS
-ARs = sp.createDataFrame(AR[['player_id', 'yr', 'archetype', 'fine_pos']])
+AWs = sp.createDataFrame(AW[['player_id', 'yr', 'archetype', 'fine_pos', 'cutoff']]).cache()
 cxs = sp.read.parquet('lake/club_xref').select(F.col('club_id').alias('c'), 'squad')
-sign = (tcl.join(cxs, 'c').join(ARs, (tcl.player_id == ARs.player_id) & (ARs.yr == tcl.season - 1)).select(F.col('c').cast('int').alias('club'), 'archetype', 'fine_pos', 'season')).cache()
-a_idx = {a: i for i, a in enumerate(sorted(AR['archetype'].unique()))}; a_df = sp.createDataFrame(pd.DataFrame({'archetype': list(a_idx), 'item': list(a_idx.values())}))
-def als_scores(t):
-    tr = sign.filter(F.col('season') <= t).join(a_df, 'archetype').groupBy('club', 'item').agg(F.count('*').cast('float').alias('n'))
+sign = (tcl.join(cxs, 'c').join(AWs, (tcl.player_id == AWs.player_id) & (AWs.yr == tcl.season - 1)).select(F.col('c').cast('int').alias('club'), 'archetype', 'fine_pos', 'season', 'cutoff')).cache()
+a_idx = {a: i for i, a in enumerate(sorted(AW['archetype'].unique()))}; a_df = sp.createDataFrame(pd.DataFrame({'archetype': list(a_idx), 'item': list(a_idx.values())}))
+def als_scores(t):      # signings up to season t, with archetypes as labelled by the clustering model of cut-off t
+    tr = sign.filter((F.col('cutoff') == t) & (F.col('season') <= t)).join(a_df, 'archetype').groupBy('club', 'item').agg(F.count('*').cast('float').alias('n'))
     mdl = ALS(userCol='club', itemCol='item', ratingCol='n', implicitPrefs=True, rank=6, maxIter=15, regParam=0.1, alpha=20.0, seed=SEED, coldStartStrategy='drop').fit(tr)
     return mdl.transform(tr.select('club').distinct().crossJoin(a_df.select('item'))), tr
 with timed('ALS (7 cut-offs)', RT):
     taste = []
-    for t in range(2018, 2024):   # the first archetype season is 2017-18, so the first cut-off with any past signing is 2018
+    for t in range(2018, 2025):   # the first archetype season is 2017-18, so the first cut-off with any past signing is 2018
         sc_, tr_ = als_scores(t); taste.append(sc_.toPandas().assign(t=t))
 sc_.explain()
 inv = {v: k for k, v in a_idx.items()}; TA = pd.concat(taste); TA['archetype'] = TA['item'].map(inv); TA = TA.rename(columns={'club': 'club_id', 'prediction': 'taste'})[['club_id', 't', 'archetype', 'taste']]; TA.to_parquet('lake/club_taste.parquet', index=False)
-SG = sign.toPandas(); trn, tst = SG[SG['season'] <= T0], SG[SG['season'] > T0]
+SG = sign.filter(F.col('cutoff') == T0).toPandas(); trn, tst = SG[SG['season'] <= T0], SG[SG['season'] > T0]
 pop = trn['archetype'].value_counts(); own = trn.groupby(['club', 'archetype']).size(); als0 = TA[TA['t'] == T0].set_index(['club_id', 'archetype'])['taste']
 def rr(row, how):
     opts = [a for a in a_idx if a.startswith(row.fine_pos) and a[len(row.fine_pos):].isdigit()]
@@ -248,7 +253,7 @@ from pyspark.ml.classification import LinearSVC, MultilayerPerceptronClassifier,
 from pyspark.ml import Pipeline
 from pyspark.ml.functions import vector_to_array
 FE_COLS = [f + '_pct' for f in AF] + ['age_num', 'composite_perf_index', 'starter_share'] + ['P_' + p for p in POS] + ['L_' + str(i) for i in range(1, 5)]
-labs = sp.read.parquet('lake/labels_v2').filter('feeder and player_id is not null').select('player_id', 'yr', (F.col('up_tier') >= 1).cast('double').alias('y_v2'), (F.col('best_tier') >= 1).cast('double').alias('y_v1'), 'labeled')
+labs = sp.read.parquet('lake/labels_v2').filter('feeder and player_id is not null and observed24').select('player_id', 'yr', (F.col('up_tier') >= 1).cast('double').alias('y_v2'), (F.col('best_tier') >= 1).cast('double').alias('y_v1'), 'labeled')
 D = feat.join(labs, ['player_id', 'yr']).withColumn('starter_share', F.coalesce('x_starter_share', F.lit(0.0)))
 for p in POS: D = D.withColumn('P_' + p, (F.col('fine_pos') == p).cast('double'))
 for i, L_ in enumerate(LEAGUES[1:], start=1): D = D.withColumn('L_' + str(i), (F.col('comp') == L_).cast('double'))
@@ -274,7 +279,7 @@ summ = CF.groupby(['label', 'model']).agg(mean_AUC=('AUC', 'mean'), hits=('hits@
 BASE = json.load(open('outputs/baseline_metrics.json')); mid_lb = {r['method']: {'mean_AUC': r['mean_AUC'], 'hits': r['hits@K'], 'picks': r['picks']} for r in BASE['leaderboard']}
 M['classification'] = {'n_features': len(FE_COLS), 'by_season': CF.round(4).to_dict('records'), 'summary': summ.round(4).to_dict('records'), 'midsem_leaderboard': mid_lb}
 fig, ax = plt.subplots(figsize=(6.4, 3.4)); s1 = summ[summ['label'] == 'mid-sem label']; allm = [(m, v['mean_AUC'], 'mid-sem (sklearn)') for m, v in mid_lb.items()] + [(r.model, r.mean_AUC, 'end-sem (Spark)') for r in s1.itertuples()]
-allm.sort(key=lambda x: x[1]); ax.barh([a[0] for a in allm], [a[1] for a in allm], color=['#d95f02' if a[2].startswith('end') else '#7f8fa6' for a in allm]); ax.axvline(0.5, color='grey', ls=':'); ax.set_xlim(0.45, 0.75)
+allm.sort(key=lambda x: x[1]); ax.barh([a[0] for a in allm], [a[1] for a in allm], color=[ORANGE if a[2].startswith('end') else GREY for a in allm]); ax.axvline(0.5, color=GREY, ls=':'); ax.set_xlim(0.45, 0.75)
 ax.set_xlabel('mean walk-forward AUC, mid-sem label, test seasons 2019-2021'); ax.tick_params(labelsize=7); ax.set_title('New Spark classifiers (orange) next to the mid-sem leaderboard', fontsize=9); savefig('p3_classification')
 
 # %% [markdown]
@@ -284,12 +289,13 @@ ax.set_xlabel('mean walk-forward AUC, mid-sem label, test seasons 2019-2021'); a
 
 # %%
 with timed('kNN outlier self-join', RT):
-    A = feat.select('player_id', 'yr', 'za', 'composite_perf_index').join(ARs.select('player_id', 'yr', 'archetype'), ['player_id', 'yr']).cache()
-    a_, b_ = A.alias('a'), A.alias('b')
-    knn = (a_.join(b_, (F.col('a.archetype') == F.col('b.archetype')) & (F.col('a.player_id') != F.col('b.player_id'))).select(F.col('a.player_id').alias('player_id'), F.col('a.yr').alias('yr'), dist2('a.za', 'b.za').alias('d'))
+    A = feat.select('player_id', 'yr', 'za', 'composite_perf_index').join(AWs.select('player_id', 'yr', 'archetype', 'cutoff'), ['player_id', 'yr']).cache()
+    a_, b_ = A.filter('yr = cutoff').alias('a'), A.alias('b')      # a player of season y is compared only with players of seasons <= y, in the archetypes of the season-y model
+    knn = (a_.join(b_, (F.col('a.cutoff') == F.col('b.cutoff')) & (F.col('a.archetype') == F.col('b.archetype')) & (F.col('b.yr') <= F.col('a.yr')) & (F.col('a.player_id') != F.col('b.player_id')))
+             .select(F.col('a.player_id').alias('player_id'), F.col('a.yr').alias('yr'), dist2('a.za', 'b.za').alias('d'))
              .withColumn('r', F.row_number().over(W.partitionBy('player_id', 'yr').orderBy('d'))).filter('r <= 10').groupBy('player_id', 'yr').agg(F.mean('d').alias('knn_dist')))
-    out = (A.join(knn, ['player_id', 'yr']).withColumn('knn_pct', F.percent_rank().over(W.partitionBy('archetype').orderBy('knn_dist')))
-            .withColumn('gem', (F.col('knn_pct') >= 0.9) & (F.col('composite_perf_index') >= F.percentile_approx('composite_perf_index', 0.5).over(W.partitionBy('archetype')))))
+    out = (A.filter('yr = cutoff').join(knn, ['player_id', 'yr']).withColumn('knn_pct', F.percent_rank().over(W.partitionBy('yr', 'archetype').orderBy('knn_dist')))
+            .withColumn('gem', (F.col('knn_pct') >= 0.9) & (F.col('composite_perf_index') >= F.percentile_approx('composite_perf_index', 0.5).over(W.partitionBy('yr', 'archetype')))))
     OUT = out.select('player_id', 'yr', 'archetype', 'knn_dist', 'knn_pct', 'gem').toPandas()
 knn.explain(); OUT.to_parquet('lake/outliers.parquet', index=False)
 LO = LB.merge(OUT, on=['player_id', 'yr']); rho, p_rho = stats.spearmanr(LO['knn_pct'], LO['up']); LO['decile'] = pd.qcut(LO['knn_pct'], 10, labels=False, duplicates='drop') + 1; dec = LO.groupby('decile')['up'].agg(['mean', 'size'])
@@ -298,7 +304,7 @@ mid_l = pd.read_parquet('lake/midsem/lake.parquet', columns=['player', 'squad', 
 M['outlier'] = {'rows_scored': len(OUT), 'feeders': len(LO), 'spearman_score_vs_up': float(rho), 'spearman_p': float(p_rho), 'gems_flagged': int(len(g1)), 'gem_move_up_rate': float(g1['up'].mean()), 'rest_move_up_rate': float(g0['up'].mean()), 'gem_fisher_p': float(fp),
                 'top_decile_rate': float(dec['mean'].iloc[-1]), 'bottom_decile_rate': float(dec['mean'].iloc[0]), 'spearman_vs_midsem_iforest': float(stats.spearmanr(mid_l['knn_dist'], mid_l['anom_if'])[0]), 'spearman_vs_midsem_lof': float(stats.spearmanr(mid_l['knn_dist'], mid_l['anom_lof'])[0])}
 print({k: (round(v, 4) if isinstance(v, float) else v) for k, v in M['outlier'].items()})
-fig, ax = plt.subplots(figsize=(5, 3.2)); ax.bar(dec.index, dec['mean']); ax.axhline(LO['up'].mean(), color='grey', ls=':', label='feeder base rate'); ax.set_xlabel('decile of k-NN outlier score inside the archetype'); ax.set_ylabel('move-up rate'); ax.legend(fontsize=7); ax.set_title('Do unusual profiles get bought?', fontsize=9); savefig('p3_outlier')
+fig, ax = plt.subplots(figsize=(5, 3.2)); ax.bar(dec.index, dec['mean']); ax.axhline(LO['up'].mean(), color=GREY, ls=':', label='feeder base rate'); ax.set_xlabel('decile of k-NN outlier score inside the archetype'); ax.set_ylabel('move-up rate'); ax.legend(fontsize=7); ax.set_title('Do unusual profiles get bought?', fontsize=9); savefig('p3_outlier')
 
 # %% [markdown]
 # ## 8. Stream mining: Structured Streaming replay with a Count-Min Sketch
@@ -334,5 +340,5 @@ first90 = RS[RS['r_with_final'] >= 0.9]
 M['stream'] = {'micro_batches': len(RS), 'match_rows': len(long), 'teams': int(long['team'].nunique()), 'teams_matched_to_final': int(RS['teams'].iloc[-1]), 'r_after_5_batches': float(RS['r_with_final'].iloc[4]), 'r_after_10_batches': float(RS['r_with_final'].iloc[9]), 'r_final': float(RS['r_with_final'].iloc[-1]),
                'first_batch_r_ge_0.9': int(first90['batch'].iloc[0]) if len(first90) else None, 'mean_matches_at_r_0.9': float(first90['mean_matches'].iloc[0]) if len(first90) else None, 'cms': cms_err, 'total_deep_events': int(exact_c.sum())}
 print(M['stream'])
-fig, ax = plt.subplots(figsize=(5.4, 3.2)); ax.plot(RS['mean_matches'], RS['r_with_final'], 'o-', ms=3); ax.axhline(0.9, color='grey', ls=':'); ax.set_xlabel('mean matches played per team so far'); ax.set_ylabel('correlation with end-of-season x_dom'); ax.set_title('Streaming team dominance converges to the season value', fontsize=9); savefig('p3_stream')
+fig, ax = plt.subplots(figsize=(5.4, 3.2)); ax.plot(RS['mean_matches'], RS['r_with_final'], 'o-', ms=3); ax.axhline(0.9, color=GREY, ls=':'); ax.set_xlabel('mean matches played per team so far'); ax.set_ylabel('correlation with end-of-season x_dom'); ax.set_title('Streaming team dominance converges to the season value', fontsize=9); savefig('p3_stream')
 _ = put_metrics('phase3', {**M, 'runtime_s': RT})

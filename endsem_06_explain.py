@@ -20,8 +20,8 @@ for Y in (2020, 2021, 2022, 2023):
     X = PF[(PF['t'] == Y) & PF['q_in_pool'] & PF['candidate']]; parts.append((shap.TreeExplainer(models[Y])(X[E.FEATS]).values, X))
 SV = np.vstack([p[0] for p in parts]); XA = pd.concat([p[1] for p in parts]); imp = pd.Series(np.abs(SV).mean(0), index=E.FEATS).sort_values()
 dirn = {f: float(np.corrcoef(XA[f].fillna(XA[f].median()), SV[:, i])[0, 1]) for i, f in enumerate(E.FEATS)}
-fig, ax = plt.subplots(figsize=(6, 3.2)); ax.barh([viz.NICE[f] for f in imp.index], imp.values, color=['#d95f02' if dirn[f] > 0 else '#1f77b4' for f in imp.index]); ax.set_xlabel('mean |SHAP|, unseen events (orange raises rank, blue lowers)'); ax.tick_params(labelsize=7)
-plt.tight_layout(); plt.savefig('outputs/figs/p6_shap_global.png', dpi=160); plt.close()
+fig, ax = plt.subplots(figsize=(6, 3.2)); ax.barh([viz.NICE[f] for f in imp.index], imp.values, color=[ORANGE if dirn[f] > 0 else BLUE for f in imp.index]); ax.set_xlabel('mean |SHAP|, unseen events (orange raises rank, blue lowers)'); ax.tick_params(labelsize=7)
+plt.tight_layout(); plt.savefig('outputs/figs/p6_shap_global.png'); plt.close()
 M['shap_global'] = {'mean_abs_shap': imp.round(4).to_dict(), 'direction_corr': {k: round(v, 3) for k, v in dirn.items()}, 'rows': len(XA)}; print(M['shap_global']['mean_abs_shap'])
 
 # %% [markdown]
@@ -36,7 +36,7 @@ for kind, row in [('hit', r) for r in hits.itertuples()] + [('miss', r) for r in
     X = E.rank(lake, models, row.C, row.t, row.S, row.P, top=10 ** 6); X['rank'] = range(1, len(X) + 1); me = X[X['player_id'] == row.player_id].iloc[0]; tag = f"{kind}_{row.club.replace(' ', '')}_{row.t}_{row.N_name.split()[-1]}"
     pct = {f: float((X[f] < me[f]).mean()) for f in E.FEATS}
     for who, lab_ in ((me, 'signed'), (X.iloc[0], 'top1')):
-        viz.radar(lake, who, row.S, row.t).savefig(f'outputs/figs/case_{tag}_{lab_}_radar.png', dpi=150); plt.close('all'); viz.waterfall(models[row.t], X, int(who.name)).savefig(f'outputs/figs/case_{tag}_{lab_}_shap.png', dpi=150); plt.close('all')
+        viz.radar(lake, who, row.S, row.t).savefig(f'outputs/figs/case_{tag}_{lab_}_radar.png'); plt.close('all'); viz.waterfall(models[row.t], X, int(who.name)).savefig(f'outputs/figs/case_{tag}_{lab_}_shap.png'); plt.close('all')
     cases.append({'kind': kind, 'tag': tag, 'club': row.club, 'league': row.league, 'season': int(row.t), 'starter': row.S_name, 'position': row.P, 'signed': row.N_name, 'from': row.N_from, 'fee': None if pd.isna(row.fee) else float(row.fee), 'rank': int(me['rank']), 'pool': len(X),
                   'signed_feature_percentile_in_pool': {k: round(v, 2) for k, v in pct.items()}, 'signed_values': {f: (None if pd.isna(me[f]) else round(float(me[f]), 3)) for f in E.FEATS}, 'starter_value': None if pd.isna(me['S_value']) else float(me['S_value']), 'signed_value': float(me['value']),
                   'top5': X.head(5)[['player', 'squad', 'age_num', 'value', 'score']].round(3).to_dict('records'), 'url': f"?league={row.league}&club={row.club}&t={row.t}&S={row.S}&X={row.player_id}".replace(' ', '%20')})

@@ -1,198 +1,232 @@
 {
  "phase1": {
   "lake_rows": {
-   "fbref": 10355,
-   "fbref_raw": 18243,
-   "understat_team": 684,
+   "fbref_raw": 21097,
    "tm_transfers": 168248,
    "tm_valuations": 615190,
    "tm_players": 50149,
    "tm_club_minutes": 38935,
-   "tm_tables": 1366
+   "tm_tables": 1366,
+   "fbref": 11792
   },
   "runtime_s": {
-   "write lake": 21.81,
-   "entity resolution": 6.45
+   "write lake": 19.8,
+   "entity resolution": 8.54,
+   "walk-forward style model": 3.51
   },
-  "clubs_mapped": 145,
+  "clubs_mapped": 149,
   "club_vote_share_min": 0.8225806451612904,
-  "rows_linked": 16474,
-  "rows_total": 16865,
-  "match_rate_all": 0.9768158908983101,
-  "match_rate_900": 0.9914710110206038,
-  "match_rate_900_min_cell": 0.981,
-  "feeders_total": 2751,
-  "feeders_unmatched": 33,
-  "mean_confidence": 0.9851913317955567,
-  "ids_multi_spelling": 0,
-  "names_multi_id": 32
+  "rows_linked": 19166,
+  "rows_total": 19507,
+  "match_rate_all": 0.9825190957092326,
+  "match_rate_900": 0.9968868321413547,
+  "match_rate_900_min_cell": 0.984,
+  "feeders_total": 3154,
+  "feeders_unmatched": 13,
+  "mean_confidence": 0.9830462276948763,
+  "ids_multi_spelling": 13,
+  "names_multi_id": 39,
+  "seasons": "2017-18 to 2024-25",
+  "player_seasons": 11792,
+  "player_seasons_2024": 1437,
+  "source_overlap_players": 1600,
+  "source_overlap_min_corr": 0.9999952072968862,
+  "raw_identical_share": 1.0,
+  "wf_neutral_corr_with_midsem": 0.9958693146036509,
+  "supported_elasticities_by_cutoff": {
+   "2017": 31,
+   "2018": 40,
+   "2019": 42,
+   "2020": 42,
+   "2021": 48,
+   "2022": 50,
+   "2023": 47,
+   "2024": 47
+  },
+  "pass3_rows": 85,
+  "pass3_players": 34
  },
  "phase2": {
   "runtime_s": {
-   "club tiers + clean transfers": 22.71,
-   "transfer outcome": 1.6,
-   "replacement events": 1.46
+   "club tiers + clean transfers": 29.75,
+   "transfer outcome": 2.29,
+   "replacement events": 1.84,
+   "all-signings events": 1.35
   },
-  "transfers_clean": 164918,
-  "loan_out_removed": 23044,
-  "loan_return_removed": 30508,
+  "transfers_clean": 166335,
+  "loan_out_removed": 23100,
+  "loan_return_removed": 30564,
   "table_agreement": 0.9912280701754386,
   "top6_agreement": 1.0,
-  "label_compare_n": 1953,
-  "label_agreement_up": 0.9078341013824884,
-  "label_midsem_only": 149,
-  "label_transfer_only": 31,
+  "label_compare_n": 1966,
+  "label_agreement_up": 0.9165818921668362,
+  "label_midsem_only": 132,
+  "label_transfer_only": 32,
   "confusion_tier": {
    "0": {
-    "0": 1403,
-    "1": 51,
-    "2": 29,
-    "3": 81
+    "0.0": 1414,
+    "1.0": 48,
+    "2.0": 22,
+    "3.0": 75
    },
    "1": {
-    "0": 6,
-    "1": 113,
-    "2": 8,
-    "3": 9
+    "0.0": 6,
+    "1.0": 116,
+    "2.0": 9,
+    "3.0": 9
    },
    "2": {
-    "0": 2,
-    "1": 0,
-    "2": 35,
-    "3": 9
+    "0.0": 2,
+    "1.0": 0,
+    "2.0": 42,
+    "3.0": 9
    },
    "3": {
-    "0": 23,
-    "1": 4,
-    "2": 1,
-    "3": 179
+    "0.0": 23,
+    "1.0": 5,
+    "2.0": 1,
+    "3.0": 185
    }
   },
-  "moved_up_rate_v1": 0.26574500768049153,
-  "moved_up_rate_v2_same_rows": 0.20532514080901176,
-  "moved_up_rate_v2_all_seasons": 0.21891096394407653,
+  "moved_up_rate_v1": 0.2650050864699898,
+  "moved_up_rate_v2_same_rows": 0.21414038657171922,
+  "moved_up_rate_v2_all_seasons": 0.22498173849525202,
   "rate_v2_by_season": [
    {
     "yr": 2017,
-    "feeders": 376,
-    "moved_up": 0.176,
-    "elite": 0.12,
+    "feeders": 378,
+    "moved_up": 0.201,
+    "elite": 0.138,
     "observed": true
    },
    {
     "yr": 2018,
-    "feeders": 401,
-    "moved_up": 0.182,
-    "elite": 0.137,
+    "feeders": 405,
+    "moved_up": 0.195,
+    "elite": 0.148,
     "observed": true
    },
    {
     "yr": 2019,
-    "feeders": 356,
-    "moved_up": 0.169,
-    "elite": 0.112,
+    "feeders": 358,
+    "moved_up": 0.176,
+    "elite": 0.117,
     "observed": true
    },
    {
     "yr": 2020,
-    "feeders": 400,
-    "moved_up": 0.23,
+    "feeders": 401,
+    "moved_up": 0.229,
     "elite": 0.13,
     "observed": true
    },
    {
     "yr": 2021,
-    "feeders": 420,
+    "feeders": 424,
     "moved_up": 0.262,
-    "elite": 0.162,
+    "elite": 0.163,
     "observed": true
    },
    {
     "yr": 2022,
-    "feeders": 379,
-    "moved_up": 0.219,
-    "elite": 0.148,
+    "feeders": 381,
+    "moved_up": 0.22,
+    "elite": 0.15,
     "observed": true
    },
    {
     "yr": 2023,
-    "feeders": 386,
-    "moved_up": 0.288,
-    "elite": 0.194,
+    "feeders": 391,
+    "moved_up": 0.284,
+    "elite": 0.192,
     "observed": true
+   },
+   {
+    "yr": 2024,
+    "feeders": 403,
+    "moved_up": 0.156,
+    "elite": 0.114,
+    "observed": false
    }
   ],
-  "person_period_rows": 2562,
-  "person_period_players": 1618,
-  "person_period_events": 314,
-  "person_period_rows_2022_23": 697,
+  "person_period_rows": 2947,
+  "person_period_players": 1840,
+  "person_period_events": 382,
+  "person_period_rows_2022_23": 1072,
   "hazard_by_duration": [
    {
     "dur": 1,
-    "at_risk": 1618,
-    "events": 177,
-    "hazard": 0.109
+    "at_risk": 1840,
+    "events": 211,
+    "hazard": 0.115
    },
    {
     "dur": 2,
-    "at_risk": 638,
-    "events": 88,
-    "hazard": 0.138
+    "at_risk": 753,
+    "events": 113,
+    "hazard": 0.15
    },
    {
     "dur": 3,
-    "at_risk": 217,
-    "events": 35,
-    "hazard": 0.161
+    "at_risk": 247,
+    "events": 39,
+    "hazard": 0.158
    },
    {
     "dur": 4,
-    "at_risk": 59,
-    "events": 8,
-    "hazard": 0.136
+    "at_risk": 73,
+    "events": 13,
+    "hazard": 0.178
    },
    {
     "dur": 5,
-    "at_risk": 23,
+    "at_risk": 25,
     "events": 6,
-    "hazard": 0.261
+    "hazard": 0.24
    },
    {
     "dur": 6,
-    "at_risk": 7,
+    "at_risk": 8,
+    "events": 0,
+    "hazard": 0.0
+   },
+   {
+    "dur": 7,
+    "at_risk": 1,
     "events": 0,
     "hazard": 0.0
    }
   ],
-  "events": 464,
-  "queries": 342,
-  "signings": 371,
-  "signings_in_pool": 86,
-  "in_pool_share": 0.23180592991913745,
-  "from_top5_share": 0.7574123989218329,
+  "events": 593,
+  "queries": 429,
+  "signings": 479,
+  "signings_in_pool": 115,
+  "in_pool_share": 0.24008350730688935,
+  "from_top5_share": 0.7536534446764092,
   "out_of_pool_reasons": {
-   "five-league club, but elite / too old / under 900 min / unmatched": 195,
-   "club outside the five leagues": 90
+   "five-league club, but elite / too old / under 900 min / unmatched": 246,
+   "club outside the five leagues": 118
   },
-  "in_pool_events": 102,
-  "in_pool_queries": 95,
+  "in_pool_events": 138,
+  "in_pool_queries": 128,
   "in_pool_queries_by_season": {
-   "2017": 6,
+   "2017": 12,
    "2018": 18,
    "2019": 7,
    "2020": 8,
    "2021": 18,
    "2022": 18,
-   "2023": 20
+   "2023": 20,
+   "2024": 27
   },
   "in_pool_queries_by_pos": {
-   "AM": 3,
-   "CB": 27,
-   "CM": 10,
-   "DM": 5,
-   "FB": 19,
-   "ST": 15,
-   "W": 16
+   "AM": 5,
+   "CB": 34,
+   "CM": 13,
+   "DM": 7,
+   "FB": 25,
+   "ST": 23,
+   "W": 21
   },
   "params": {
    "POOL_MAX_AGE": 26,
@@ -202,8 +236,24 @@
    "SIGNING_MIN_MIN": 450,
    "DATA_END": "2026-06-01"
   },
-  "feeders_with_transfer_record": 0.9091243561442237,
-  "label_midsem_only_no_record": 23
+  "feeders_with_transfer_record": 0.9595670168736071,
+  "label_midsem_only_no_record": 2,
+  "all_signings": 1941,
+  "all_signing_queries": 1657,
+  "all_signings_by_season": {
+   "2017": 289,
+   "2018": 259,
+   "2019": 177,
+   "2020": 195,
+   "2021": 287,
+   "2022": 250,
+   "2023": 245,
+   "2024": 239
+  },
+  "all_signings_elite_club": 760,
+  "all_signings_fee_positive_share": 0.5146831530139103,
+  "inferred_moves": 1417,
+  "inferred_move_players": 750
  },
  "phase3": {
   "lsh": {
@@ -211,226 +261,226 @@
     {
      "bucketLength": 2.0,
      "numHashTables": 1,
-     "pairs": 15342,
-     "set_share": 0.4680864046863559,
-     "recall_top25": 0.5711111111111111,
-     "signing_recall": 0.49019607843137253,
-     "seconds": 0.72
+     "pairs": 19430,
+     "set_share": 0.4742841799497156,
+     "recall_top25": 0.5768764568764568,
+     "signing_recall": 0.463768115942029,
+     "seconds": 0.87
     },
     {
      "bucketLength": 2.0,
      "numHashTables": 2,
-     "pairs": 22606,
-     "set_share": 0.6897119843788138,
-     "recall_top25": 0.8012865497076024,
-     "signing_recall": 0.7156862745098039,
-     "seconds": 0.48
+     "pairs": 28325,
+     "set_share": 0.6914101593965875,
+     "recall_top25": 0.8076456876456877,
+     "signing_recall": 0.717391304347826,
+     "seconds": 0.47
     },
     {
      "bucketLength": 2.0,
      "numHashTables": 4,
-     "pairs": 28898,
-     "set_share": 0.8816817183304857,
-     "recall_top25": 0.9467836257309942,
-     "signing_recall": 0.9411764705882353,
-     "seconds": 0.39
+     "pairs": 36198,
+     "set_share": 0.8835892303561403,
+     "recall_top25": 0.9508624708624709,
+     "signing_recall": 0.8840579710144928,
+     "seconds": 0.55
     },
     {
      "bucketLength": 2.0,
      "numHashTables": 8,
-     "pairs": 32103,
-     "set_share": 0.9794666829387356,
-     "recall_top25": 0.9968421052631579,
-     "signing_recall": 0.9803921568627451,
-     "seconds": 0.47
+     "pairs": 40134,
+     "set_share": 0.9796665608904728,
+     "recall_top25": 0.9966433566433567,
+     "signing_recall": 0.9637681159420289,
+     "seconds": 0.53
     },
     {
      "bucketLength": 4.0,
      "numHashTables": 1,
-     "pairs": 16553,
-     "set_share": 0.5050341713448865,
-     "recall_top25": 0.607953216374269,
-     "signing_recall": 0.5294117647058824,
-     "seconds": 0.34
+     "pairs": 20760,
+     "set_share": 0.5067493348304734,
+     "recall_top25": 0.612027972027972,
+     "signing_recall": 0.4927536231884058,
+     "seconds": 0.35
     },
     {
      "bucketLength": 4.0,
      "numHashTables": 2,
-     "pairs": 24717,
-     "set_share": 0.754118867463998,
-     "recall_top25": 0.8683040935672515,
-     "signing_recall": 0.7843137254901961,
-     "seconds": 0.33
-    },
-    {
-     "bucketLength": 4.0,
-     "numHashTables": 4,
-     "pairs": 30117,
-     "set_share": 0.9188735660239199,
-     "recall_top25": 0.9729824561403508,
-     "signing_recall": 0.9509803921568627,
+     "pairs": 30705,
+     "set_share": 0.7495056997095223,
+     "recall_top25": 0.8704895104895105,
+     "signing_recall": 0.7681159420289855,
      "seconds": 0.45
     },
     {
      "bucketLength": 4.0,
+     "numHashTables": 4,
+     "pairs": 37552,
+     "set_share": 0.9166402226182049,
+     "recall_top25": 0.9754778554778555,
+     "signing_recall": 0.9057971014492754,
+     "seconds": 0.41
+    },
+    {
+     "bucketLength": 4.0,
      "numHashTables": 8,
-     "pairs": 32373,
-     "set_share": 0.9877044178667318,
-     "recall_top25": 0.9985964912280701,
-     "signing_recall": 0.9901960784313726,
-     "seconds": 0.49
+     "pairs": 40446,
+     "set_share": 0.9872824468474626,
+     "recall_top25": 0.9988811188811189,
+     "signing_recall": 0.9710144927536232,
+     "seconds": 0.55
     }
    ],
    "chosen": {
     "bucketLength": 2.0,
     "numHashTables": 4.0,
-    "pairs": 28898.0,
-    "set_share": 0.8816817183304857,
-    "recall_top25": 0.9467836257309942,
-    "signing_recall": 0.9411764705882353,
-    "seconds": 0.39
+    "pairs": 36198.0,
+    "set_share": 0.8835892303561403,
+    "recall_top25": 0.9508624708624709,
+    "signing_recall": 0.8840579710144928,
+    "seconds": 0.55
    },
-   "exact_pairs": 32776,
-   "queries": 342,
-   "mean_pool_per_query": 95.83625730994152,
-   "minhash_pairs": 12226,
-   "minhash_signing_recall": 0.43137254901960786,
-   "minhash_recall_top25": 0.5396491228070175,
-   "brp_minhash_jaccard": 0.3686102236421725,
-   "union_pairs": 30048,
-   "union_set_share": 0.9167683670978765,
-   "union_signing_recall": 0.9509803921568627,
-   "union_recall_top25": 0.975672514619883,
-   "in_pool_signing_pairs": 102
+   "exact_pairs": 40967,
+   "queries": 429,
+   "mean_pool_per_query": 95.49417249417249,
+   "minhash_pairs": 15246,
+   "minhash_signing_recall": 0.45652173913043476,
+   "minhash_recall_top25": 0.5393939393939394,
+   "brp_minhash_jaccard": 0.3690289272693403,
+   "union_pairs": 37577,
+   "union_set_share": 0.9172504698903996,
+   "union_signing_recall": 0.9130434782608695,
+   "union_recall_top25": 0.9756643356643356,
+   "in_pool_signing_pairs": 138
   },
   "prefixspan": {
-   "train_sequences": 1133,
-   "test_sequences": 1585,
-   "frequent_patterns": 477,
-   "patterns_len2plus": 336,
-   "kept_rules": 176,
-   "kept_multi_season": 144,
-   "base_rate_train": 0.17563989408649602,
-   "base_rate_test": 0.24984227129337538,
-   "flagged_test": 1293,
-   "flagged_rate_test": 0.27532869296210366,
-   "oot_lift": 1.1020100463255917,
-   "fisher_p": 1.7263868637314894e-07,
-   "rank_corr_train_test_lift": 0.2583203689428467,
+   "train_sequences": 1141,
+   "test_sequences": 1597,
+   "frequent_patterns": 461,
+   "patterns_len2plus": 320,
+   "kept_rules": 159,
+   "kept_multi_season": 127,
+   "base_rate_train": 0.19106047326906223,
+   "base_rate_test": 0.24921728240450847,
+   "flagged_test": 1257,
+   "flagged_rate_test": 0.273667462211615,
+   "oot_lift": 1.0981078822913293,
+   "fisher_p": 4.907823819339093e-06,
+   "rank_corr_train_test_lift": 0.2777728914731353,
    "top": [
     {
-     "pattern": "{lg=SA} -> {club=mid, form=mid}",
-     "n_train": 34,
-     "lift_train": 2.34,
-     "n_test": 72,
-     "lift_test": 1.06
-    },
-    {
      "pattern": "{club=mid, form=high, role=starter}",
-     "n_train": 75,
-     "lift_train": 2.28,
-     "n_test": 132,
-     "lift_test": 1.73
+     "n_train": 76,
+     "lift_train": 2.13,
+     "n_test": 134,
+     "lift_test": 1.77
     },
     {
      "pattern": "{club=mid} -> {club=mid, form=mid, role=starter}",
      "n_train": 41,
-     "lift_train": 2.22,
-     "n_test": 122,
-     "lift_test": 1.41
+     "lift_train": 2.04,
+     "n_test": 126,
+     "lift_test": 1.46
     },
     {
-     "pattern": "{club=mid, form=mid, lg=LL, role=starter}",
+     "pattern": "{club=mid, form=mid} -> {club=mid, role=starter}",
+     "n_train": 44,
+     "lift_train": 2.02,
+     "n_test": 120,
+     "lift_test": 1.64
+    },
+    {
+     "pattern": "{club=mid} -> {club=mid, role=starter}",
+     "n_train": 67,
+     "lift_train": 1.95,
+     "n_test": 191,
+     "lift_test": 1.45
+    },
+    {
+     "pattern": "{role=starter} -> {lg=SA, role=starter}",
      "n_train": 38,
-     "lift_train": 2.1,
-     "n_test": 51,
-     "lift_test": 1.57
+     "lift_train": 1.93,
+     "n_test": 87,
+     "lift_test": 1.11
     },
     {
-     "pattern": "{form=high} -> {role=starter}",
-     "n_train": 50,
-     "lift_train": 2.05,
-     "n_test": 145,
-     "lift_test": 1.49
+     "pattern": "{form=high, lg=SA, role=starter}",
+     "n_train": 41,
+     "lift_train": 1.91,
+     "n_test": 44,
+     "lift_test": 1.19
     },
     {
-     "pattern": "{form=mid} -> {form=mid, lg=SA, role=starter}",
-     "n_train": 34,
-     "lift_train": 2.01,
-     "n_test": 80,
-     "lift_test": 0.95
+     "pattern": "{club=mid, role=starter} -> {club=mid, role=starter}",
+     "n_train": 44,
+     "lift_train": 1.9,
+     "n_test": 116,
+     "lift_test": 1.59
     },
     {
-     "pattern": "{club=mid, lg=SA} -> {form=mid}",
-     "n_train": 34,
-     "lift_train": 2.01,
-     "n_test": 64,
-     "lift_test": 1.25
-    },
-    {
-     "pattern": "{lg=SA, role=starter} -> {form=mid}",
-     "n_train": 34,
-     "lift_train": 2.01,
-     "n_test": 82,
-     "lift_test": 0.93
+     "pattern": "{lg=SA, role=starter} -> {role=starter}",
+     "n_train": 36,
+     "lift_train": 1.89,
+     "n_test": 81,
+     "lift_test": 1.24
     }
    ],
    "top_multi_season": [
     {
-     "pattern": "{lg=SA} -> {club=mid, form=mid}",
-     "n_train": 34,
-     "lift_train": 2.34,
-     "n_test": 72,
-     "lift_test": 1.06
-    },
-    {
      "pattern": "{club=mid} -> {club=mid, form=mid, role=starter}",
      "n_train": 41,
-     "lift_train": 2.22,
-     "n_test": 122,
-     "lift_test": 1.41
+     "lift_train": 2.04,
+     "n_test": 126,
+     "lift_test": 1.46
     },
     {
-     "pattern": "{form=high} -> {role=starter}",
-     "n_train": 50,
-     "lift_train": 2.05,
-     "n_test": 145,
-     "lift_test": 1.49
+     "pattern": "{club=mid, form=mid} -> {club=mid, role=starter}",
+     "n_train": 44,
+     "lift_train": 2.02,
+     "n_test": 120,
+     "lift_test": 1.64
     },
     {
-     "pattern": "{form=mid} -> {form=mid, lg=SA, role=starter}",
-     "n_train": 34,
-     "lift_train": 2.01,
-     "n_test": 80,
-     "lift_test": 0.95
-    },
-    {
-     "pattern": "{club=mid, lg=SA} -> {form=mid}",
-     "n_train": 34,
-     "lift_train": 2.01,
-     "n_test": 64,
-     "lift_test": 1.25
-    },
-    {
-     "pattern": "{lg=SA, role=starter} -> {form=mid}",
-     "n_train": 34,
-     "lift_train": 2.01,
-     "n_test": 82,
-     "lift_test": 0.93
-    },
-    {
-     "pattern": "{form=high} -> {form=high}",
-     "n_train": 40,
-     "lift_train": 1.99,
-     "n_test": 122,
-     "lift_test": 1.71
-    },
-    {
-     "pattern": "{form=mid, lg=SA} -> {form=mid, role=starter}",
-     "n_train": 35,
+     "pattern": "{club=mid} -> {club=mid, role=starter}",
+     "n_train": 67,
      "lift_train": 1.95,
-     "n_test": 79,
+     "n_test": 191,
+     "lift_test": 1.45
+    },
+    {
+     "pattern": "{role=starter} -> {lg=SA, role=starter}",
+     "n_train": 38,
+     "lift_train": 1.93,
+     "n_test": 87,
      "lift_test": 1.11
+    },
+    {
+     "pattern": "{club=mid, role=starter} -> {club=mid, role=starter}",
+     "n_train": 44,
+     "lift_train": 1.9,
+     "n_test": 116,
+     "lift_test": 1.59
+    },
+    {
+     "pattern": "{lg=SA, role=starter} -> {role=starter}",
+     "n_train": 36,
+     "lift_train": 1.89,
+     "n_test": 81,
+     "lift_test": 1.24
+    },
+    {
+     "pattern": "{lg=SA, role=starter} -> {lg=SA, role=starter}",
+     "n_train": 36,
+     "lift_train": 1.89,
+     "n_test": 78,
+     "lift_test": 1.23
+    },
+    {
+     "pattern": "{lg=L1} -> {club=mid, lg=L1}",
+     "n_train": 40,
+     "lift_train": 1.83,
+     "n_test": 139,
+     "lift_test": 1.5
     }
    ]
   },
@@ -439,493 +489,486 @@
     {
      "fine_pos": "CB",
      "k": 2,
-     "silhouette": 0.3855
+     "silhouette": 0.4467
     },
     {
      "fine_pos": "CB",
      "k": 3,
-     "silhouette": 0.1763
+     "silhouette": 0.1907
     },
     {
      "fine_pos": "CB",
      "k": 4,
-     "silhouette": 0.1858
+     "silhouette": 0.2041
     },
     {
      "fine_pos": "CB",
      "k": 5,
-     "silhouette": 0.1278
+     "silhouette": 0.1452
     },
     {
      "fine_pos": "CB",
      "k": 6,
-     "silhouette": 0.1008
+     "silhouette": 0.129
     },
     {
      "fine_pos": "FB",
      "k": 2,
-     "silhouette": 0.2929
+     "silhouette": 0.2871
     },
     {
      "fine_pos": "FB",
      "k": 3,
-     "silhouette": 0.1505
+     "silhouette": 0.1978
     },
     {
      "fine_pos": "FB",
      "k": 4,
-     "silhouette": 0.1364
+     "silhouette": 0.1397
     },
     {
      "fine_pos": "FB",
      "k": 5,
-     "silhouette": 0.0986
+     "silhouette": 0.1153
     },
     {
      "fine_pos": "FB",
      "k": 6,
-     "silhouette": 0.0881
+     "silhouette": 0.0967
     },
     {
      "fine_pos": "DM",
      "k": 2,
-     "silhouette": 0.3112
+     "silhouette": 0.302
     },
     {
      "fine_pos": "DM",
      "k": 3,
-     "silhouette": 0.1505
+     "silhouette": 0.1526
     },
     {
      "fine_pos": "DM",
      "k": 4,
-     "silhouette": 0.1431
+     "silhouette": 0.1496
     },
     {
      "fine_pos": "DM",
-     "k": 5,
-     "silhouette": 0.0939
-    },
-    {
-     "fine_pos": "DM",
-     "k": 6,
-     "silhouette": 0.106
-    },
-    {
-     "fine_pos": "CM",
-     "k": 2,
-     "silhouette": 0.3173
-    },
-    {
-     "fine_pos": "CM",
-     "k": 3,
-     "silhouette": 0.1697
-    },
-    {
-     "fine_pos": "CM",
-     "k": 4,
-     "silhouette": 0.1554
-    },
-    {
-     "fine_pos": "CM",
-     "k": 5,
-     "silhouette": 0.1235
-    },
-    {
-     "fine_pos": "CM",
-     "k": 6,
-     "silhouette": 0.1173
-    },
-    {
-     "fine_pos": "AM",
-     "k": 2,
-     "silhouette": 0.2872
-    },
-    {
-     "fine_pos": "AM",
-     "k": 3,
-     "silhouette": 0.143
-    },
-    {
-     "fine_pos": "AM",
-     "k": 4,
-     "silhouette": 0.1476
-    },
-    {
-     "fine_pos": "AM",
-     "k": 5,
-     "silhouette": 0.1112
-    },
-    {
-     "fine_pos": "AM",
-     "k": 6,
-     "silhouette": 0.116
-    },
-    {
-     "fine_pos": "W",
-     "k": 2,
-     "silhouette": 0.3155
-    },
-    {
-     "fine_pos": "W",
-     "k": 3,
-     "silhouette": 0.1872
-    },
-    {
-     "fine_pos": "W",
-     "k": 4,
-     "silhouette": 0.1819
-    },
-    {
-     "fine_pos": "W",
-     "k": 5,
-     "silhouette": 0.1238
-    },
-    {
-     "fine_pos": "W",
-     "k": 6,
-     "silhouette": 0.1205
-    },
-    {
-     "fine_pos": "ST",
-     "k": 2,
-     "silhouette": 0.3256
-    },
-    {
-     "fine_pos": "ST",
-     "k": 3,
-     "silhouette": 0.1929
-    },
-    {
-     "fine_pos": "ST",
-     "k": 4,
-     "silhouette": 0.1768
-    },
-    {
-     "fine_pos": "ST",
      "k": 5,
      "silhouette": 0.1182
     },
     {
+     "fine_pos": "DM",
+     "k": 6,
+     "silhouette": 0.1097
+    },
+    {
+     "fine_pos": "CM",
+     "k": 2,
+     "silhouette": 0.3368
+    },
+    {
+     "fine_pos": "CM",
+     "k": 3,
+     "silhouette": 0.1871
+    },
+    {
+     "fine_pos": "CM",
+     "k": 4,
+     "silhouette": 0.1698
+    },
+    {
+     "fine_pos": "CM",
+     "k": 5,
+     "silhouette": 0.1405
+    },
+    {
+     "fine_pos": "CM",
+     "k": 6,
+     "silhouette": 0.1324
+    },
+    {
+     "fine_pos": "AM",
+     "k": 2,
+     "silhouette": 0.2716
+    },
+    {
+     "fine_pos": "AM",
+     "k": 3,
+     "silhouette": 0.2158
+    },
+    {
+     "fine_pos": "AM",
+     "k": 4,
+     "silhouette": 0.1396
+    },
+    {
+     "fine_pos": "AM",
+     "k": 5,
+     "silhouette": 0.1054
+    },
+    {
+     "fine_pos": "AM",
+     "k": 6,
+     "silhouette": 0.085
+    },
+    {
+     "fine_pos": "W",
+     "k": 2,
+     "silhouette": 0.3031
+    },
+    {
+     "fine_pos": "W",
+     "k": 3,
+     "silhouette": 0.1755
+    },
+    {
+     "fine_pos": "W",
+     "k": 4,
+     "silhouette": 0.1741
+    },
+    {
+     "fine_pos": "W",
+     "k": 5,
+     "silhouette": 0.1416
+    },
+    {
+     "fine_pos": "W",
+     "k": 6,
+     "silhouette": 0.1012
+    },
+    {
+     "fine_pos": "ST",
+     "k": 2,
+     "silhouette": 0.3237
+    },
+    {
+     "fine_pos": "ST",
+     "k": 3,
+     "silhouette": 0.1882
+    },
+    {
+     "fine_pos": "ST",
+     "k": 4,
+     "silhouette": 0.176
+    },
+    {
+     "fine_pos": "ST",
+     "k": 5,
+     "silhouette": 0.1181
+    },
+    {
      "fine_pos": "ST",
      "k": 6,
-     "silhouette": 0.1212
+     "silhouette": 0.1284
     }
    ],
    "k_chosen": {
-    "AM": 4,
     "CB": 4,
-    "CM": 3,
-    "DM": 3,
     "FB": 3,
-    "ST": 3,
-    "W": 3
+    "DM": 3,
+    "CM": 3,
+    "AM": 3,
+    "W": 3,
+    "ST": 3
    },
-   "archetypes": 23,
-   "silhouette_chosen_mean": 0.16916639652861654,
-   "chi2": 113.20603895957757,
-   "chi2_p": 2.942930974371872e-14,
-   "cramers_v": 0.2040845232416612,
+   "archetypes": 22,
+   "silhouette_chosen_mean": 0.1887285732959647,
+   "chi2": 98.62900918806896,
+   "chi2_p": 5.039531590144661e-12,
+   "cramers_v": 0.1897953697842807,
    "table": [
     {
      "archetype": "AM0",
-     "n": 145,
-     "feeders": 50,
-     "move_up_rate": 0.26,
-     "defining traits (mean z)": "npxg +0.4, clr +0.3, gls +0.3"
+     "n": 140,
+     "feeders": 43,
+     "move_up_rate": 0.279,
+     "defining traits (mean z)": "npxg +0.3, clr +0.2, gls +0.2"
     },
     {
      "archetype": "AM1",
-     "n": 169,
-     "feeders": 45,
-     "move_up_rate": 0.089,
-     "defining traits (mean z)": "int +0.7, tklw +0.6, clr +0.6"
+     "n": 224,
+     "feeders": 56,
+     "move_up_rate": 0.107,
+     "defining traits (mean z)": "blocks +0.7, clr +0.6, int +0.5"
     },
     {
      "archetype": "AM2",
-     "n": 215,
-     "feeders": 62,
-     "move_up_rate": 0.226,
-     "defining traits (mean z)": "prgc +0.4, kp +0.3, sca +0.3"
-    },
-    {
-     "archetype": "AM3",
-     "n": 111,
-     "feeders": 11,
-     "move_up_rate": 0.273,
-     "defining traits (mean z)": "sca +1.3, ppa +1.1, kp +1.1"
+     "n": 362,
+     "feeders": 69,
+     "move_up_rate": 0.261,
+     "defining traits (mean z)": "sca +0.6, kp +0.6, ppa +0.6"
     },
     {
      "archetype": "CB0",
-     "n": 852,
-     "feeders": 247,
-     "move_up_rate": 0.182,
-     "defining traits (mean z)": "clr +0.1, blocks +0.1, tklw -0.1"
+     "n": 951,
+     "feeders": 246,
+     "move_up_rate": 0.191,
+     "defining traits (mean z)": "blocks +0.2, clr -0.1, tklw -0.2"
     },
     {
      "archetype": "CB1",
-     "n": 877,
-     "feeders": 179,
-     "move_up_rate": 0.212,
+     "n": 993,
+     "feeders": 176,
+     "move_up_rate": 0.205,
      "defining traits (mean z)": "npxg +0.6, gls +0.5, sh +0.5"
     },
     {
      "archetype": "CB2",
-     "n": 516,
-     "feeders": 130,
-     "move_up_rate": 0.192,
-     "defining traits (mean z)": "prgp +0.8, prgc +0.8, sca +0.8"
+     "n": 634,
+     "feeders": 145,
+     "move_up_rate": 0.2,
+     "defining traits (mean z)": "sca +0.8, prgp +0.8, prgc +0.7"
     },
     {
      "archetype": "CB3",
-     "n": 147,
-     "feeders": 29,
-     "move_up_rate": 0.483,
-     "defining traits (mean z)": "kp +2.3, att_pen +2.2, sca +2.2"
+     "n": 168,
+     "feeders": 30,
+     "move_up_rate": 0.5,
+     "defining traits (mean z)": "kp +2.2, sca +2.1, ppa +2.1"
     },
     {
      "archetype": "CM0",
-     "n": 321,
-     "feeders": 93,
-     "move_up_rate": 0.065,
-     "defining traits (mean z)": "clr +0.4, blocks +0.4, int +0.4"
+     "n": 405,
+     "feeders": 90,
+     "move_up_rate": 0.067,
+     "defining traits (mean z)": "blocks +0.3, clr +0.2, int +0.2"
     },
     {
      "archetype": "CM1",
-     "n": 472,
-     "feeders": 118,
-     "move_up_rate": 0.178,
-     "defining traits (mean z)": "clr +0.4, int +0.3, blocks +0.3"
+     "n": 461,
+     "feeders": 103,
+     "move_up_rate": 0.175,
+     "defining traits (mean z)": "clr +0.7, blocks +0.6, aer_won +0.4"
     },
     {
      "archetype": "CM2",
-     "n": 696,
-     "feeders": 193,
-     "move_up_rate": 0.259,
-     "defining traits (mean z)": "sca +0.7, kp +0.7, ppa +0.6"
+     "n": 840,
+     "feeders": 211,
+     "move_up_rate": 0.265,
+     "defining traits (mean z)": "sca +0.6, kp +0.6, ppa +0.6"
     },
     {
      "archetype": "DM0",
-     "n": 228,
-     "feeders": 51,
-     "move_up_rate": 0.118,
-     "defining traits (mean z)": "clr +0.3, blocks +0.2, int -0.1"
+     "n": 268,
+     "feeders": 56,
+     "move_up_rate": 0.161,
+     "defining traits (mean z)": "blocks +0.3, clr +0.3, int -0.3"
     },
     {
      "archetype": "DM1",
-     "n": 366,
-     "feeders": 90,
-     "move_up_rate": 0.133,
-     "defining traits (mean z)": "blocks +0.3, clr +0.3, int +0.3"
+     "n": 383,
+     "feeders": 79,
+     "move_up_rate": 0.127,
+     "defining traits (mean z)": "blocks +0.4, clr +0.3, aer_won +0.2"
     },
     {
      "archetype": "DM2",
-     "n": 462,
-     "feeders": 137,
-     "move_up_rate": 0.358,
-     "defining traits (mean z)": "sca +0.8, kp +0.7, ppa +0.7"
+     "n": 543,
+     "feeders": 145,
+     "move_up_rate": 0.345,
+     "defining traits (mean z)": "ppa +0.7, sca +0.7, kp +0.6"
     },
     {
      "archetype": "FB0",
-     "n": 906,
-     "feeders": 248,
-     "move_up_rate": 0.262,
-     "defining traits (mean z)": "sca +0.7, kp +0.6, att_pen +0.6"
+     "n": 438,
+     "feeders": 94,
+     "move_up_rate": 0.138,
+     "defining traits (mean z)": "blocks +0.7, clr +0.4, aer_won +0.1"
     },
     {
      "archetype": "FB1",
-     "n": 359,
-     "feeders": 92,
-     "move_up_rate": 0.13,
-     "defining traits (mean z)": "blocks +0.7, clr +0.6, aer_won +0.2"
+     "n": 625,
+     "feeders": 151,
+     "move_up_rate": 0.106,
+     "defining traits (mean z)": "blocks +0.2, tklw +0.2, aer_won +0.1"
     },
     {
      "archetype": "FB2",
-     "n": 583,
-     "feeders": 159,
-     "move_up_rate": 0.107,
-     "defining traits (mean z)": "int +0.3, clr +0.3, tklw +0.3"
+     "n": 1058,
+     "feeders": 257,
+     "move_up_rate": 0.268,
+     "defining traits (mean z)": "sca +0.7, kp +0.7, sh +0.6"
     },
     {
      "archetype": "ST0",
-     "n": 425,
-     "feeders": 117,
-     "move_up_rate": 0.154,
-     "defining traits (mean z)": "clr +0.4, blocks +0.2, tklw +0.2"
+     "n": 453,
+     "feeders": 111,
+     "move_up_rate": 0.207,
+     "defining traits (mean z)": "clr +0.4, blocks +0.3, aer_won +0.1"
     },
     {
      "archetype": "ST1",
-     "n": 488,
-     "feeders": 114,
-     "move_up_rate": 0.298,
-     "defining traits (mean z)": "npxg +0.6, gls +0.5, sh +0.5"
+     "n": 529,
+     "feeders": 101,
+     "move_up_rate": 0.277,
+     "defining traits (mean z)": "npxg +0.6, gls +0.5, sh +0.4"
     },
     {
      "archetype": "ST2",
-     "n": 566,
-     "feeders": 125,
-     "move_up_rate": 0.368,
-     "defining traits (mean z)": "prgc +0.9, sca +0.9, ppa +0.8"
+     "n": 691,
+     "feeders": 146,
+     "move_up_rate": 0.349,
+     "defining traits (mean z)": "ppa +0.8, sca +0.7, take_on +0.7"
     },
     {
      "archetype": "W0",
-     "n": 562,
-     "feeders": 168,
-     "move_up_rate": 0.161,
-     "defining traits (mean z)": "clr +0.7, int +0.5, blocks +0.5"
+     "n": 689,
+     "feeders": 179,
+     "move_up_rate": 0.173,
+     "defining traits (mean z)": "clr +0.6, blocks +0.5, tklw +0.3"
     },
     {
      "archetype": "W1",
-     "n": 411,
-     "feeders": 146,
-     "move_up_rate": 0.26,
-     "defining traits (mean z)": "npxg +0.7, att_pen +0.6, gls +0.6"
+     "n": 453,
+     "feeders": 136,
+     "move_up_rate": 0.279,
+     "defining traits (mean z)": "npxg +0.7, att_pen +0.7, gls +0.6"
     },
     {
      "archetype": "W2",
-     "n": 390,
+     "n": 445,
      "feeders": 114,
-     "move_up_rate": 0.333,
+     "move_up_rate": 0.307,
      "defining traits (mean z)": "sca +1.0, kp +0.9, ppa +0.9"
     }
    ]
   },
   "runtime_s": {
-   "exact same-position join": 0.92,
-   "MinHash join": 0.57,
-   "PrefixSpan": 1.01,
-   "BisectingKMeans (7 positions x k=2..6)": 56.08,
-   "GraphFrames PageRank (7 seasons x 2 directions)": 21.54,
-   "PowerIterationClustering": 13.02,
-   "ALS (7 cut-offs)": 13.22,
-   "LinearSVC + MLP + LR walk-forward": 146.84,
-   "kNN outlier self-join": 4.42,
-   "Structured Streaming replay": 10.29
+   "exact same-position join": 0.96,
+   "MinHash join": 0.6,
+   "PrefixSpan": 1.22,
+   "BisectingKMeans (k chosen on seasons <= 2019, then one refit per season cut-off)": 130.81,
+   "GraphFrames PageRank (8 seasons x 2 directions)": 23.06,
+   "PowerIterationClustering": 12.25,
+   "ALS (7 cut-offs)": 16.41,
+   "LinearSVC + MLP + LR walk-forward": 188.16,
+   "kNN outlier self-join": 3.15,
+   "Structured Streaming replay": 10.71
   },
   "graph": {
-   "edges": 61230,
+   "edges": 62535,
    "clubs": 11401,
-   "auc_pipeline_rank_alone": 0.5733817121460643,
-   "auc_sales_count_alone": 0.5791982150648088,
-   "auc_dest_rank_alone": 0.5315185755863723,
-   "feeders_scored": 2236,
-   "club_level_spearman": 0.24330207152273528,
-   "club_level_spearman_p": 4.996510531526875e-06,
-   "club_seasons": 344,
+   "auc_pipeline_rank_alone": 0.5818840967465753,
+   "auc_sales_count_alone": 0.5821057184646119,
+   "auc_dest_rank_alone": 0.5301530393835616,
+   "feeders_scored": 2504,
+   "club_level_spearman": 0.27013830536371963,
+   "club_level_spearman_p": 6.24104546919642e-08,
+   "club_seasons": 389,
    "top_pipeline_2023": [
     {
-     "club": "Salzburg",
-     "pr_pipe": 3.454,
-     "pr_dest": 1.876,
-     "sales": 72
+     "club": "Red Star",
+     "pr_pipe": 3.416,
+     "pr_dest": 2.089,
+     "sales": 82
     },
     {
-     "club": "Indep. Medell\u00edn",
-     "pr_pipe": 3.264,
-     "pr_dest": 0.933,
-     "sales": 46
+     "club": "Salzburg",
+     "pr_pipe": 3.416,
+     "pr_dest": 1.791,
+     "sales": 82
+    },
+    {
+     "club": "Inter Milan",
+     "pr_pipe": 3.055,
+     "pr_dest": 3.055,
+     "sales": 114
     },
     {
      "club": "Olympiacos",
-     "pr_pipe": 3.173,
-     "pr_dest": 3.857,
-     "sales": 83
-    },
-    {
-     "club": "Benfica",
-     "pr_pipe": 3.073,
-     "pr_dest": 2.842,
-     "sales": 99
+     "pr_pipe": 3.05,
+     "pr_dest": 3.66,
+     "sales": 100
     },
     {
      "club": "Boca Juniors",
-     "pr_pipe": 2.974,
-     "pr_dest": 1.462,
-     "sales": 56
+     "pr_pipe": 2.95,
+     "pr_dest": 1.631,
+     "sales": 69
     },
     {
-     "club": "Indep. Santa Fe",
-     "pr_pipe": 2.908,
-     "pr_dest": 1.229,
-     "sales": 39
-    },
-    {
-     "club": "Red Star",
-     "pr_pipe": 2.872,
-     "pr_dest": 1.939,
-     "sales": 60
-    },
-    {
-     "club": "Inter",
-     "pr_pipe": 2.814,
-     "pr_dest": 3.286,
-     "sales": 85
-    },
-    {
-     "club": "Atl. Nacional",
-     "pr_pipe": 2.792,
-     "pr_dest": 1.019,
-     "sales": 48
-    },
-    {
-     "club": "Junior FC",
-     "pr_pipe": 2.777,
-     "pr_dest": 1.25,
-     "sales": 38
+     "club": "Benfica",
+     "pr_pipe": 2.926,
+     "pr_dest": 2.585,
+     "sales": 110
     },
     {
      "club": "Shakhtar D.",
-     "pr_pipe": 2.719,
-     "pr_dest": 2.137,
-     "sales": 67
+     "pr_pipe": 2.748,
+     "pr_dest": 2.121,
+     "sales": 79
     },
     {
-     "club": "Dinamo Zagreb",
-     "pr_pipe": 2.634,
-     "pr_dest": 1.543,
-     "sales": 58
+     "club": "Chelsea FC",
+     "pr_pipe": 2.723,
+     "pr_dest": 2.977,
+     "sales": 97
     },
     {
-     "club": "Deportivo Cali",
-     "pr_pipe": 2.575,
-     "pr_dest": 0.759,
-     "sales": 41
+     "club": "AS Roma",
+     "pr_pipe": 2.694,
+     "pr_dest": 3.162,
+     "sales": 108
     },
     {
-     "club": "Man City",
-     "pr_pipe": 2.548,
-     "pr_dest": 3.216,
-     "sales": 81
+     "club": "Genoa CFC",
+     "pr_pipe": 2.637,
+     "pr_dest": 3.741,
+     "sales": 106
+    },
+    {
+     "club": "Indep. Medell\u00edn",
+     "pr_pipe": 2.636,
+     "pr_dest": 1.059,
+     "sales": 51
     },
     {
      "club": "Midtjylland",
-     "pr_pipe": 2.516,
-     "pr_dest": 1.76,
-     "sales": 56
+     "pr_pipe": 2.617,
+     "pr_dest": 1.825,
+     "sales": 70
+    },
+    {
+     "club": "Udinese",
+     "pr_pipe": 2.605,
+     "pr_dest": 3.276,
+     "sales": 95
+    },
+    {
+     "club": "Sampdoria",
+     "pr_pipe": 2.57,
+     "pr_dest": 2.158,
+     "sales": 73
+    },
+    {
+     "club": "Indep. Santa Fe",
+     "pr_pipe": 2.548,
+     "pr_dest": 1.424,
+     "sales": 44
     }
    ],
-   "pic_clubs": 1001,
+   "pic_clubs": 1002,
    "pic_k": 8,
    "pic_maxIter_chosen": 8,
    "pic_modularity_by_maxIter": {
-    "3": 0.24272184225424065,
-    "5": 0.3028508747962009,
-    "8": 0.3233933468865139,
-    "12": 0.21252931934461705,
-    "20": 0.10578028927096483
+    "3": 0.26841159018809524,
+    "5": 0.2794408433966645,
+    "8": 0.33499486690840263,
+    "12": 0.19659243587220965,
+    "20": 0.10576787919836206
    },
-   "pic_modularity": 0.3233933468865139,
-   "pic_country_purity": 0.16551724137931034,
-   "pic_known_clubs": 725,
+   "pic_modularity": 0.33499486690840263,
+   "pic_country_purity": 0.16666666666666666,
+   "pic_known_clubs": 726,
    "pic_sizes": {
-    "0": 431,
-    "1": 3,
-    "2": 127,
-    "3": 73,
-    "4": 5,
-    "5": 2,
-    "6": 291,
-    "7": 69
+    "0": 443,
+    "1": 48,
+    "2": 5,
+    "3": 163,
+    "4": 78,
+    "5": 3,
+    "6": 2,
+    "7": 260
    }
   },
   "classification": {
@@ -935,279 +978,279 @@
      "label": "mid-sem label",
      "season": 2019,
      "model": "LinearSVC",
-     "n_test": 356,
-     "AUC": 0.6651,
+     "n_test": 358,
+     "AUC": 0.6724,
      "hits@25": 7,
-     "base_rate": 0.2416
+     "base_rate": 0.2402
     },
     {
      "label": "mid-sem label",
      "season": 2019,
      "model": "MLP (16-8)",
-     "n_test": 356,
-     "AUC": 0.6017,
-     "hits@25": 10,
-     "base_rate": 0.2416
-    },
-    {
-     "label": "mid-sem label",
-     "season": 2019,
-     "model": "Logistic regression (reference)",
-     "n_test": 356,
-     "AUC": 0.6808,
-     "hits@25": 10,
-     "base_rate": 0.2416
-    },
-    {
-     "label": "mid-sem label",
-     "season": 2020,
-     "model": "LinearSVC",
-     "n_test": 400,
-     "AUC": 0.6511,
-     "hits@25": 14,
-     "base_rate": 0.2625
-    },
-    {
-     "label": "mid-sem label",
-     "season": 2020,
-     "model": "MLP (16-8)",
-     "n_test": 400,
-     "AUC": 0.512,
-     "hits@25": 9,
-     "base_rate": 0.2625
-    },
-    {
-     "label": "mid-sem label",
-     "season": 2020,
-     "model": "Logistic regression (reference)",
-     "n_test": 400,
-     "AUC": 0.6547,
-     "hits@25": 15,
-     "base_rate": 0.2625
-    },
-    {
-     "label": "mid-sem label",
-     "season": 2021,
-     "model": "LinearSVC",
-     "n_test": 420,
-     "AUC": 0.7459,
-     "hits@25": 20,
-     "base_rate": 0.3143
-    },
-    {
-     "label": "mid-sem label",
-     "season": 2021,
-     "model": "MLP (16-8)",
-     "n_test": 420,
-     "AUC": 0.5617,
-     "hits@25": 15,
-     "base_rate": 0.3143
-    },
-    {
-     "label": "mid-sem label",
-     "season": 2021,
-     "model": "Logistic regression (reference)",
-     "n_test": 420,
-     "AUC": 0.7441,
-     "hits@25": 20,
-     "base_rate": 0.3143
-    },
-    {
-     "label": "transfer label",
-     "season": 2019,
-     "model": "LinearSVC",
-     "n_test": 356,
-     "AUC": 0.6497,
-     "hits@25": 5,
-     "base_rate": 0.1685
-    },
-    {
-     "label": "transfer label",
-     "season": 2019,
-     "model": "MLP (16-8)",
-     "n_test": 356,
-     "AUC": 0.5163,
-     "hits@25": 5,
-     "base_rate": 0.1685
-    },
-    {
-     "label": "transfer label",
-     "season": 2019,
-     "model": "Logistic regression (reference)",
-     "n_test": 356,
-     "AUC": 0.6446,
-     "hits@25": 6,
-     "base_rate": 0.1685
-    },
-    {
-     "label": "transfer label",
-     "season": 2020,
-     "model": "LinearSVC",
-     "n_test": 400,
-     "AUC": 0.6766,
-     "hits@25": 12,
-     "base_rate": 0.23
-    },
-    {
-     "label": "transfer label",
-     "season": 2020,
-     "model": "MLP (16-8)",
-     "n_test": 400,
-     "AUC": 0.5929,
+     "n_test": 358,
+     "AUC": 0.5959,
      "hits@25": 11,
-     "base_rate": 0.23
+     "base_rate": 0.2402
     },
     {
-     "label": "transfer label",
-     "season": 2020,
+     "label": "mid-sem label",
+     "season": 2019,
      "model": "Logistic regression (reference)",
-     "n_test": 400,
-     "AUC": 0.6771,
-     "hits@25": 14,
-     "base_rate": 0.23
-    },
-    {
-     "label": "transfer label",
-     "season": 2021,
-     "model": "LinearSVC",
-     "n_test": 420,
-     "AUC": 0.7272,
-     "hits@25": 13,
-     "base_rate": 0.2619
-    },
-    {
-     "label": "transfer label",
-     "season": 2021,
-     "model": "MLP (16-8)",
-     "n_test": 420,
-     "AUC": 0.5974,
-     "hits@25": 10,
-     "base_rate": 0.2619
-    },
-    {
-     "label": "transfer label",
-     "season": 2021,
-     "model": "Logistic regression (reference)",
-     "n_test": 420,
-     "AUC": 0.7336,
-     "hits@25": 13,
-     "base_rate": 0.2619
-    },
-    {
-     "label": "transfer label",
-     "season": 2022,
-     "model": "LinearSVC",
-     "n_test": 379,
-     "AUC": 0.6781,
-     "hits@25": 13,
-     "base_rate": 0.219
-    },
-    {
-     "label": "transfer label",
-     "season": 2022,
-     "model": "MLP (16-8)",
-     "n_test": 379,
-     "AUC": 0.588,
-     "hits@25": 5,
-     "base_rate": 0.219
-    },
-    {
-     "label": "transfer label",
-     "season": 2022,
-     "model": "Logistic regression (reference)",
-     "n_test": 379,
-     "AUC": 0.6762,
-     "hits@25": 11,
-     "base_rate": 0.219
-    },
-    {
-     "label": "transfer label",
-     "season": 2023,
-     "model": "LinearSVC",
-     "n_test": 386,
-     "AUC": 0.6695,
-     "hits@25": 19,
-     "base_rate": 0.2876
-    },
-    {
-     "label": "transfer label",
-     "season": 2023,
-     "model": "MLP (16-8)",
-     "n_test": 386,
-     "AUC": 0.5999,
-     "hits@25": 10,
-     "base_rate": 0.2876
-    },
-    {
-     "label": "transfer label",
-     "season": 2023,
-     "model": "Logistic regression (reference)",
-     "n_test": 386,
+     "n_test": 358,
      "AUC": 0.6801,
-     "hits@25": 18,
-     "base_rate": 0.2876
+     "hits@25": 8,
+     "base_rate": 0.2402
+    },
+    {
+     "label": "mid-sem label",
+     "season": 2020,
+     "model": "LinearSVC",
+     "n_test": 401,
+     "AUC": 0.6484,
+     "hits@25": 14,
+     "base_rate": 0.2618
+    },
+    {
+     "label": "mid-sem label",
+     "season": 2020,
+     "model": "MLP (16-8)",
+     "n_test": 401,
+     "AUC": 0.5792,
+     "hits@25": 11,
+     "base_rate": 0.2618
+    },
+    {
+     "label": "mid-sem label",
+     "season": 2020,
+     "model": "Logistic regression (reference)",
+     "n_test": 401,
+     "AUC": 0.655,
+     "hits@25": 16,
+     "base_rate": 0.2618
+    },
+    {
+     "label": "mid-sem label",
+     "season": 2021,
+     "model": "LinearSVC",
+     "n_test": 424,
+     "AUC": 0.7483,
+     "hits@25": 20,
+     "base_rate": 0.3137
+    },
+    {
+     "label": "mid-sem label",
+     "season": 2021,
+     "model": "MLP (16-8)",
+     "n_test": 424,
+     "AUC": 0.6355,
+     "hits@25": 11,
+     "base_rate": 0.3137
+    },
+    {
+     "label": "mid-sem label",
+     "season": 2021,
+     "model": "Logistic regression (reference)",
+     "n_test": 424,
+     "AUC": 0.7454,
+     "hits@25": 20,
+     "base_rate": 0.3137
+    },
+    {
+     "label": "transfer label",
+     "season": 2019,
+     "model": "LinearSVC",
+     "n_test": 358,
+     "AUC": 0.6651,
+     "hits@25": 4,
+     "base_rate": 0.176
+    },
+    {
+     "label": "transfer label",
+     "season": 2019,
+     "model": "MLP (16-8)",
+     "n_test": 358,
+     "AUC": 0.4408,
+     "hits@25": 3,
+     "base_rate": 0.176
+    },
+    {
+     "label": "transfer label",
+     "season": 2019,
+     "model": "Logistic regression (reference)",
+     "n_test": 358,
+     "AUC": 0.6457,
+     "hits@25": 5,
+     "base_rate": 0.176
+    },
+    {
+     "label": "transfer label",
+     "season": 2020,
+     "model": "LinearSVC",
+     "n_test": 401,
+     "AUC": 0.675,
+     "hits@25": 12,
+     "base_rate": 0.2294
+    },
+    {
+     "label": "transfer label",
+     "season": 2020,
+     "model": "MLP (16-8)",
+     "n_test": 401,
+     "AUC": 0.5701,
+     "hits@25": 8,
+     "base_rate": 0.2294
+    },
+    {
+     "label": "transfer label",
+     "season": 2020,
+     "model": "Logistic regression (reference)",
+     "n_test": 401,
+     "AUC": 0.6773,
+     "hits@25": 14,
+     "base_rate": 0.2294
+    },
+    {
+     "label": "transfer label",
+     "season": 2021,
+     "model": "LinearSVC",
+     "n_test": 424,
+     "AUC": 0.7319,
+     "hits@25": 14,
+     "base_rate": 0.2618
+    },
+    {
+     "label": "transfer label",
+     "season": 2021,
+     "model": "MLP (16-8)",
+     "n_test": 424,
+     "AUC": 0.685,
+     "hits@25": 15,
+     "base_rate": 0.2618
+    },
+    {
+     "label": "transfer label",
+     "season": 2021,
+     "model": "Logistic regression (reference)",
+     "n_test": 424,
+     "AUC": 0.7349,
+     "hits@25": 15,
+     "base_rate": 0.2618
+    },
+    {
+     "label": "transfer label",
+     "season": 2022,
+     "model": "LinearSVC",
+     "n_test": 381,
+     "AUC": 0.6752,
+     "hits@25": 13,
+     "base_rate": 0.2205
+    },
+    {
+     "label": "transfer label",
+     "season": 2022,
+     "model": "MLP (16-8)",
+     "n_test": 381,
+     "AUC": 0.5521,
+     "hits@25": 9,
+     "base_rate": 0.2205
+    },
+    {
+     "label": "transfer label",
+     "season": 2022,
+     "model": "Logistic regression (reference)",
+     "n_test": 381,
+     "AUC": 0.6722,
+     "hits@25": 12,
+     "base_rate": 0.2205
+    },
+    {
+     "label": "transfer label",
+     "season": 2023,
+     "model": "LinearSVC",
+     "n_test": 391,
+     "AUC": 0.66,
+     "hits@25": 16,
+     "base_rate": 0.2839
+    },
+    {
+     "label": "transfer label",
+     "season": 2023,
+     "model": "MLP (16-8)",
+     "n_test": 391,
+     "AUC": 0.6157,
+     "hits@25": 9,
+     "base_rate": 0.2839
+    },
+    {
+     "label": "transfer label",
+     "season": 2023,
+     "model": "Logistic regression (reference)",
+     "n_test": 391,
+     "AUC": 0.6684,
+     "hits@25": 17,
+     "base_rate": 0.2839
     }
    ],
    "summary": [
     {
      "label": "mid-sem label",
      "model": "LinearSVC",
-     "mean_AUC": 0.6874,
+     "mean_AUC": 0.6897,
      "hits": 41,
      "picks": 75,
-     "base_rate": 0.2728,
+     "base_rate": 0.2719,
      "precision@25": 0.5467,
-     "lift": 2.004
+     "lift": 2.0104
     },
     {
      "label": "mid-sem label",
      "model": "Logistic regression (reference)",
-     "mean_AUC": 0.6932,
-     "hits": 45,
+     "mean_AUC": 0.6935,
+     "hits": 44,
      "picks": 75,
-     "base_rate": 0.2728,
-     "precision@25": 0.6,
-     "lift": 2.1995
+     "base_rate": 0.2719,
+     "precision@25": 0.5867,
+     "lift": 2.1575
     },
     {
      "label": "mid-sem label",
      "model": "MLP (16-8)",
-     "mean_AUC": 0.5585,
-     "hits": 34,
+     "mean_AUC": 0.6036,
+     "hits": 33,
      "picks": 75,
-     "base_rate": 0.2728,
-     "precision@25": 0.4533,
-     "lift": 1.6619
+     "base_rate": 0.2719,
+     "precision@25": 0.44,
+     "lift": 1.6181
     },
     {
      "label": "transfer label",
      "model": "LinearSVC",
-     "mean_AUC": 0.6802,
-     "hits": 62,
+     "mean_AUC": 0.6814,
+     "hits": 59,
      "picks": 125,
-     "base_rate": 0.2334,
-     "precision@25": 0.496,
-     "lift": 2.1251
+     "base_rate": 0.2343,
+     "precision@25": 0.472,
+     "lift": 2.0144
     },
     {
      "label": "transfer label",
      "model": "Logistic regression (reference)",
-     "mean_AUC": 0.6823,
-     "hits": 62,
+     "mean_AUC": 0.6797,
+     "hits": 63,
      "picks": 125,
-     "base_rate": 0.2334,
-     "precision@25": 0.496,
-     "lift": 2.1251
+     "base_rate": 0.2343,
+     "precision@25": 0.504,
+     "lift": 2.151
     },
     {
      "label": "transfer label",
      "model": "MLP (16-8)",
-     "mean_AUC": 0.5789,
-     "hits": 41,
+     "mean_AUC": 0.5727,
+     "hits": 44,
      "picks": 125,
-     "base_rate": 0.2334,
-     "precision@25": 0.328,
-     "lift": 1.4053
+     "base_rate": 0.2343,
+     "precision@25": 0.352,
+     "lift": 1.5023
     }
    ],
    "midsem_leaderboard": {
@@ -1254,18 +1297,18 @@
    }
   },
   "outlier": {
-   "rows_scored": 10267,
-   "feeders": 2718,
-   "spearman_score_vs_up": -0.08816401704169267,
-   "spearman_p": 4.159819189851734e-06,
-   "gems_flagged": 100,
-   "gem_move_up_rate": 0.15,
-   "rest_move_up_rate": 0.2215431627196333,
-   "gem_fisher_p": 0.9701164330126127,
-   "top_decile_rate": 0.16176470588235295,
-   "bottom_decile_rate": 0.2977941176470588,
-   "spearman_vs_midsem_iforest": 0.47088330385477656,
-   "spearman_vs_midsem_lof": 0.5217640408794021
+   "rows_scored": 11753,
+   "feeders": 2738,
+   "spearman_score_vs_up": -0.08111139976104573,
+   "spearman_p": 2.144473815085943e-05,
+   "gems_flagged": 114,
+   "gem_move_up_rate": 0.16666666666666666,
+   "rest_move_up_rate": 0.22751524390243902,
+   "gem_fisher_p": 0.9531755762323879,
+   "top_decile_rate": 0.17472118959107807,
+   "bottom_decile_rate": 0.28363636363636363,
+   "spearman_vs_midsem_iforest": 0.4626097628116894,
+   "spearman_vs_midsem_lof": 0.4892323914397949
   },
   "stream": {
    "micro_batches": 39,
@@ -1294,54 +1337,54 @@
    "total_deep_events": 23686
   },
   "als": {
-   "train_signings": 364,
-   "test_signings": 1119,
-   "clubs": 132,
-   "archetypes": 23,
-   "mrr_pop": 0.6969764670837056,
-   "mrr_own": 0.6771671134941912,
-   "mrr_als": 0.6311438784629133,
-   "top1_pop": 0.48525469168900803,
-   "top1_own": 0.450402144772118,
-   "top1_als": 0.38159070598748884,
+   "train_signings": 560,
+   "test_signings": 1551,
+   "clubs": 144,
+   "archetypes": 22,
+   "mrr_pop": 0.6679024285407263,
+   "mrr_own": 0.6672039544379971,
+   "mrr_als": 0.6331936385127874,
+   "top1_pop": 0.42424242424242425,
+   "top1_own": 0.425531914893617,
+   "top1_als": 0.3733075435203095,
    "mrr_als_minus_pop_ci95": [
-    -0.08549486148346737,
-    -0.0470658325886208
+    -0.05169379969911885,
+    -0.018697614442295292
    ],
    "mrr_als_minus_own_ci95": [
-    -0.06218349717009234,
-    -0.030455019362526082
+    -0.04781861164839889,
+    -0.019557274876423815
    ]
   }
  },
  "phase4": {
   "translation": {
-   "movers": 1110,
-   "cross_league_movers": 460,
-   "new_club_style_known": 953,
+   "movers": 1319,
+   "cross_league_movers": 557,
+   "new_club_style_known": 1130,
    "mean_scaled_mae": {
-    "a_raw": 0.4949362816115702,
-    "b_neutral": 0.4863147211874726,
-    "c_translated": 0.488755130051894,
-    "c_oracle_style": 0.4835847412497543
+    "a_raw": 0.4951341243504701,
+    "b_neutral": 0.4916212429309982,
+    "c_translated": 0.4944382566870193,
+    "c_oracle_style": 0.49092650603885957
    },
    "c_minus_a_ci95": [
-    -0.009624480988460466,
-    -0.0027476351399800284
+    -0.004279177690651111,
+    0.002606603533706945
    ],
    "c_minus_b_ci95": [
-    -0.0010316900978067942,
-    0.00608322169000389
+    -0.0003754741027203594,
+    0.0062598757173058656
    ],
    "b_minus_a_ci95": [
-    -0.012464396312945025,
-    -0.005132995175314797
+    -0.006731718484362243,
+    -0.00018981741432694374
    ],
    "oracle_minus_a_ci95": [
-    -0.015032038340834624,
-    -0.007885481243576162
+    -0.007770372963581975,
+    -0.000662294766059352
    ],
-   "cells_c_beats_a": 37,
+   "cells_c_beats_a": 30,
    "cells_total": 48,
    "metrics_c_beats_a_all_positions": [
     "gls",
@@ -1354,143 +1397,158 @@
     "take_on",
     "int",
     "clr",
-    "blocks",
-    "aer_won"
+    "blocks"
    ],
    "cross_league_only": {
-    "a_raw": 0.529354191216598,
-    "b_neutral": 0.5054628023416823,
-    "c_translated": 0.5073562301015337,
-    "c_oracle_style": 0.5002816669142524
+    "a_raw": 0.5246495330502455,
+    "b_neutral": 0.5089018041144823,
+    "c_translated": 0.5145042687353562,
+    "c_oracle_style": 0.5100778773752028
    },
    "big_style_change_only": {
-    "n": 399,
-    "a_raw": 0.5123341421304611,
-    "b_neutral": 0.5050376162741862,
-    "c_translated": 0.5132564862834144,
-    "c_oracle_style": 0.5058091860773962
+    "n": 476,
+    "a_raw": 0.5115243684835422,
+    "b_neutral": 0.5090973077847619,
+    "c_translated": 0.5184572210029743,
+    "c_oracle_style": 0.5121778888897157
    },
    "by_pos": {
     "DF": {
-     "a_raw": 0.43958930043093725,
-     "b_neutral": 0.4351557676561557,
-     "c_translated": 0.43354832782215247,
-     "c_oracle_style": 0.42800702304901134
+     "a_raw": 0.4408943341707008,
+     "b_neutral": 0.43902593469518575,
+     "c_translated": 0.43708078839511066,
+     "c_oracle_style": 0.43247717958824927
     },
     "MF": {
-     "a_raw": 0.5238047045918042,
-     "b_neutral": 0.5100735689607466,
-     "c_translated": 0.5175466974253987,
-     "c_oracle_style": 0.5128520136803003
+     "a_raw": 0.5244353493495166,
+     "b_neutral": 0.5165400365531205,
+     "c_translated": 0.5235316318829824,
+     "c_oracle_style": 0.5209001361555697
     },
     "FW": {
-     "a_raw": 0.548854219972318,
-     "b_neutral": 0.5401454783563188,
-     "c_translated": 0.5425416133820029,
-     "c_oracle_style": 0.5373473175990942
+     "a_raw": 0.5499791486010617,
+     "b_neutral": 0.549447841034905,
+     "c_translated": 0.5549507462113163,
+     "c_oracle_style": 0.5521570083613956
     }
    }
   },
   "pairs": {
-   "rows": 32776,
-   "queries": 342,
-   "in_pool_queries": 95,
-   "positives": 102,
-   "positives_in_candidate_set": 97,
+   "rows": 40967,
+   "queries": 429,
+   "in_pool_queries": 128,
+   "positives": 138,
+   "positives_in_candidate_set": 126,
    "traj_available": 1.0,
-   "traj_age_aligned_share": 0.13604466682938735,
-   "value_missing": 0.0001525506468147425,
-   "hazard_missing": 0.08158408591652429,
+   "traj_age_aligned_share": 0.1464349354358386,
+   "value_missing": 0.002074840725461957,
+   "hazard_missing": 0.0943198183904118,
    "mean_feature_pos_vs_neg": {
     "sim_translated": [
-     0.11619846144009838,
-     0.03240813780938119
+     0.12473650785496761,
+     0.028097389174696414
     ],
     "traj_sim": [
-     0.062021005986998556,
-     0.005781865742349161
+     0.05943942961030894,
+     -0.001939502313624562
     ],
     "pipeline_rank": [
-     -0.14978432598049105,
-     -0.24533944472010613
+     0.08810198650245196,
+     -0.008302875610300053
     ],
     "club_taste": [
-     0.6206222767850348,
-     0.5659640129613879
+     0.7075563669204712,
+     0.6410481929779053
     ],
     "hazard": [
-     0.17151274101969838,
-     0.10921172760122916
+     0.17936748338839298,
+     0.11449649304579397
     ],
     "log_value": [
-     7.1340176408075875,
-     6.843775236416573
+     7.145128320296996,
+     6.8212692445095335
     ],
     "value_gap": [
-     0.3595594639299086,
-     0.530500948836644
+     0.34330261943995094,
+     0.5574013317830409
     ],
     "age_num": [
-     22.186274509803923,
-     23.2202892247472
+     22.456521739130434,
+     23.2213300892133
     ],
     "composite_perf_index": [
-     52.54607843137257,
-     48.80764379689029
+     53.57173913043478,
+     48.68819140308191
     ],
     "sim_raw": [
-     0.0795765455669973,
-     -0.011879054119083032
+     0.08390653260404946,
+     -0.016709813110041032
     ],
     "sim_neutral": [
-     0.07765747082252918,
-     0.0033620454123960593
+     0.08878291814136192,
+     -0.002082564306159368
     ]
    }
   },
   "trajectory": {
-   "two_season_vectors": 5884,
-   "lsh_pairs": 3857972,
-   "lsh_pair_share": 0.6889720455332036,
-   "lsh_recall_top10": 0.88,
-   "spearman_traj_vs_dtw": 0.42879192215283013,
-   "median_rank_true_signing_traj_sim": 40.5,
-   "median_rank_true_signing_dtw": 40.0,
-   "recall10_traj_sim": 0.16666666666666666,
-   "recall10_dtw": 0.16666666666666666
+   "two_season_vectors": 6848,
+   "lsh_pairs": 5274478,
+   "lsh_pair_share": 0.6939905392162539,
+   "lsh_recall_top10": 0.8776666666666667,
+   "spearman_traj_vs_dtw": 0.45086603737645714,
+   "median_rank_true_signing_traj_sim": 37.0,
+   "median_rank_true_signing_dtw": 41.0,
+   "recall10_traj_sim": 0.17391304347826086,
+   "recall10_dtw": 0.15942028985507245
   },
   "fusion": {
    "test_seasons": [
     2020,
     2021,
     2022,
-    2023
+    2023,
+    2024
    ],
-   "train_queries_first_fold": 31,
+   "train_queries_first_fold": 37,
    "lgbm": {
-    "queries": 64,
-    "median_rank": 26.0,
-    "recall@5": 0.125,
-    "recall@10": 0.3125,
-    "recall@25": 0.46875
+    "queries": 91,
+    "median_rank": 27.0,
+    "recall@5": 0.08791208791208792,
+    "recall@10": 0.21978021978021978,
+    "recall@25": 0.4725274725274725
+   },
+   "lgbm_trained_on_all_signings": {
+    "queries": 91,
+    "median_rank": 19.0,
+    "recall@5": 0.17582417582417584,
+    "recall@10": 0.2967032967032967,
+    "recall@25": 0.5824175824175825
+   },
+   "all_signings_task": {
+    "queries": 1029,
+    "median_rank": 56.0,
+    "recall@5": 0.06608357628765792,
+    "recall@10": 0.11564625850340136,
+    "recall@25": 0.26433430515063167
    },
    "gbt_spark": {
-    "queries": 64,
-    "median_rank": 34.5,
-    "recall@5": 0.015625,
-    "recall@10": 0.140625,
-    "recall@25": 0.375
+    "queries": 91,
+    "median_rank": 25.0,
+    "recall@5": 0.054945054945054944,
+    "recall@10": 0.17582417582417584,
+    "recall@25": 0.5054945054945055
    },
+   "train_queries_first_fold_all_signings": 628,
    "gain_share_all_events_model": {
-    "hazard": 0.1555,
-    "pipeline_rank": 0.1432,
-    "sim_translated": 0.1274,
-    "log_value": 0.1164,
-    "traj_sim": 0.1148,
-    "composite_perf_index": 0.0917,
-    "value_gap": 0.0917,
-    "club_taste": 0.0846,
-    "age_num": 0.0745
+    "hazard": 0.1579,
+    "log_value": 0.1568,
+    "pipeline_rank": 0.129,
+    "club_taste": 0.1283,
+    "composite_perf_index": 0.1101,
+    "value_gap": 0.0963,
+    "sim_translated": 0.0861,
+    "age_num": 0.0762,
+    "traj_sim": 0.0593
    },
    "features": [
     "sim_translated",
@@ -1505,13 +1563,23 @@
    ]
   },
   "runtime_s": {
-   "value at t": 3.54,
-   "discrete-time hazard, Spark LR, 6 refits": 14.35,
-   "pair features": 2.48,
-   "trajectory LSH self-join": 6.68,
-   "DTW on in-pool events": 0.22,
-   "LGBMRanker walk-forward": 0.45,
-   "Spark GBTClassifier walk-forward": 46.88
+   "value at t": 3.67,
+   "discrete-time hazard, Spark LR, 7 refits": 16.87,
+   "pair features": 1.64,
+   "trajectory LSH self-join": 10.0,
+   "DTW on in-pool events": 0.29,
+   "pair features, all signings": 6.58,
+   "LGBMRanker walk-forward": 0.63,
+   "LGBMRanker trained on all signings, walk-forward": 27.01,
+   "Spark GBTClassifier walk-forward": 64.03
+  },
+  "value_cutoff": "last valuation before 1 June after season t",
+  "pairs_all": {
+   "rows": 375959,
+   "queries": 1657,
+   "positives": 1941,
+   "mean_candidates": 226.89136994568497,
+   "reference_profile_missing": 0.17489407089602857
   }
  },
  "phase5": {

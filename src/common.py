@@ -47,3 +47,19 @@ def put_metrics(section, values, path=f'{ROOT}/outputs/metrics.json'):
     m = json.load(open(path)) if os.path.exists(path) else {}
     m.setdefault(section, {}).update(json.loads(json.dumps(values, default=lambda o: o.item() if hasattr(o, 'item') else str(o))))
     json.dump(m, open(path, 'w'), indent=1); return values
+
+
+# ---- one plot theme for every figure: the mid-sem notebook's palette (validated with the dataviz palette checker) ----
+BLUE, ORANGE, GREEN, AMBER, PINK, VIOLET, GREY = '#2a78d6', '#eb6834', '#1baf7a', '#eda100', '#e87ba4', '#6250d6', '#898781'
+PAL = [BLUE, ORANGE, GREEN, AMBER, PINK, VIOLET]; INK, INK2, GRID, PAPER = '#0b0b0b', '#52514e', '#e1e0d9', '#fcfcfb'
+try:
+    import matplotlib as _mpl
+    from matplotlib.colors import LinearSegmentedColormap as _LSC
+    from cycler import cycler as _cycler
+    SEQ = _LSC.from_list('seq_blue', ['#eef5fe', '#cde2fb', '#86b6ef', '#2a78d6', '#184f95', '#0d366b']); DIV = _LSC.from_list('div_orange_blue', [ORANGE, '#f0efec', BLUE])
+    _mpl.rcParams.update({'axes.prop_cycle': _cycler(color=PAL), 'figure.facecolor': PAPER, 'axes.facecolor': PAPER, 'savefig.facecolor': PAPER, 'axes.edgecolor': '#c3c2b7', 'axes.linewidth': 0.8,
+                          'axes.spines.top': False, 'axes.spines.right': False, 'axes.grid': True, 'grid.color': GRID, 'grid.linewidth': 0.7, 'axes.axisbelow': True, 'text.color': INK, 'axes.labelcolor': INK2,
+                          'xtick.color': INK2, 'ytick.color': INK2, 'xtick.labelsize': 8, 'ytick.labelsize': 8, 'axes.labelsize': 9, 'axes.titlesize': 10, 'axes.titleweight': 'bold', 'axes.titlelocation': 'left',
+                          'legend.frameon': False, 'legend.fontsize': 8, 'lines.linewidth': 2, 'lines.markersize': 5, 'font.family': 'DejaVu Sans', 'savefig.dpi': 200, 'figure.dpi': 110})
+except ImportError:
+    pass

@@ -1,6 +1,6 @@
 # %% [markdown]
 # # End-sem 01. Data lake (PySpark + Parquet) and player entity resolution
-# Sources: FBref (mid-sem tables, exported unchanged by `src/run_baseline.py`), Understat team style, Transfermarkt (`davidcariboo/player-scores`).
+# Sources: FBref 2017-18 to 2023-24 (the mid-sem file) plus 2024-25 (`emrey3lmaz`, scraped before FBref removed its advanced columns), Understat team style, Transfermarkt (`davidcariboo/player-scores`).
 # Everything is written as Parquet partitioned by `season` and `league`. FBref players are then linked to Transfermarkt ids.
 
 # %%
@@ -9,6 +9,7 @@ import pandas as pd, numpy as np
 from pyspark.sql import functions as F, Window as W
 from pyspark.sql.types import DoubleType, StringType
 from common import *
+import style as ST
 sp = spark(); RT = {}
 TM = 'data/transfermarkt'
 rd = lambda name: sp.read.csv(f'{TM}/{name}.csv', header=True, inferSchema=True, multiLine=True, escape='"')
@@ -23,11 +24,8 @@ def write(df, name, parts=('season', 'league')):
 # %%
 rows = {}
 with timed('write lake', RT):
-    fb = sp.read.parquet('lake/midsem/lake.parquet').withColumn('season', F.col('yr')).withColumn('league', F.col('comp'))
-    rows['fbref'] = write(fb, 'fbref')
-    raw = sp.read.parquet('lake/midsem/df_raw.parquet').withColumn('season', F.col('start_year').cast('int')).withColumn('league', F.col('comp'))
-    rows['fbref_raw'] = write(raw, 'fbref_raw')
-    rows['understat_team'] = write(sp.read.parquet('lake/midsem/ctx.parquet').withColumn('season', F.col('yr')).withColumn('league', F.col('comp')), 'understat_team')
+    RAWP, src_agree, n_chk = ST.load_raw()      # 2017-18 to 2023-24 from the mid-sem file, 2024-25 from the emrey3lmaz scrape
+    raw = sp.createDataFrame(RAWP).withColumn('season', F.col('yr')).withColumn('league', F.col('comp')); rows['fbref_raw'] = write(raw, 'fbref_raw')
     clubs = rd('clubs').select('club_id', F.col('name').alias('club_name'), F.coalesce(lg[F.col('domestic_competition_id')], F.lit('other')).alias('club_league'))
     tr = (rd('transfers').withColumn('transfer_date', F.to_date('transfer_date')).withColumn('season', (F.lit(2000) + F.substring('transfer_season', 1, 2).cast('int')))
           .filter(F.col('season').between(2010, 2026))
@@ -93,15 +91,48 @@ with timed('entity resolution', RT):
     best = (cand.withColumn('r1', F.row_number().over(W.partitionBy('player', 'squad', 'yr').orderBy(F.desc('confidence'), F.desc('minutes'))))
                 .withColumn('r2', F.row_number().over(W.partitionBy('player_id', 'club_id', 'yr').orderBy(F.desc('confidence'), F.desc('min_num')))).filter('r1 = 1 and r2 = 1'))
     fine = F.create_map(*[F.lit(x) for kv in FINE_POS.items() for x in kv])
-    xref = best.select('player', 'squad', 'comp', 'yr', 'born', 'player_id', F.col('name').alias('tm_name'), 'club_id', 'birth_year', 'sub_position', fine[F.col('sub_position')].alias('fine_pos'),
-                       'name_sim', 'by', 'pos_ok', 'confidence', F.col('minutes').alias('tm_minutes'), 'min_num')
+    best = best.cache(); cols = ['player', 'squad', 'comp', 'yr', 'born', 'player_id', F.col('name').alias('tm_name'), 'club_id', 'birth_year', 'sub_position', fine[F.col('sub_position')].alias('fine_pos'), 'name_sim', 'by', 'pos_ok', 'confidence', F.col('minutes').alias('tm_minutes'), 'min_num']
+    # pass 3: names that do not resemble each other (nicknames, e.g. FBref "Jonny Castro" = Transfermarkt "Jonny Otto"). Same club and season, same birth year and position group, league minutes within 10%, and the pair must be unique on both sides.
+    left_fb = fbp.join(cx, ['comp', 'squad']).join(best.select('player', 'squad', 'yr'), ['player', 'squad', 'yr'], 'left_anti').filter('min_num >= 450')
+    left_tm = tmp.drop('comp').join(best.select('player_id', 'club_id', 'yr'), ['player_id', 'club_id', 'yr'], 'left_anti')
+    posm = ((F.col('pos2') == 'DF') & (F.col('position') == 'Defender')) | ((F.col('pos2') == 'MF') & (F.col('position') == 'Midfield')) | ((F.col('pos2') == 'FW') & (F.col('position') == 'Attack'))
+    p3 = (left_fb.join(left_tm, ['yr', 'club_id']).filter((F.col('born') == F.col('birth_year')) & posm & (F.abs(F.col('min_num') - F.col('minutes')) <= 0.1 * F.greatest('min_num', 'minutes') + 45))
+          .withColumn('n1', F.count('*').over(W.partitionBy('player', 'squad', 'yr'))).withColumn('n2', F.count('*').over(W.partitionBy('player_id', 'club_id', 'yr'))).filter('n1 = 1 and n2 = 1')
+          .withColumn('name_sim', 1 - F.levenshtein('k_fb', 'k_tm') / F.greatest(F.length('k_fb'), F.length('k_tm'), F.lit(1))).withColumn('by', F.lit(1.0)).withColumn('pos_ok', F.lit(1.0)).withColumn('confidence', F.lit(0.5)))
+    xref = best.select(*cols, F.lit('name').alias('method')).unionByName(p3.select(*cols, F.lit('birth year + minutes').alias('method')))
     xref.withColumn('season', F.col('yr')).withColumn('league', F.col('comp')).write.mode('overwrite').partitionBy('season', 'league').parquet('lake/player_xref')
 cand.select('player', 'tm_name' if False else 'name', 'confidence').explain()
 X = sp.read.parquet('lake/player_xref').toPandas(); FB = fbp.toPandas()
 print(f'{len(club_x)} FBref clubs mapped one-to-one to Transfermarkt clubs (lowest vote share {club_x["share"].min():.2f}); {len(X):,} of {len(FB):,} outfield player-club-seasons linked')
 
 # %% [markdown]
-# ## 3. Checks: match rate per league-season, a random sample to eyeball, and the unmatched feeders
+# ## 3. Player-season feature table with a walk-forward style model
+# One row per player-season with 900+ minutes (the club where he played most). Team style comes from Understat. For every season y the style elasticities and league offsets are refitted on seasons up to y, so the style-neutral numbers of a season never use a later one. League positions come from Transfermarkt match results, with the mid-sem table kept where it exists.
+
+# %%
+with timed('walk-forward style model', RT):
+    D = RAWP[(~RAWP['pos'].astype(str).str.upper().str.startswith('GK')) & (RAWP['min_num'] >= 900)].copy(); D['pos_group'] = D['pos'].astype(str).str.upper().str[:2]
+    D = D[D['pos_group'].isin(ST.POS3)].sort_values('min_num', ascending=False).drop_duplicates(['player', 'yr'])
+    ctx, miss = ST.team_style(RAWP[['comp', 'squad']].drop_duplicates()); assert not miss, f'Understat clubs without an FBref name: {miss}'
+    D = D.merge(ctx[['comp', 'squad', 'yr', 'x_dom', 'x_press', 'x_str', 'matches']], on=['comp', 'squad', 'yr'], how='left'); assert D['x_dom'].notna().all(), 'club-season without Understat style'
+    FE, ELW, OFW = ST.walk_forward_features(D, range(2017, 2025))
+    tab = sp.read.parquet('lake/tm_tables').toPandas().merge(club_x[['club_id', 'comp', 'squad']], on='club_id'); mt = pd.read_parquet('lake/midsem/league_table.parquet')[['comp', 'squad', 'yr', 'position']]
+    tab = tab.rename(columns={'season': 'yr'}).merge(mt, on=['comp', 'squad', 'yr'], how='left'); tab['table_pos'] = tab['position'].fillna(tab['tm_pos']).astype(int)
+    FE = FE.merge(tab[['comp', 'squad', 'yr', 'table_pos']], on=['comp', 'squad', 'yr'], how='left'); assert FE['table_pos'].notna().all()
+    giants = {c for v in MID['GIANTS'].values() for c in v}; FE['is_giant'] = FE['squad'].isin(giants); FE['elite_club'] = FE['is_giant'] | (FE['table_pos'] <= MID['ELITE_TOP_N'])
+    FE['feeder'] = ~FE['elite_club'] & (FE['age_num'] <= MID['FEEDER_MAX_AGE']) & (FE['min_num'] >= MID['FEEDER_MIN_MIN']); FE['elite'] = (FE['table_pos'] <= MID['ELITE_TOP_N']) & (FE['min_num'] >= MID['ELITE_MIN_MIN'])
+    FE['x_starter_share'] = FE['min_num'] / (FE['matches'] * 90.0)
+    mid = pd.read_parquet('lake/midsem/lake.parquet', columns=['player', 'squad', 'yr', 'best_tier', 'labeled'] + ST.AF + ST.RAW).rename(columns={c: c + '_mid' for c in ST.AF + ST.RAW})
+    FE = FE.merge(mid, on=['player', 'squad', 'yr'], how='left'); FE['labeled'] = FE['labeled'].fillna(False).astype(bool)
+    ctx.to_parquet('lake/team_style.parquet', index=False); ELW.to_parquet('lake/elas_wf.parquet', index=False); OFW.to_parquet('lake/offsets_wf.parquet', index=False)
+    both = FE.dropna(subset=[ST.RAW[0] + '_mid']); raw_same = float(np.mean([np.allclose(both[r], both[r + '_mid'], atol=2e-3) for r in ST.RAW])); neu_corr = float(np.mean([np.corrcoef(both[f], both[f + '_mid'])[0, 1] for f in ST.AF]))
+    rows['fbref'] = write(sp.createDataFrame(FE.drop(columns=[c + '_mid' for c in ST.AF + ST.RAW])).withColumn('season', F.col('yr')).withColumn('league', F.col('comp')), 'fbref')
+sup = ELW[ELW['term'] != 'x_str'].groupby('cutoff')['significant'].sum().to_dict()
+print(f"player-seasons: {len(FE):,} ({(FE['yr'] == 2024).sum():,} from 2024-25); raw per-90 identical to the mid-sem table on {raw_same:.0%} of metrics; walk-forward neutral values correlate {neu_corr:.3f} with the mid-sem all-season fit")
+print(f"2023-24 overlap of the two FBref sources ({n_chk} players): lowest per-metric correlation {min(src_agree.values()):.3f}; supported elasticities by cut-off: {sup}")
+
+# %% [markdown]
+# ## 4. Checks: match rate per league-season, a random sample to eyeball, and the unmatched feeders
 
 # %%
 FBm = FB.merge(X[['player', 'squad', 'yr', 'player_id', 'confidence', 'fine_pos']], on=['player', 'squad', 'yr'], how='left'); FBm['matched'] = FBm['player_id'].notna()
@@ -110,8 +141,9 @@ rate_900 = FBm[FBm['min_num'] >= 900].pivot_table(index='comp', columns='yr', va
 print('match rate, all outfield rows'); display(rate_all); print('match rate, rows with >= 900 minutes (the modelling population)'); display(rate_900)
 print('30 random matches for a manual check:')
 display(X.sample(30, random_state=SEED)[['player', 'tm_name', 'squad', 'yr', 'born', 'birth_year', 'sub_position', 'name_sim', 'confidence']])
+P3 = X[X['method'] != 'name']; print(f'pass 3 (no name resemblance) added {len(P3)} rows, {P3["player"].nunique()} players:'); display(P3.drop_duplicates('player')[['player', 'tm_name', 'squad', 'yr', 'born', 'min_num', 'tm_minutes']].head(40))
 print('20 lowest-confidence matches:'); display(X.nsmallest(20, 'confidence')[['player', 'tm_name', 'squad', 'yr', 'born', 'birth_year', 'sub_position', 'name_sim', 'confidence']])
-L = pd.read_parquet('lake/midsem/lake.parquet', columns=['player', 'squad', 'comp', 'yr', 'feeder', 'age_num', 'min_num'])
+L = FE[['player', 'squad', 'comp', 'yr', 'feeder', 'age_num', 'min_num']]
 Lf = L[L['feeder']].merge(X[['player', 'squad', 'yr', 'player_id']], on=['player', 'squad', 'yr'], how='left')
 unm = Lf[Lf['player_id'].isna()].sort_values(['yr', 'comp', 'squad']); unm.to_csv('outputs/unmatched_feeders.csv', index=False)
 print(f'unmatched feeders: {len(unm)} of {len(Lf)} feeder-seasons (full list in outputs/unmatched_feeders.csv)'); display(unm.head(40))
@@ -120,10 +152,10 @@ print(f'Transfermarkt ids carrying more than one FBref spelling: {(same_id > 1).
 
 # %%
 import matplotlib; matplotlib.use('Agg'); import matplotlib.pyplot as plt
-fig, ax = plt.subplots(figsize=(7, 2.6)); im = ax.imshow(rate_900.values, vmin=0.9, vmax=1, cmap='Blues'); ax.set_xticks(range(rate_900.shape[1]), rate_900.columns); ax.set_yticks(range(len(rate_900)), rate_900.index)
+fig, ax = plt.subplots(figsize=(7.6, 2.6)); im = ax.imshow(rate_900.values, vmin=0.9, vmax=1, cmap=SEQ); ax.set_xticks(range(rate_900.shape[1]), rate_900.columns); ax.set_yticks(range(len(rate_900)), rate_900.index)
 for i in range(rate_900.shape[0]):
     for j in range(rate_900.shape[1]): ax.text(j, i, f'{rate_900.values[i, j]:.0%}', ha='center', va='center', fontsize=8, color='white' if rate_900.values[i, j] > .96 else 'black')
-ax.set_title('FBref to Transfermarkt match rate (players with >= 900 min)'); fig.colorbar(im, shrink=.8); os.makedirs('outputs/figs', exist_ok=True); fig.savefig('outputs/figs/p1_match_rate.png', dpi=160, bbox_inches='tight'); plt.show()
-put_metrics('phase1', {'lake_rows': rows, 'runtime_s': RT, 'clubs_mapped': len(club_x), 'club_vote_share_min': float(club_x['share'].min()), 'rows_linked': len(X), 'rows_total': len(FB),
+ax.set_title('FBref to Transfermarkt match rate (players with >= 900 min)'); fig.colorbar(im, shrink=.8); os.makedirs('outputs/figs', exist_ok=True); fig.savefig('outputs/figs/p1_match_rate.png', bbox_inches='tight'); plt.show()
+_ = put_metrics('phase1', {'seasons': '2017-18 to 2024-25', 'player_seasons': len(FE), 'player_seasons_2024': int((FE['yr'] == 2024).sum()), 'source_overlap_players': n_chk, 'source_overlap_min_corr': min(src_agree.values()), 'raw_identical_share': raw_same, 'wf_neutral_corr_with_midsem': neu_corr, 'supported_elasticities_by_cutoff': {int(k): int(v) for k, v in sup.items()}, 'lake_rows': rows, 'runtime_s': RT, 'clubs_mapped': len(club_x), 'club_vote_share_min': float(club_x['share'].min()), 'rows_linked': len(X), 'rows_total': len(FB),
                        'match_rate_all': float(FBm['matched'].mean()), 'match_rate_900': float(FBm.loc[FBm['min_num'] >= 900, 'matched'].mean()), 'match_rate_900_min_cell': float(np.nanmin(rate_900.values)),
-                       'feeders_total': len(Lf), 'feeders_unmatched': len(unm), 'mean_confidence': float(X['confidence'].mean()), 'ids_multi_spelling': int((same_id > 1).sum()), 'names_multi_id': int((same_name > 1).sum())})
+                       'pass3_rows': len(P3), 'pass3_players': int(P3['player'].nunique()), 'feeders_total': len(Lf), 'feeders_unmatched': len(unm), 'mean_confidence': float(X['confidence'].mean()), 'ids_multi_spelling': int((same_id > 1).sum()), 'names_multi_id': int((same_name > 1).sum())})
