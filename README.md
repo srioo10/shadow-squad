@@ -1,6 +1,6 @@
 # Shadow Squad
 
-Player replacement scouting for Europe's top five leagues: given an elite club, a season and a departing starter, rank the players who could replace him. End-semester project, Analysis and Systems of Big Data, IIITDM Kancheepuram.
+Player replacement scouting for Europe's top five leagues: given an elite club, a season and a departing starter, rank the players who could replace him.
 
 ## Run order
 
