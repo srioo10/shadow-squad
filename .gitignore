@@ -1,8 +1,26 @@
 .venv/
 data/
-lake/
 __pycache__/
 .ipynb_checkpoints/
 spark-warehouse/
 metastore_db/
 derby.log
+# the lake is rebuilt by the notebooks; only the small tables the Streamlit app reads are tracked
+lake/*
+!lake/features/
+!lake/pool/
+!lake/replacement_events/
+!lake/archetypes.parquet
+!lake/club_pagerank.parquet
+!lake/club_taste.parquet
+!lake/hazard.parquet
+!lake/value_at_t.parquet
+!lake/models.pkl
+!lake/midsem/
+lake/midsem/*
+!lake/midsem/elas.parquet
+!lake/midsem/league_offsets.parquet
+!lake/midsem/league_offsets_sig.parquet
+!lake/midsem/config.json
+*.crc
+_SUCCESS

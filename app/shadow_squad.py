@@ -31,7 +31,7 @@ if len(real):
     st.info('What the club actually did: signed ' + '; '.join(bits) + '.')
 show = R.head(15)[['rank', 'player', 'squad', 'comp', 'age_num', 'value', 'score', 'sim_translated', 'traj_sim', 'hazard', 'pipeline_rank', 'club_taste', 'archetype']].rename(
     columns={'squad': 'club', 'comp': 'league', 'age_num': 'age', 'value': 'market value (EUR)', 'sim_translated': 'translated similarity', 'traj_sim': 'trajectory similarity', 'pipeline_rank': 'pipeline rank', 'club_taste': 'club taste'})
-st.dataframe(show.style.format({'market value (EUR)': '{:,.0f}', 'age': '{:.0f}', 'score': '{:.2f}', 'translated similarity': '{:.2f}', 'trajectory similarity': '{:.2f}', 'hazard': '{:.2f}', 'pipeline rank': '{:.2f}', 'club taste': '{:.2f}'}), hide_index=True, use_container_width=True)
+st.dataframe(show.style.format({'market value (EUR)': '{:,.0f}', 'age': '{:.0f}', 'score': '{:.2f}', 'translated similarity': '{:.2f}', 'trajectory similarity': '{:.2f}', 'hazard': '{:.2f}', 'pipeline rank': '{:.2f}', 'club taste': '{:.2f}'}), hide_index=True)
 who = pick('Explain candidate', R.head(15)['player_id'].tolist() + [n for n in real['N'] if (R['player_id'] == n).any() and n not in set(R.head(15)['player_id'])], 'X', lambda i: f"{int(R.loc[R['player_id'] == i, 'rank'].iat[0])}. {R.loc[R['player_id'] == i, 'player'].iat[0]}")
 i = int(R.index[R['player_id'] == who][0]); row = R.loc[i]
 a, b, c = st.columns([1.1, 1.5, 0.7])
