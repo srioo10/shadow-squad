@@ -1513,5 +1513,882 @@
    "LGBMRanker walk-forward": 0.52,
    "Spark GBTClassifier walk-forward": 53.75
   }
+ },
+ "phase5": {
+  "survival": {
+   "person_period_rows_scored": 2186,
+   "discrete_time_auc_walk_forward": 0.6883169689701695,
+   "discrete_time_auc_by_season": {
+    "2018": 0.7075847691458704,
+    "2019": 0.6762952302631579,
+    "2020": 0.6904433327583233,
+    "2021": 0.7369881710646041,
+    "2022": 0.68570960877394,
+    "2023": 0.6372398297067171
+   },
+   "cox_train_players": 799,
+   "cox_test_players": 819,
+   "cox_test_events": 158,
+   "c_index_cox_test": 0.6563672295658143,
+   "c_index_discrete_time_test": 0.6749109499071039,
+   "c_index_cox_train": 0.7244349513478802,
+   "top_hazard_ratios": {
+    "z_npxg": 1.097,
+    "z_take_on": 1.129,
+    "composite_perf_index": 1.159,
+    "min_num": 1.193
+   },
+   "bottom_hazard_ratios": {
+    "age_num": 0.786,
+    "z_tklw": 0.921,
+    "z_clr": 0.963
+   },
+   "calibration": [
+    {
+     "dec": 0,
+     "pred": 0.0278,
+     "obs": 0.0457,
+     "n": 219
+    },
+    {
+     "dec": 1,
+     "pred": 0.0457,
+     "obs": 0.0411,
+     "n": 219
+    },
+    {
+     "dec": 2,
+     "pred": 0.0595,
+     "obs": 0.1055,
+     "n": 218
+    },
+    {
+     "dec": 3,
+     "pred": 0.0739,
+     "obs": 0.0411,
+     "n": 219
+    },
+    {
+     "dec": 4,
+     "pred": 0.0885,
+     "obs": 0.1193,
+     "n": 218
+    },
+    {
+     "dec": 5,
+     "pred": 0.1046,
+     "obs": 0.1233,
+     "n": 219
+    },
+    {
+     "dec": 6,
+     "pred": 0.124,
+     "obs": 0.1193,
+     "n": 218
+    },
+    {
+     "dec": 7,
+     "pred": 0.1494,
+     "obs": 0.1598,
+     "n": 219
+    },
+    {
+     "dec": 8,
+     "pred": 0.1858,
+     "obs": 0.211,
+     "n": 218
+    },
+    {
+     "dec": 9,
+     "pred": 0.2819,
+     "obs": 0.3151,
+     "n": 219
+    }
+   ],
+   "calibration_mean_abs_gap": 0.022437394332069736
+  },
+  "conformal": {
+   "movers": [
+    {
+     "alpha": 0.5,
+     "target": 0.5,
+     "coverage": 0.43781094527363185,
+     "movers": 201,
+     "list_share_of_pool": 0.25539270477991466
+    },
+    {
+     "alpha": 0.3,
+     "target": 0.7,
+     "coverage": 0.7412935323383084,
+     "movers": 201,
+     "list_share_of_pool": 0.5103627919468202
+    },
+    {
+     "alpha": 0.2,
+     "target": 0.8,
+     "coverage": 0.8507462686567164,
+     "movers": 201,
+     "list_share_of_pool": 0.6584256174193734
+    },
+    {
+     "alpha": 0.1,
+     "target": 0.9,
+     "coverage": 0.945273631840796,
+     "movers": 201,
+     "list_share_of_pool": 0.836468211322325
+    }
+   ],
+   "replacement": [
+    {
+     "alpha": 0.5,
+     "target": 0.5,
+     "list_share_of_pool": 0.319672131147541,
+     "list_length_for_mean_pool": 31.891501294219154,
+     "coverage": 0.5789473684210527,
+     "calibration_events": 26,
+     "test_events": 38
+    },
+    {
+     "alpha": 0.3,
+     "target": 0.7,
+     "list_share_of_pool": 0.4909090909090909,
+     "list_length_for_mean_pool": 48.974641148325354,
+     "coverage": 0.7368421052631579,
+     "calibration_events": 26,
+     "test_events": 38
+    },
+    {
+     "alpha": 0.2,
+     "target": 0.8,
+     "list_share_of_pool": 0.6323529411764706,
+     "list_length_for_mean_pool": 63.085526315789465,
+     "coverage": 0.8421052631578947,
+     "calibration_events": 26,
+     "test_events": 38
+    },
+    {
+     "alpha": 0.1,
+     "target": 0.9,
+     "list_share_of_pool": 0.7019230769230769,
+     "list_length_for_mean_pool": 70.02606275303643,
+     "coverage": 0.868421052631579,
+     "calibration_events": 26,
+     "test_events": 38
+    }
+   ]
+  },
+  "main": {
+   "test_queries": 64,
+   "test_seasons": [
+    2020,
+    2021,
+    2022,
+    2023
+   ],
+   "mean_pool_size": 100.796875,
+   "queries_by_season": {
+    "2020": 8,
+    "2021": 18,
+    "2022": 18,
+    "2023": 20
+   },
+   "table": [
+    {
+     "method": "Random order of the pool",
+     "median_rank": 46.0,
+     "recall@5": 0.0584,
+     "recall@10": 0.1154,
+     "recall@25": 0.2839,
+     "recall@50": 0.5473,
+     "recall@5_lo": 0.0156,
+     "recall@10_lo": 0.0469,
+     "recall@25_lo": 0.1719,
+     "recall@50_lo": 0.4375,
+     "recall@5_hi": 0.125,
+     "recall@10_hi": 0.2031,
+     "recall@25_hi": 0.3906,
+     "recall@50_hi": 0.6562,
+     "MRR": 0.0571,
+     "median_rank_lo": NaN,
+     "median_rank_hi": NaN,
+     "p_vs_best_young@5": NaN,
+     "p_vs_best_young@10": NaN,
+     "p_vs_best_young@25": NaN,
+     "p_vs_best_young@50": NaN,
+     "p_vs_best_young_MRR": NaN
+    },
+    {
+     "method": "Best young performer (composite index)",
+     "median_rank": 29.5,
+     "recall@5": 0.0469,
+     "recall@10": 0.1719,
+     "recall@25": 0.4062,
+     "recall@50": 0.6562,
+     "recall@5_lo": 0.0,
+     "recall@10_lo": 0.0781,
+     "recall@25_lo": 0.2812,
+     "recall@50_lo": 0.5312,
+     "recall@5_hi": 0.1094,
+     "recall@10_hi": 0.2656,
+     "recall@25_hi": 0.5312,
+     "recall@50_hi": 0.7812,
+     "MRR": 0.0721,
+     "median_rank_lo": 23.0,
+     "median_rank_hi": 37.0,
+     "p_vs_best_young@5": NaN,
+     "p_vs_best_young@10": NaN,
+     "p_vs_best_young@25": NaN,
+     "p_vs_best_young@50": NaN,
+     "p_vs_best_young_MRR": NaN
+    },
+    {
+     "method": "Raw cosine similarity to the starter",
+     "median_rank": 35.0,
+     "recall@5": 0.125,
+     "recall@10": 0.25,
+     "recall@25": 0.3594,
+     "recall@50": 0.625,
+     "recall@5_lo": 0.0469,
+     "recall@10_lo": 0.1406,
+     "recall@25_lo": 0.25,
+     "recall@50_lo": 0.5,
+     "recall@5_hi": 0.2031,
+     "recall@10_hi": 0.3594,
+     "recall@25_hi": 0.4844,
+     "recall@50_hi": 0.7344,
+     "MRR": 0.1168,
+     "median_rank_lo": 27.0,
+     "median_rank_hi": 49.5,
+     "p_vs_best_young@5": 0.2247,
+     "p_vs_best_young@10": 0.3627,
+     "p_vs_best_young@25": 0.7162,
+     "p_vs_best_young@50": 0.8445,
+     "p_vs_best_young_MRR": 0.2099
+    },
+    {
+     "method": "Highest market value",
+     "median_rank": 19.25,
+     "recall@5": 0.1406,
+     "recall@10": 0.2656,
+     "recall@25": 0.625,
+     "recall@50": 0.7812,
+     "recall@5_lo": 0.0625,
+     "recall@10_lo": 0.1562,
+     "recall@25_lo": 0.5,
+     "recall@50_lo": 0.6875,
+     "recall@5_hi": 0.2344,
+     "recall@10_hi": 0.375,
+     "recall@25_hi": 0.75,
+     "recall@50_hi": 0.875,
+     "MRR": 0.0977,
+     "median_rank_lo": 13.25,
+     "median_rank_hi": 24.0,
+     "p_vs_best_young@5": 0.1123,
+     "p_vs_best_young@10": 0.2668,
+     "p_vs_best_young@25": 0.0163,
+     "p_vs_best_young@50": 0.1149,
+     "p_vs_best_young_MRR": 0.2663
+    },
+    {
+     "method": "Shadow Squad (LambdaMART, all scores)",
+     "median_rank": 26.0,
+     "recall@5": 0.125,
+     "recall@10": 0.3125,
+     "recall@25": 0.4688,
+     "recall@50": 0.7344,
+     "recall@5_lo": 0.0469,
+     "recall@10_lo": 0.2031,
+     "recall@25_lo": 0.3438,
+     "recall@50_lo": 0.625,
+     "recall@5_hi": 0.2188,
+     "recall@10_hi": 0.4219,
+     "recall@25_hi": 0.5938,
+     "recall@50_hi": 0.8438,
+     "MRR": 0.0891,
+     "median_rank_lo": 16.0,
+     "median_rank_hi": 36.0,
+     "p_vs_best_young@5": 0.2193,
+     "p_vs_best_young@10": 0.0812,
+     "p_vs_best_young@25": 0.5862,
+     "p_vs_best_young@50": 0.4211,
+     "p_vs_best_young_MRR": 0.4853
+    },
+    {
+     "method": "Shadow Squad fusion with Spark GBT (pointwise)",
+     "median_rank": 34.5,
+     "recall@5": 0.0156,
+     "recall@10": 0.1406,
+     "recall@25": 0.375,
+     "recall@50": 0.7031,
+     "recall@5_lo": 0.0,
+     "recall@10_lo": 0.0625,
+     "recall@25_lo": 0.25,
+     "recall@50_lo": 0.5938,
+     "recall@5_hi": 0.0469,
+     "recall@10_hi": 0.2344,
+     "recall@25_hi": 0.5,
+     "recall@50_hi": 0.8125,
+     "MRR": 0.0471,
+     "median_rank_lo": 26.0,
+     "median_rank_hi": 39.0,
+     "p_vs_best_young@5": 0.6198,
+     "p_vs_best_young@10": 0.8109,
+     "p_vs_best_young@25": 0.856,
+     "p_vs_best_young@50": 0.7199,
+     "p_vs_best_young_MRR": 0.2124
+    },
+    {
+     "method": "Ablation: no translation",
+     "median_rank": 28.5,
+     "recall@5": 0.0625,
+     "recall@10": 0.1875,
+     "recall@25": 0.4688,
+     "recall@50": 0.7344,
+     "recall@5_lo": 0.0156,
+     "recall@10_lo": 0.0938,
+     "recall@25_lo": 0.3438,
+     "recall@50_lo": 0.625,
+     "recall@5_hi": 0.125,
+     "recall@10_hi": 0.2812,
+     "recall@25_hi": 0.5938,
+     "recall@50_hi": 0.8438,
+     "MRR": 0.0632,
+     "median_rank_lo": 18.0,
+     "median_rank_hi": 35.0,
+     "p_vs_best_young@5": 1.0,
+     "p_vs_best_young@10": 1.0,
+     "p_vs_best_young@25": 0.5606,
+     "p_vs_best_young@50": 0.4275,
+     "p_vs_best_young_MRR": 0.7038
+    },
+    {
+     "method": "Ablation: no trajectory",
+     "median_rank": 25.5,
+     "recall@5": 0.1094,
+     "recall@10": 0.25,
+     "recall@25": 0.5,
+     "recall@50": 0.75,
+     "recall@5_lo": 0.0312,
+     "recall@10_lo": 0.1406,
+     "recall@25_lo": 0.375,
+     "recall@50_lo": 0.6406,
+     "recall@5_hi": 0.1875,
+     "recall@10_hi": 0.3594,
+     "recall@25_hi": 0.625,
+     "recall@50_hi": 0.8594,
+     "MRR": 0.0884,
+     "median_rank_lo": 17.0,
+     "median_rank_hi": 38.0,
+     "p_vs_best_young@5": 0.2895,
+     "p_vs_best_young@10": 0.3665,
+     "p_vs_best_young@25": 0.3392,
+     "p_vs_best_young@50": 0.3146,
+     "p_vs_best_young_MRR": 0.5326
+    },
+    {
+     "method": "Ablation: no PageRank",
+     "median_rank": 26.5,
+     "recall@5": 0.1719,
+     "recall@10": 0.25,
+     "recall@25": 0.4844,
+     "recall@50": 0.7344,
+     "recall@5_lo": 0.0781,
+     "recall@10_lo": 0.1562,
+     "recall@25_lo": 0.3594,
+     "recall@50_lo": 0.625,
+     "recall@5_hi": 0.2656,
+     "recall@10_hi": 0.3594,
+     "recall@25_hi": 0.6094,
+     "recall@50_hi": 0.8438,
+     "MRR": 0.1056,
+     "median_rank_lo": 18.0,
+     "median_rank_hi": 39.5,
+     "p_vs_best_young@5": 0.0416,
+     "p_vs_best_young@10": 0.362,
+     "p_vs_best_young@25": 0.4436,
+     "p_vs_best_young@50": 0.4046,
+     "p_vs_best_young_MRR": 0.2207
+    },
+    {
+     "method": "Ablation: no ALS taste",
+     "median_rank": 26.0,
+     "recall@5": 0.1406,
+     "recall@10": 0.2344,
+     "recall@25": 0.4844,
+     "recall@50": 0.75,
+     "recall@5_lo": 0.0625,
+     "recall@10_lo": 0.1406,
+     "recall@25_lo": 0.3594,
+     "recall@50_lo": 0.6406,
+     "recall@5_hi": 0.2344,
+     "recall@10_hi": 0.3438,
+     "recall@25_hi": 0.6094,
+     "recall@50_hi": 0.8438,
+     "MRR": 0.0894,
+     "median_rank_lo": 17.5,
+     "median_rank_hi": 35.0,
+     "p_vs_best_young@5": 0.1441,
+     "p_vs_best_young@10": 0.4834,
+     "p_vs_best_young@25": 0.4725,
+     "p_vs_best_young@50": 0.3078,
+     "p_vs_best_young_MRR": 0.5002
+    },
+    {
+     "method": "Single score: translated similarity",
+     "median_rank": 36.5,
+     "recall@5": 0.1406,
+     "recall@10": 0.2188,
+     "recall@25": 0.3125,
+     "recall@50": 0.625,
+     "recall@5_lo": 0.0625,
+     "recall@10_lo": 0.125,
+     "recall@25_lo": 0.2031,
+     "recall@50_lo": 0.5,
+     "recall@5_hi": 0.2344,
+     "recall@10_hi": 0.3281,
+     "recall@25_hi": 0.4219,
+     "recall@50_hi": 0.7344,
+     "MRR": 0.115,
+     "median_rank_lo": 31.0,
+     "median_rank_hi": 50.0,
+     "p_vs_best_young@5": 0.1492,
+     "p_vs_best_young@10": 0.6296,
+     "p_vs_best_young@25": 0.3472,
+     "p_vs_best_young@50": 0.8451,
+     "p_vs_best_young_MRR": 0.2091
+    },
+    {
+     "method": "Single score: hazard",
+     "median_rank": 22.5,
+     "recall@5": 0.1719,
+     "recall@10": 0.2812,
+     "recall@25": 0.5625,
+     "recall@50": 0.7812,
+     "recall@5_lo": 0.0938,
+     "recall@10_lo": 0.1719,
+     "recall@25_lo": 0.4375,
+     "recall@50_lo": 0.6719,
+     "recall@5_hi": 0.2656,
+     "recall@10_hi": 0.3906,
+     "recall@25_hi": 0.6875,
+     "recall@50_hi": 0.875,
+     "MRR": 0.1201,
+     "median_rank_lo": 15.0,
+     "median_rank_hi": 29.5,
+     "p_vs_best_young@5": 0.0196,
+     "p_vs_best_young@10": 0.0647,
+     "p_vs_best_young@25": 0.0207,
+     "p_vs_best_young@50": 0.0575,
+     "p_vs_best_young_MRR": 0.0258
+    },
+    {
+     "method": "Single score: value gap to the starter",
+     "median_rank": 23.0,
+     "recall@5": 0.1406,
+     "recall@10": 0.2031,
+     "recall@25": 0.5469,
+     "recall@50": 0.7344,
+     "recall@5_lo": 0.0625,
+     "recall@10_lo": 0.1094,
+     "recall@25_lo": 0.4219,
+     "recall@50_lo": 0.625,
+     "recall@5_hi": 0.2344,
+     "recall@10_hi": 0.3125,
+     "recall@25_hi": 0.6719,
+     "recall@50_hi": 0.8438,
+     "MRR": 0.1051,
+     "median_rank_lo": 14.5,
+     "median_rank_hi": 33.0,
+     "p_vs_best_young@5": 0.1072,
+     "p_vs_best_young@10": 0.8191,
+     "p_vs_best_young@25": 0.1474,
+     "p_vs_best_young@50": 0.4776,
+     "p_vs_best_young_MRR": 0.2426
+    }
+   ],
+   "full_minus_best_young_recall10_ci95": [
+    0.0,
+    0.28125
+   ],
+   "full_minus_best_young_recall25_ci95": [
+    -0.109375,
+    0.21875
+   ],
+   "recall10_by_season_full": {
+    "2020": 0.375,
+    "2021": 0.2777777777777778,
+    "2022": 0.3333333333333333,
+    "2023": 0.3
+   },
+   "recall10_by_position_full": {
+    "AM": [
+     2,
+     1.0
+    ],
+    "CB": [
+     20,
+     0.25
+    ],
+    "CM": [
+     5,
+     0.6
+    ],
+    "DM": [
+     2,
+     0.0
+    ],
+    "FB": [
+     11,
+     0.09090909090909091
+    ],
+    "ST": [
+     12,
+     0.3333333333333333
+    ],
+    "W": [
+     12,
+     0.4166666666666667
+    ]
+   }
+  }
+ },
+ "phase6": {
+  "shap_global": {
+   "mean_abs_shap": {
+    "traj_sim": 0.1555,
+    "sim_translated": 0.248,
+    "pipeline_rank": 0.2879,
+    "composite_perf_index": 0.2991,
+    "value_gap": 0.3149,
+    "club_taste": 0.323,
+    "log_value": 0.4114,
+    "age_num": 0.4169,
+    "hazard": 0.421
+   },
+   "direction_corr": {
+    "sim_translated": 0.397,
+    "traj_sim": -0.266,
+    "pipeline_rank": -0.467,
+    "club_taste": 0.633,
+    "hazard": 0.787,
+    "log_value": 0.844,
+    "value_gap": -0.837,
+    "age_num": -0.627,
+    "composite_perf_index": 0.228
+   },
+   "rows": 5955
+  },
+  "cases": [
+   {
+    "kind": "hit",
+    "tag": "hit_Dortmund_2023_Beier",
+    "club": "Dortmund",
+    "league": "Bundesliga",
+    "season": 2023,
+    "starter": "Niclas F\u00fcllkrug",
+    "position": "ST",
+    "signed": "Maximilian Beier",
+    "from": "Hoffenheim",
+    "fee": 28500000.0,
+    "rank": 2,
+    "pool": 76,
+    "signed_feature_percentile_in_pool": {
+     "sim_translated": 0.09,
+     "traj_sim": 0.04,
+     "pipeline_rank": 0.86,
+     "club_taste": 0.33,
+     "hazard": 0.91,
+     "log_value": 0.88,
+     "value_gap": 0.46,
+     "age_num": 0.05,
+     "composite_perf_index": 0.64
+    },
+    "signed_values": {
+     "sim_translated": -0.461,
+     "traj_sim": -0.58,
+     "pipeline_rank": 0.565,
+     "club_taste": 0.869,
+     "hazard": 0.228,
+     "log_value": 7.477,
+     "value_gap": 0.301,
+     "age_num": 20.0,
+     "composite_perf_index": 47.8
+    },
+    "starter_value": 15000000.0,
+    "signed_value": 30000000.0,
+    "top5": [
+     {
+      "player": "Elye Wahi",
+      "squad": "Lens",
+      "age_num": 20.0,
+      "value": 35000000.0,
+      "score": 0.425
+     },
+     {
+      "player": "Maximilian Beier",
+      "squad": "Hoffenheim",
+      "age_num": 20.0,
+      "value": 30000000.0,
+      "score": 0.148
+     },
+     {
+      "player": "Matthis Abline",
+      "squad": "Nantes",
+      "age_num": 20.0,
+      "value": 6000000.0,
+      "score": 0.083
+     },
+     {
+      "player": "J\u00f8rgen Strand Larsen",
+      "squad": "Celta Vigo",
+      "age_num": 23.0,
+      "value": 25000000.0,
+      "score": 0.007
+     },
+     {
+      "player": "Rodrigo Muniz",
+      "squad": "Fulham",
+      "age_num": 22.0,
+      "value": 20000000.0,
+      "score": -0.021
+     }
+    ],
+    "url": "?league=Bundesliga&club=Dortmund&t=2023&S=75489&X=578392"
+   },
+   {
+    "kind": "hit",
+    "tag": "hit_ParisS-G_2022_Lee",
+    "club": "Paris S-G",
+    "league": "Ligue 1",
+    "season": 2022,
+    "starter": "Neymar",
+    "position": "AM",
+    "signed": "Kang-in Lee",
+    "from": "RCD Mallorca",
+    "fee": 22000000.0,
+    "rank": 2,
+    "pool": 42,
+    "signed_feature_percentile_in_pool": {
+     "sim_translated": 0.93,
+     "traj_sim": 0.81,
+     "pipeline_rank": 0.24,
+     "club_taste": 0.76,
+     "hazard": 0.95,
+     "log_value": 0.74,
+     "value_gap": 0.24,
+     "age_num": 0.17,
+     "composite_perf_index": 0.45
+    },
+    "signed_values": {
+     "sim_translated": 0.756,
+     "traj_sim": 0.267,
+     "pipeline_rank": -0.241,
+     "club_taste": 0.814,
+     "hazard": 0.295,
+     "log_value": 7.342,
+     "value_gap": 0.503,
+     "age_num": 21.0,
+     "composite_perf_index": 58.2
+    },
+    "starter_value": 70000000.0,
+    "signed_value": 22000000.0,
+    "top5": [
+     {
+      "player": "Gabriel Veiga",
+      "squad": "Celta Vigo",
+      "age_num": 20.0,
+      "value": 30000000.0,
+      "score": 0.406
+     },
+     {
+      "player": "Lee Kang-in",
+      "squad": "Mallorca",
+      "age_num": 21.0,
+      "value": 22000000.0,
+      "score": 0.204
+     },
+     {
+      "player": "James Maddison",
+      "squad": "Leicester City",
+      "age_num": 25.0,
+      "value": 55000000.0,
+      "score": -0.041
+     },
+     {
+      "player": "Brenden Aaronson",
+      "squad": "Leeds United",
+      "age_num": 21.0,
+      "value": 30000000.0,
+      "score": -0.085
+     },
+     {
+      "player": "Oihan Sancet",
+      "squad": "Athletic Club",
+      "age_num": 22.0,
+      "value": 30000000.0,
+      "score": -0.106
+     }
+    ],
+    "url": "?league=Ligue%201&club=Paris%20S-G&t=2022&S=68290&X=557149"
+   },
+   {
+    "kind": "hit",
+    "tag": "hit_ParisS-G_2021_Soler",
+    "club": "Paris S-G",
+    "league": "Ligue 1",
+    "season": 2021,
+    "starter": "Georginio Wijnaldum",
+    "position": "CM",
+    "signed": "Carlos Soler",
+    "from": "Valencia",
+    "fee": 18000000.0,
+    "rank": 2,
+    "pool": 104,
+    "signed_feature_percentile_in_pool": {
+     "sim_translated": 0.6,
+     "traj_sim": 0.63,
+     "pipeline_rank": 0.66,
+     "club_taste": 0.51,
+     "hazard": 0.98,
+     "log_value": 0.97,
+     "value_gap": 0.54,
+     "age_num": 0.53,
+     "composite_perf_index": 0.75
+    },
+    "signed_values": {
+     "sim_translated": 0.061,
+     "traj_sim": 0.174,
+     "pipeline_rank": 0.13,
+     "club_taste": 1.114,
+     "hazard": 0.297,
+     "log_value": 7.699,
+     "value_gap": 0.444,
+     "age_num": 24.0,
+     "composite_perf_index": 55.3
+    },
+    "starter_value": 18000000.0,
+    "signed_value": 50000000.0,
+    "top5": [
+     {
+      "player": "Pablo Fornals",
+      "squad": "West Ham",
+      "age_num": 25.0,
+      "value": 22000000.0,
+      "score": 0.578
+     },
+     {
+      "player": "Carlos Soler",
+      "squad": "Valencia",
+      "age_num": 24.0,
+      "value": 50000000.0,
+      "score": 0.287
+     },
+     {
+      "player": "Jon Moncayola",
+      "squad": "Osasuna",
+      "age_num": 23.0,
+      "value": 12000000.0,
+      "score": 0.214
+     },
+     {
+      "player": "Declan Rice",
+      "squad": "West Ham",
+      "age_num": 22.0,
+      "value": 80000000.0,
+      "score": -0.047
+     },
+     {
+      "player": "Xaver Schlager",
+      "squad": "Wolfsburg",
+      "age_num": 23.0,
+      "value": 27000000.0,
+      "score": -0.063
+     }
+    ],
+    "url": "?league=Ligue%201&club=Paris%20S-G&t=2021&S=49499&X=372246"
+   },
+   {
+    "kind": "miss",
+    "tag": "miss_Marseille_2022_Me\u00eft\u00e9",
+    "club": "Marseille",
+    "league": "Ligue 1",
+    "season": 2022,
+    "starter": "Sead Kola\u0161inac",
+    "position": "CB",
+    "signed": "Bamo Me\u00eft\u00e9",
+    "from": "FC Lorient",
+    "fee": 10500000.0,
+    "rank": 131,
+    "pool": 133,
+    "signed_feature_percentile_in_pool": {
+     "sim_translated": 0.1,
+     "traj_sim": 0.14,
+     "pipeline_rank": 0.73,
+     "club_taste": 0.17,
+     "hazard": 0.56,
+     "log_value": 0.02,
+     "value_gap": 0.77,
+     "age_num": 0.02,
+     "composite_perf_index": 0.08
+    },
+    "signed_values": {
+     "sim_translated": -0.361,
+     "traj_sim": -0.453,
+     "pipeline_rank": 0.261,
+     "club_taste": 0.715,
+     "hazard": 0.096,
+     "log_value": 6.176,
+     "value_gap": 0.523,
+     "age_num": 20.0,
+     "composite_perf_index": 32.1
+    },
+    "starter_value": 5000000.0,
+    "signed_value": 1500000.0,
+    "top5": [
+     {
+      "player": "Erhan Ma\u0161ovi\u0107",
+      "squad": "Bochum",
+      "age_num": 23.0,
+      "value": 5000000.0,
+      "score": 0.808
+     },
+     {
+      "player": "Isma\u00ebl Doukour\u00e9",
+      "squad": "Strasbourg",
+      "age_num": 19.0,
+      "value": 3000000.0,
+      "score": 0.755
+     },
+     {
+      "player": "Marc Gu\u00e9hi",
+      "squad": "Crystal Palace",
+      "age_num": 22.0,
+      "value": 35000000.0,
+      "score": 0.419
+     },
+     {
+      "player": "Gast\u00f3n \u00c1lvarez",
+      "squad": "Getafe",
+      "age_num": 22.0,
+      "value": 5000000.0,
+      "score": 0.368
+     },
+     {
+      "player": "Jean-Clair Todibo",
+      "squad": "Nice",
+      "age_num": 22.0,
+      "value": 30000000.0,
+      "score": 0.346
+     }
+    ],
+    "url": "?league=Ligue%201&club=Marseille&t=2022&S=94005&X=807165"
+   }
+  ],
+  "screens": [
+   "outputs/screens/hit_Dortmund_2023_Beier.png",
+   "outputs/screens/hit_ParisS-G_2022_Lee.png",
+   "outputs/screens/hit_ParisS-G_2021_Soler.png",
+   "outputs/screens/miss_Marseille_2022_Me\u00eft\u00e9.png"
+  ]
  }
 }
