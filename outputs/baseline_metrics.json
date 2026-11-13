@@ -1,0 +1,391 @@
+{
+ "minutes_column": "avg_mins_per_match",
+ "min_num_describe": {
+  "count": 18243.0,
+  "mean": 1362.4,
+  "std": 956.5,
+  "min": 1.0,
+  "25%": 495.0,
+  "50%": 1270.0,
+  "75%": 2136.5,
+  "max": 3420.0
+ },
+ "rows_raw": 18243,
+ "rows_outfield_900": 10435,
+ "n_metrics": 16,
+ "pool_n": 1974,
+ "pool_hit_rate": 0.2674772036474164,
+ "pool_weighted_precision": 0.2135258358662614,
+ "pool_top_club_rate": 0.17933130699088146,
+ "base_rate_by_tier": {
+  "0": 0.7345,
+  "1": 0.0861,
+  "2": 0.0375,
+  "3": 0.1418
+ },
+ "base_count_by_tier": {
+  "0": 1450,
+  "1": 170,
+  "2": 74,
+  "3": 280
+ },
+ "base_by_season": [
+  {
+   "yr": 2017,
+   "players": 378,
+   "hit_rate": 0.267,
+   "weighted": 0.214,
+   "top_club": 0.185
+  },
+  {
+   "yr": 2018,
+   "players": 405,
+   "hit_rate": 0.242,
+   "weighted": 0.195,
+   "top_club": 0.173
+  },
+  {
+   "yr": 2019,
+   "players": 360,
+   "hit_rate": 0.244,
+   "weighted": 0.19,
+   "top_club": 0.161
+  },
+  {
+   "yr": 2020,
+   "players": 404,
+   "hit_rate": 0.26,
+   "weighted": 0.203,
+   "top_club": 0.153
+  },
+  {
+   "yr": 2021,
+   "players": 427,
+   "hit_rate": 0.319,
+   "weighted": 0.261,
+   "top_club": 0.22
+  }
+ ],
+ "base_by_league": [
+  {
+   "scouted from": "Premier League",
+   "players": 334,
+   "hit_rate": 0.165,
+   "move_up": 0.162,
+   "top_club": 0.162
+  },
+  {
+   "scouted from": "La Liga",
+   "players": 332,
+   "hit_rate": 0.223,
+   "move_up": 0.223,
+   "top_club": 0.172
+  },
+  {
+   "scouted from": "Bundesliga",
+   "players": 398,
+   "hit_rate": 0.264,
+   "move_up": 0.264,
+   "top_club": 0.178
+  },
+  {
+   "scouted from": "Serie A",
+   "players": 420,
+   "hit_rate": 0.271,
+   "move_up": 0.264,
+   "top_club": 0.198
+  },
+  {
+   "scouted from": "Ligue 1",
+   "players": 490,
+   "hit_rate": 0.367,
+   "move_up": 0.367,
+   "top_club": 0.182
+  }
+ ],
+ "tier_by_season": [
+  {
+   "yr": 2017,
+   "0": 0.7354,
+   "1": 0.0794,
+   "2": 0.045,
+   "3": 0.1402
+  },
+  {
+   "yr": 2018,
+   "0": 0.7605,
+   "1": 0.0667,
+   "2": 0.0469,
+   "3": 0.1259
+  },
+  {
+   "yr": 2019,
+   "0": 0.7583,
+   "1": 0.0806,
+   "2": 0.05,
+   "3": 0.1111
+  },
+  {
+   "yr": 2020,
+   "0": 0.7401,
+   "1": 0.1064,
+   "2": 0.0149,
+   "3": 0.1386
+  },
+  {
+   "yr": 2021,
+   "0": 0.6838,
+   "1": 0.096,
+   "2": 0.0328,
+   "3": 0.1874
+  }
+ ],
+ "moves_new_rule": 524,
+ "moves_old_rule": 67,
+ "eta_style_raw": 0.05178286095046051,
+ "eta_style_weighted": 0.023165630995622147,
+ "eta_league_raw": 0.010038008659413978,
+ "eta_league_weighted": 0.010781619191042693,
+ "elasticities_supported": 49,
+ "clubs_matched_understat": 145,
+ "shortlist_hit_rate": 0.224,
+ "best_composite_hit_rate": 0.432,
+ "shortlist_perm_p": 0.8877112288771123,
+ "shortlist_minus_best_ci95": [
+  -0.32,
+  -0.09599999999999997
+ ],
+ "similarity_measures": [
+  {
+   "measure / representation": "cosine / PCA",
+   "picks": 125,
+   "hit_rate": 0.296,
+   "CI95_low": 0.22302390784930146,
+   "CI95_high": 0.38114120652369604,
+   "weighted_precision": 0.252,
+   "top_club_moves": 29,
+   "overlap_with_baseline_cosine": 0.13636363636363635
+  },
+  {
+   "measure / representation": "mahalanobis / winsorised z",
+   "picks": 125,
+   "hit_rate": 0.296,
+   "CI95_low": 0.22302390784930146,
+   "CI95_high": 0.38114120652369604,
+   "weighted_precision": 0.234,
+   "top_club_moves": 24,
+   "overlap_with_baseline_cosine": 0.28205128205128205
+  },
+  {
+   "measure / representation": "manhattan / winsorised z",
+   "picks": 125,
+   "hit_rate": 0.272,
+   "CI95_low": 0.20165963789326397,
+   "CI95_high": 0.3559366664059686,
+   "weighted_precision": 0.226,
+   "top_club_moves": 26,
+   "overlap_with_baseline_cosine": 0.32275132275132273
+  },
+  {
+   "measure / representation": "cosine / winsorised z",
+   "picks": 125,
+   "hit_rate": 0.248,
+   "CI95_low": 0.18056639010525916,
+   "CI95_high": 0.3304611041202084,
+   "weighted_precision": 0.214,
+   "top_club_moves": 25,
+   "overlap_with_baseline_cosine": 0.26262626262626265
+  },
+  {
+   "measure / representation": "euclidean / winsorised z",
+   "picks": 125,
+   "hit_rate": 0.24,
+   "CI95_low": 0.17359960150069906,
+   "CI95_high": 0.3219049560335135,
+   "weighted_precision": 0.196,
+   "top_club_moves": 22,
+   "overlap_with_baseline_cosine": 0.32978723404255317
+  },
+  {
+   "measure / representation": "pearson / winsorised z",
+   "picks": 125,
+   "hit_rate": 0.232,
+   "CI95_low": 0.16666666666666669,
+   "CI95_high": 0.3133149541762909,
+   "weighted_precision": 0.208,
+   "top_club_moves": 24,
+   "overlap_with_baseline_cosine": 0.2315270935960591
+  },
+  {
+   "measure / representation": "cosine / p90 standardised",
+   "picks": 125,
+   "hit_rate": 0.224,
+   "CI95_low": 0.15976874687261633,
+   "CI95_high": 0.3046899372790862,
+   "weighted_precision": 0.18,
+   "top_club_moves": 18,
+   "overlap_with_baseline_cosine": 1.0
+  }
+ ],
+ "rules_oot": {
+  "flagged": 342.0,
+  "flagged_moved_up": 136.0,
+  "flagged_rate": 0.39766081871345027,
+  "unflagged_rate": 0.21267893660531698,
+  "pool_rate": 0.2888086642599278,
+  "lift": 1.3769005847953215,
+  "weighted_flagged": 0.3230994152046784,
+  "weighted_pool": 0.2325511432009627,
+  "fisher_p": 6.484244462745783e-09
+ },
+ "leaderboard": [
+  {
+   "method": "Logistic regression",
+   "mean_AUC": 0.6811177159342119,
+   "mean_AP": 0.4468338088603489,
+   "hits@K": 46,
+   "picks": 75,
+   "precision@K": 0.6133333333333333,
+   "CI95_low": 0.5001726873212743,
+   "CI95_high": 0.7154495222736602,
+   "lift_vs_pool": 2.2338837920489296,
+   "weighted_precision@K": 0.5,
+   "binomial_p": 9.028860874644128e-10
+  },
+  {
+   "method": "Decision tree",
+   "mean_AUC": 0.5881909728951961,
+   "mean_AP": 0.3291603232018361,
+   "hits@K": 36,
+   "picks": 75,
+   "precision@K": 0.48,
+   "CI95_low": 0.37068921756788065,
+   "CI95_high": 0.5912598042683074,
+   "lift_vs_pool": 1.748256880733945,
+   "weighted_precision@K": 0.4066666666666667,
+   "binomial_p": 0.00012060045694771616
+  },
+  {
+   "method": "Mined rules (ARM)",
+   "mean_AUC": 0.6010130986240534,
+   "mean_AP": 0.37831591055920305,
+   "hits@K": 35,
+   "picks": 75,
+   "precision@K": 0.4666666666666667,
+   "CI95_low": 0.35815509458811656,
+   "CI95_high": 0.5784266084721967,
+   "lift_vs_pool": 1.6996941896024467,
+   "weighted_precision@K": 0.3566666666666667,
+   "binomial_p": 0.00029642234469121894
+  },
+  {
+   "method": "Random forest",
+   "mean_AUC": 0.6525784063549427,
+   "mean_AP": 0.38667008056753566,
+   "hits@K": 34,
+   "picks": 75,
+   "precision@K": 0.4533333333333333,
+   "CI95_low": 0.34569612127592114,
+   "CI95_high": 0.5655182630085175,
+   "lift_vs_pool": 1.651131498470948,
+   "weighted_precision@K": 0.4,
+   "binomial_p": 0.0006929953204026798
+  },
+  {
+   "method": "Best composite (baseline)",
+   "mean_AUC": 0.5995352732864114,
+   "mean_AP": 0.3588102490621646,
+   "hits@K": 31,
+   "picks": 75,
+   "precision@K": 0.41333333333333333,
+   "CI95_low": 0.30877553459149687,
+   "CI95_high": 0.5263368933653179,
+   "lift_vs_pool": 1.5054434250764526,
+   "weighted_precision@K": 0.33666666666666667,
+   "binomial_p": 0.006566409946459237
+  },
+  {
+   "method": "Naive Bayes",
+   "mean_AUC": 0.6089358933916108,
+   "mean_AP": 0.3555281816321177,
+   "hits@K": 28,
+   "picks": 75,
+   "precision@K": 0.37333333333333335,
+   "CI95_low": 0.27255803135314144,
+   "CI95_high": 0.4864524402760493,
+   "lift_vs_pool": 1.3597553516819574,
+   "weighted_precision@K": 0.3433333333333333,
+   "binomial_p": 0.0398497443606994
+  },
+  {
+   "method": "Bucket-brigade LCS",
+   "mean_AUC": 0.5686499522636249,
+   "mean_AP": 0.33371087460192106,
+   "hits@K": 27,
+   "picks": 75,
+   "precision@K": 0.36,
+   "CI95_low": 0.26064766399338823,
+   "CI95_high": 0.47299548885992776,
+   "lift_vs_pool": 1.3111926605504587,
+   "weighted_precision@K": 0.2866666666666667,
+   "binomial_p": 0.06589850077480322
+  },
+  {
+   "method": "Similarity to elite starters",
+   "mean_AUC": 0.49583496160105117,
+   "mean_AP": 0.2768730244122962,
+   "hits@K": 16,
+   "picks": 75,
+   "precision@K": 0.21333333333333335,
+   "CI95_low": 0.13580086342007996,
+   "CI95_high": 0.31880178289861477,
+   "lift_vs_pool": 0.7770030581039756,
+   "weighted_precision@K": 0.17666666666666667,
+   "binomial_p": 0.9090261049825512
+  }
+ ],
+ "K_PICK": 25,
+ "walk_forward_seasons": [
+  2019,
+  2020,
+  2021
+ ],
+ "ablation_auc": [
+  {
+   "model": "Logistic regression",
+   "raw per-90 percentiles": 0.7010495816982983,
+   "team-style + league weighted": 0.6995713951889974
+  },
+  {
+   "model": "Random forest",
+   "raw per-90 percentiles": 0.6588224175054048,
+   "team-style + league weighted": 0.6563545356686458
+  }
+ ],
+ "regression": [
+  {
+   "model": "Ridge regression",
+   "MAE": 6.811238399392136,
+   "RMSE": 8.609823184618161,
+   "R2": 0.4176443085537086
+  },
+  {
+   "model": "Gradient boosting",
+   "MAE": 7.0173637885848885,
+   "RMSE": 8.861028077922757,
+   "R2": 0.38316631213558505
+  },
+  {
+   "model": "Persistence (same index as now)",
+   "MAE": 7.647083333333333,
+   "RMSE": 9.66696694935904,
+   "R2": 0.2658575675074344
+  },
+  {
+   "model": "Mean of training targets",
+   "MAE": 9.29129297458894,
+   "RMSE": 11.285760713405674,
+   "R2": -0.0006023872601848002
+  }
+ ]
+}
