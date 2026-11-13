@@ -1313,5 +1313,205 @@
     -0.030455019362526082
    ]
   }
+ },
+ "phase4": {
+  "translation": {
+   "movers": 1110,
+   "cross_league_movers": 460,
+   "new_club_style_known": 953,
+   "mean_scaled_mae": {
+    "a_raw": 0.4949362816115702,
+    "b_neutral": 0.4863147211874726,
+    "c_translated": 0.488755130051894,
+    "c_oracle_style": 0.4835847412497543
+   },
+   "c_minus_a_ci95": [
+    -0.009624480988460466,
+    -0.0027476351399800284
+   ],
+   "c_minus_b_ci95": [
+    -0.0010316900978067942,
+    0.00608322169000389
+   ],
+   "b_minus_a_ci95": [
+    -0.012464396312945025,
+    -0.005132995175314797
+   ],
+   "oracle_minus_a_ci95": [
+    -0.015032038340834624,
+    -0.007885481243576162
+   ],
+   "cells_c_beats_a": 37,
+   "cells_total": 48,
+   "metrics_c_beats_a_all_positions": [
+    "gls",
+    "npxg",
+    "sh",
+    "ast",
+    "kp",
+    "sca",
+    "prgp",
+    "take_on",
+    "int",
+    "clr",
+    "blocks",
+    "aer_won"
+   ],
+   "cross_league_only": {
+    "a_raw": 0.529354191216598,
+    "b_neutral": 0.5054628023416823,
+    "c_translated": 0.5073562301015337,
+    "c_oracle_style": 0.5002816669142524
+   },
+   "big_style_change_only": {
+    "n": 399,
+    "a_raw": 0.5123341421304611,
+    "b_neutral": 0.5050376162741862,
+    "c_translated": 0.5132564862834144,
+    "c_oracle_style": 0.5058091860773962
+   },
+   "by_pos": {
+    "DF": {
+     "a_raw": 0.43958930043093725,
+     "b_neutral": 0.4351557676561557,
+     "c_translated": 0.43354832782215247,
+     "c_oracle_style": 0.42800702304901134
+    },
+    "MF": {
+     "a_raw": 0.5238047045918042,
+     "b_neutral": 0.5100735689607466,
+     "c_translated": 0.5175466974253987,
+     "c_oracle_style": 0.5128520136803003
+    },
+    "FW": {
+     "a_raw": 0.548854219972318,
+     "b_neutral": 0.5401454783563188,
+     "c_translated": 0.5425416133820029,
+     "c_oracle_style": 0.5373473175990942
+    }
+   }
+  },
+  "pairs": {
+   "rows": 32776,
+   "queries": 342,
+   "in_pool_queries": 95,
+   "positives": 102,
+   "positives_in_candidate_set": 97,
+   "traj_available": 1.0,
+   "traj_age_aligned_share": 0.13604466682938735,
+   "value_missing": 0.0001525506468147425,
+   "hazard_missing": 0.08158408591652429,
+   "mean_feature_pos_vs_neg": {
+    "sim_translated": [
+     0.11619846144009838,
+     0.03240813780938119
+    ],
+    "traj_sim": [
+     0.062021005986998556,
+     0.005781865742349161
+    ],
+    "pipeline_rank": [
+     -0.14978432598049105,
+     -0.24533944472010613
+    ],
+    "club_taste": [
+     0.6206222767850348,
+     0.5659640129613879
+    ],
+    "hazard": [
+     0.17151274101969838,
+     0.10921172760122916
+    ],
+    "log_value": [
+     7.1340176408075875,
+     6.843775236416573
+    ],
+    "value_gap": [
+     0.3595594639299086,
+     0.530500948836644
+    ],
+    "age_num": [
+     22.186274509803923,
+     23.2202892247472
+    ],
+    "composite_perf_index": [
+     52.54607843137257,
+     48.80764379689029
+    ],
+    "sim_raw": [
+     0.0795765455669973,
+     -0.011879054119083032
+    ],
+    "sim_neutral": [
+     0.07765747082252918,
+     0.0033620454123960593
+    ]
+   }
+  },
+  "trajectory": {
+   "two_season_vectors": 5884,
+   "lsh_pairs": 5401406,
+   "lsh_pair_share": 0.9646046525416252,
+   "lsh_recall_top10": 0.999,
+   "spearman_traj_vs_dtw": 0.42879192215283013,
+   "median_rank_true_signing_traj_sim": 40.5,
+   "median_rank_true_signing_dtw": 40.0,
+   "recall10_traj_sim": 0.16666666666666666,
+   "recall10_dtw": 0.16666666666666666
+  },
+  "fusion": {
+   "test_seasons": [
+    2020,
+    2021,
+    2022,
+    2023
+   ],
+   "train_queries_first_fold": 31,
+   "lgbm": {
+    "queries": 64,
+    "median_rank": 26.0,
+    "recall@5": 0.125,
+    "recall@10": 0.3125,
+    "recall@25": 0.46875
+   },
+   "gbt_spark": {
+    "queries": 64,
+    "median_rank": 34.5,
+    "recall@5": 0.015625,
+    "recall@10": 0.140625,
+    "recall@25": 0.375
+   },
+   "gain_share_all_events_model": {
+    "hazard": 0.1555,
+    "pipeline_rank": 0.1432,
+    "sim_translated": 0.1274,
+    "log_value": 0.1164,
+    "traj_sim": 0.1148,
+    "composite_perf_index": 0.0917,
+    "value_gap": 0.0917,
+    "club_taste": 0.0846,
+    "age_num": 0.0745
+   },
+   "features": [
+    "sim_translated",
+    "traj_sim",
+    "pipeline_rank",
+    "club_taste",
+    "hazard",
+    "log_value",
+    "value_gap",
+    "age_num",
+    "composite_perf_index"
+   ]
+  },
+  "runtime_s": {
+   "value at t": 3.57,
+   "discrete-time hazard, Spark LR, 6 refits": 14.02,
+   "pair features": 2.41,
+   "trajectory LSH self-join": 19.9,
+   "DTW on in-pool events": 0.22,
+   "LGBMRanker walk-forward": 0.52,
+   "Spark GBTClassifier walk-forward": 53.75
+  }
  }
 }
