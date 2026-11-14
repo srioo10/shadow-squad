@@ -63,3 +63,8 @@ try:
                           'legend.frameon': False, 'legend.fontsize': 8, 'lines.linewidth': 2, 'lines.markersize': 5, 'font.family': 'DejaVu Sans', 'savefig.dpi': 200, 'figure.dpi': 110})
 except ImportError:
     pass
+# a method keeps its colour in every figure
+MCOL = {'Shadow Squad': ORANGE, 'Market value': BLUE, 'Best young performer': GREEN, 'Random': GREY, 'Hazard': VIOLET, 'Raw cosine': PINK, 'Under-priced (hedonic)': AMBER}
+def fmt_p(p):
+    """p-values the way the report prints them: 0.97, 0.04, <0.001."""
+    return '<0.001' if p < 0.001 else (f'{p:.3f}' if p < 0.01 else f'{p:.2f}')

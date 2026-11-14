@@ -1,0 +1,37 @@
+--[3] Shadow Squad            100.0        0.180                  0.052   
+Best young performer    100.0        0.284                  0.128   
+Market value            100.0       -0.005                 -0.007   
+Hazard                  100.0        0.222                  0.162   
+Under-priced (hedonic)  100.0        1.760                  1.488   
+Random                  100.0        0.220                  0.070   
+
+Shadow Squad                   -0.076      0.40   0.199             0.564   
+Best young performer            0.000      0.47   0.237             0.270   
+Market value                   -0.082      0.39  -0.012             0.975   
+Hazard                          0.000      0.45   0.261             0.432   
+Under-priced (hedonic)          0.367      0.63   0.388             0.000   
+Random                         -0.100      0.39   0.151               NaN   
+
+Shadow Squad                     52.0                          0.166  
+Best young performer             43.0                          0.251  
+Market value                     49.0                          0.119  
+Hazard                           63.0                          0.295  
+Under-priced (hedonic)           16.0                          1.396  
+Random                            NaN                            NaN  
+--[3] 1095        Yan Couto      Girona  2022   4000000.0  20000000.0  4.00
+1821     Habib Diarra  Strasbourg  2022   4000000.0  20000000.0  4.00
+190   Ismaël Doukouré  Strasbourg  2022   3000000.0  15000000.0  4.00
+242    Wilson Odobert     Burnley  2023  10000000.0  29300000.0  1.93
+424       Lee Kang-in    Mallorca  2021   8000000.0  22000000.0  1.75
+--[5] {'Bundesliga': (-0.81, '<0.001'), 'La Liga': (-0.646, '<0.001'), 'Ligue 1': (-1.019, '<0.001'), 'Serie A': (-0.725, '<0.001')} | return model: {'Bundesliga': (-0.361, '<0.001'), 'La Liga': (-0.15, '<0.001'), 'Ligue 1': (-0.328, '<0.001'), 'Serie A': (-0.206, '<0.001')}
+R2 0.705 0.313 | residual vs return -0.256 <0.001 {1: 0.853, 2: 0.322, 3: 0.138, 4: -0.049, 5: -0.166}
+under-priced: [('z_sca', 0.048, 0.0028), ('z_gls', 0.0431, 0.0), ('z_npxg', 0.0428, 0.0005), ('z_take_on', 0.0297, 0.0066)] over-priced: [('z_sh', 0.0014, 0.9147), ('z_ppa', 0.0002, 0.9813), ('z_kp', -0.0007, 0.9597), ('z_prgc', -0.0044, 0.6952)]
+
+--[7] {'feeders': 1372, 'treated': 190, 'matching_chosen': {'twins_per_treated': 25, 'caliper_sd': 0.2, 'with_replacement': False, 'worst_smd': 0.12161320774562764, 'pairs': 142}, 'distinct_twins': 142, 'matched_pairs': 142, 'max_abs_smd_before': 0.4106317931286949, 'max_abs_smd_after': 0.12161320774562764, 'covariates_over_0.1_after': ['lv', 'z_blocks'], 'att': {'minutes_share': {'pairs': 142, 'att': 0.018105139263513658, 'ci95': [-0.043031596441393455, 0.07933157121262144], 'p_sign_flip': 0.56925, 'treated_mean_change': -0.18609645489033272, 'twin_mean_change': -0.20420159415384637, 'std_effect': 0.05834232786186578, 'e_value': 1.2943161618116532, 'e_value_ci': 1.0}, 'neutral_output_index': {'pairs': 79, 'att': -0.04556962025316547, 'ci95': [-2.8278797468354435, 2.864556962025315], 'p_sign_flip': 0.9746, 'treated_mean_change': -0.9836363636363643, 'twin_mean_change': -1.330097087378641, 'std_effect': -0.0050219692124209405, 'e_value': 1.0724142976791526, 'e_value_ci': 1.0}}}
+{'all': (-0.008, [-0.09, 0.074]), '21 or under': (-0.01, [-0.091, 0.071]), '22': (-0.01, [-0.094, 0.074]), '23-24': (-0.005, [-0.088, 0.077]), 'DF': (-0.001, [-0.085, 0.083]), 'MF': (-0.013, [-0.094, 0.068]), 'FW': (-0.011, [-0.094, 0.072])}
+{'21 or under | d_min': (60, 0.072, [-0.03, 0.177]), '21 or under | d_out': (33, -0.915, [-5.434, 3.682]), '22 | d_min': (19, 0.032, [-0.13, 0.191]), '22 | d_out': (13, 1.892, [-3.608, 7.446]), '23-24 | d_min': (63, -0.037, [-0.118, 0.045]), '23-24 | d_out': (33, 0.061, [-4.494, 4.815]), 'DF | d_min': (54, 0.065, [-0.031, 0.168]), 'DF | d_out': (32, -3.244, [-7.541, 1.166]), 'MF | d_min': (53, -0.026, [-0.123, 0.067]), 'MF | d_out': (29, -0.769, [-5.114, 3.452]), 'FW | d_min': (35, 0.014, [-0.119, 0.149]), 'FW | d_out': (18, 6.806, [1.016, 12.606]), 'buyer less dominant | d_min': (72, 0.001, [-0.079, 0.083]), 'buyer less dominant | d_out': (37, 0.086, [-4.219, 4.232]), 'buyer more dominant | d_min': (70, 0.036, [-0.057, 0.13]), 'buyer more dominant | d_out': (42, -0.162, [-4.021, 3.603])}
+
+--[9] {'queries': 150, 'near_miss_players': 1500, 'cheap': ['sh', 'take_on', 'clr', 'prgc'], 'gameability': 0.13466666666666666, 'gameability_ci95': [0.11894590643274854, 0.14893617021276595], 'median_steps': 1.0, 'median_change_share_of_range': 0.05, 'most_used_metric': 'sh', 'share_of_gamers_using_it': 0.4158415841584158, 'median_added_per90': {'sh': 0.0932087499999999, 'take_on': 0.14443249999999996, 'clr': 0.13837999999999973, 'prgc': 0.15215}, 'median_relative_increase': {'sh': 0.07755939919967386, 'take_on': 0.12302901561955189, 'clr': 0.08850000000000002, 'prgc': 0.09503597900773686}, 'gamed_with_one_metric_alone': {'sh': 0.05333333333333334, 'take_on': 0.03266666666666666, 'clr': 0.03333333333333333, 'prgc': 0.010666666666666666}, 'search_seconds': 4.8}
+
+--[11] {'gameability_through_cheap_metrics': 0.0, 'test_queries': 91, 'recall10_before': 0.2967032967032967, 'recall10_after': 0.34065934065934067, 'recall10_change_ci95': [-0.054945054945054944, 0.14285714285714285], 'recall25_before': 0.5824175824175825, 'recall25_after': 0.5714285714285714, 'median_rank_before': 19.0, 'median_rank_after': 23.0}
+

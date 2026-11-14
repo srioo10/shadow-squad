@@ -41,6 +41,7 @@ class Lake:
         ws = np.bincount(gi, w, ng)[:, None]; agg = lambda V: np.stack([np.bincount(gi, w * V[:, j], ng) for j in range(V.shape[1])], 1) / ws
         self.CENR, self.CENZ = agg(self.RAWV), agg(np.nan_to_num(self.Z)); v = F['value'].to_numpy(float); self.CENV = np.bincount(gi, np.nan_to_num(v), ng) / np.maximum(np.bincount(gi, ~np.isnan(v), ng), 1); self.CENV[self.CENV == 0] = np.nan
         self.CEN = key.drop_duplicates('g').rename(columns={'g': 'ci'})
+        self.dims = np.arange(len(MET))      # metrics used by the profile similarities (the red-team notebook drops the cheap ones)
         self.STY = F.groupby(['club_id', 'yr']).agg(x_dom=('x_dom', 'first'), x_press=('x_press', 'first'), c_league=('comp', 'first')).reset_index()
 
     def translate(self, neutral, pos_group, x_dom, x_press, league, cutoff):
@@ -52,13 +53,15 @@ class Lake:
     def zraw(self, vals, fine_pos, cutoff):
         cutoff = np.broadcast_to(cutoff, len(vals)); return (np.log(vals + EPS) - np.stack([self.mu[(c, p)] for c, p in zip(cutoff, fine_pos)])) / np.stack([self.sd[(c, p)] for c, p in zip(cutoff, fine_pos)])
 
-    def _traj(self, xi, si, t):
+    def _traj(self, xi, si, t, z0=None):
         """Mean cosine of season vectors: candidate at t-k against the starter at the same age when that season is in the data, else against the starter at t-k."""
         delta = int(round(self.age[si] - self.age[xi])) if not (np.isnan(self.age[si]) or np.isnan(self.age[xi])) else 0
         px, ps = self.F['player_id'].iat[xi], self.F['player_id'].iat[si]
         for d, aligned in ((delta, True), (0, False)):
             pairs = [(self.idx.get((px, t - k)), self.idx.get((ps, t - d - k))) for k in range(3)]; pairs = [(a, b) for a, b in pairs if a is not None and b is not None]
-            if len(pairs) >= (2 if aligned and d != 0 else 1): return float(np.mean([cos(self.Z[a], self.Z[b]) for a, b in pairs])), aligned and d != 0, len(pairs)
+            if len(pairs) >= (2 if aligned and d != 0 else 1):
+                dm = self.dims; zx = lambda a: (z0 if (z0 is not None and a == xi) else self.Z[a])[dm]      # z0: an altered season-t vector for the candidate
+                return float(np.mean([cos(zx(a), self.Z[b][dm]) for a, b in pairs])), aligned and d != 0, len(pairs)
         return np.nan, False, 0
 
     def _common(self, P, ref_value, tr):
@@ -74,7 +77,7 @@ class Lake:
         P = Q.merge(self.pool, left_on=['t', 'P'], right_on=['yr', 'fine_pos']).reset_index(drop=True); F = self.F
         si = np.array([self.idx[k] for k in zip(P['S'], P['t'])]); xi = P['fi'].to_numpy(); fp = P['P'].to_numpy(); t = P['t'].to_numpy()
         tr = self.translate(self.NEU[xi], P['pos_group'].to_numpy(), F['x_dom'].to_numpy()[si], F['x_press'].to_numpy()[si], F['comp'].to_numpy()[si], t)
-        zS = self.zraw(self.RAWV[si], fp, t); P['sim_translated'] = rowcos(self.zraw(tr, fp, t), zS); P['sim_raw'] = rowcos(self.zraw(self.RAWV[xi], fp, t), zS); P['sim_neutral'] = rowcos(self.Z[xi], self.Z[si])
+        dm = self.dims; zS = self.zraw(self.RAWV[si], fp, t)[:, dm]; P['sim_translated'] = rowcos(self.zraw(tr, fp, t)[:, dm], zS); P['sim_raw'] = rowcos(self.zraw(self.RAWV[xi], fp, t)[:, dm], zS); P['sim_neutral'] = rowcos(self.Z[xi][:, dm], self.Z[si][:, dm])
         tj = [self._traj(a, b, tt) for a, b, tt in zip(xi, si, t)]; P['traj_sim'], P['traj_age_aligned'], P['traj_n'] = zip(*tj)
         return self._common(P, F['value'].to_numpy()[si], tr)
 
@@ -87,10 +90,10 @@ class Lake:
         def cidx(k): return P[['C', 'P']].assign(yr=t - k).merge(self.CEN, left_on=['C', 'yr', 'P'], right_on=['club_id', 'yr', 'fine_pos'], how='left')['ci'].to_numpy()
         def xidx(k): return P[['player_id']].assign(yr=t - k).merge(self.F[['player_id', 'yr', 'fi']], on=['player_id', 'yr'], how='left')['fi'].to_numpy()
         c0 = cidx(0); ok = ~np.isnan(c0); ci = np.where(ok, c0, 0).astype(int); nan = lambda v, m: np.where(m, v, np.nan)
-        zC = self.zraw(self.CENR[ci], fp, t); P['sim_translated'] = nan(rowcos(self.zraw(tr, fp, t), zC), ok); P['sim_raw'] = nan(rowcos(self.zraw(self.RAWV[xi], fp, t), zC), ok); P['sim_neutral'] = nan(rowcos(self.Z[xi], self.CENZ[ci]), ok)
+        dm = self.dims; zC = self.zraw(self.CENR[ci], fp, t)[:, dm]; P['sim_translated'] = nan(rowcos(self.zraw(tr, fp, t)[:, dm], zC), ok); P['sim_raw'] = nan(rowcos(self.zraw(self.RAWV[xi], fp, t)[:, dm], zC), ok); P['sim_neutral'] = nan(rowcos(self.Z[xi][:, dm], self.CENZ[ci][:, dm]), ok)
         sims = []
         for k in range(3):
-            a, b = xidx(k), (c0 if k == 0 else cidx(k)); m = ~np.isnan(a) & ~np.isnan(b); sims.append(nan(rowcos(self.Z[np.where(m, a, 0).astype(int)], self.CENZ[np.where(m, b, 0).astype(int)]), m))
+            a, b = xidx(k), (c0 if k == 0 else cidx(k)); m = ~np.isnan(a) & ~np.isnan(b); sims.append(nan(rowcos(self.Z[np.where(m, a, 0).astype(int)][:, dm], self.CENZ[np.where(m, b, 0).astype(int)][:, dm]), m))
         P['traj_sim'] = pd.DataFrame(sims).mean(axis=0).to_numpy(); P['traj_age_aligned'] = False
         return self._common(P, nan(self.CENV[ci], ok), tr)
 
