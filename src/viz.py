@@ -4,7 +4,7 @@ import engine as E
 from common import BLUE, ORANGE, GREY, INK, PAL
 
 NICE = {'log_value': 'market value (log10 EUR)', 'value_gap': 'value gap to the starter', 'sim_translated': 'translated similarity', 'traj_sim': 'trajectory similarity', 'pipeline_rank': 'club pipeline PageRank (log)',
-        'club_taste': 'club taste for his archetype (ALS)', 'hazard': 'move-up hazard', 'age_num': 'age', 'composite_perf_index': 'composite index'}
+        'club_taste': 'club taste for his archetype (ALS)', 'hazard': 'move-up hazard', 'age_num': 'age', 'composite_perf_index': 'composite index', 'pattern_match': 'pattern-match score (closed itemsets)'}
 
 
 def radar(lake, row, S, t):

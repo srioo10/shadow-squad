@@ -11,7 +11,7 @@ from common import *
 import engine as E
 M = {}; rng = np.random.default_rng(SEED); KS = (5, 10, 25, 50); TEST = (2020, 2021, 2022, 2023, 2024)
 def savefig(name): plt.tight_layout(); plt.savefig(f'outputs/figs/{name}.png'); plt.close()
-SS, SS0, GBT, BY, MV, RC, RN, HZN = 'Shadow Squad (trained on all signings)', 'Shadow Squad, replacement events only', 'Shadow Squad fusion with Spark GBT (pointwise)', 'Best young performer (composite index)', 'Highest market value', 'Raw cosine similarity to the starter', 'Random order of the pool', 'Single score: hazard'
+SS, SS0, GBT, BY, MV, RC, RN, HZN, VF = 'Shadow Squad (trained on all signings)', 'Shadow Squad, replacement events only', 'Shadow Squad fusion with Spark GBT (pointwise)', 'Best young performer (composite index)', 'Highest market value', 'Raw cosine similarity to the starter', 'Random order of the pool', 'Single score: hazard', 'Value fit (closest in value to the starter)'
 PF = pd.read_parquet('lake/pairs.parquet'); PA = pd.read_parquet('lake/pairs_all.parquet'); T = PF[PF['q_in_pool'] & PF['t'].isin(TEST)].copy(); qids = np.array(sorted(T['qid'].unique()))
 def true_rank(df, col, asc=False, idx=None):
     """Rank of the best-placed real signing in each query (ties get the average rank; missing scores go last)."""
@@ -20,7 +20,7 @@ rd = lambda f: pd.read_parquet(f'lake/{f}.parquet'); sub = lambda R: R[R['qid'].
 ranks = {BY: true_rank(T, 'composite_perf_index'), RC: true_rank(T, 'sim_raw'), MV: true_rank(T, 'value'), SS: true_rank(sub(rd('scores_lgbm_v2')), 'score'), SS0: true_rank(sub(rd('scores_lgbm')), 'score'), GBT: true_rank(sub(rd('scores_gbt')), 'score')}
 for name, (drop, swap) in E.ABLATIONS.items():
     feats = [swap if f == drop else f for f in E.FEATS if not (f == drop and swap is None)]; R = E.walk_forward(PF, feats, TEST, train_pairs=PA, use_candidates=False); ranks['Ablation: ' + name] = true_rank(sub(R), 'score')
-for name, feats in (('Single score: translated similarity', 'sim_translated'), (HZN, 'hazard'), ('Single score: value gap to the starter', 'value_gap')): ranks[name] = true_rank(T, feats, asc=(feats == 'value_gap'))
+for name, feats in (('Single score: translated similarity', 'sim_translated'), (HZN, 'hazard'), (VF, 'value_gap')): ranks[name] = true_rank(T, feats, asc=(feats == 'value_gap'))
 n_q = T.groupby('qid').size().reindex(qids).to_numpy(); n_pos = T.groupby('qid')['y'].sum().reindex(qids).to_numpy()
 sim = np.array([[np.sort(rng.permutation(n)[:p])[0] + 1 for n, p in zip(n_q, n_pos)] for _ in range(2000)])      # 2,000 random orderings of every pool
 
@@ -49,12 +49,12 @@ dci = lambda a, b, k: [float(x) for x in np.percentile(((a <= k).astype(float)[b
 M['main'] = {'test_queries': len(qids), 'test_seasons': list(TEST), 'mean_pool_size': float(n_q.mean()), 'queries_by_season': T.drop_duplicates('qid').groupby('t').size().to_dict(), 'table': MT.round(4).to_dict('records'),
              'full_minus_best_young_recall10_ci95': dci(full, base, 10), 'full_minus_best_young_recall25_ci95': dci(full, base, 25), 'full_minus_market_value_recall10_ci95': dci(full, mvr, 10), 'full_minus_market_value_recall25_ci95': dci(full, mvr, 25),
              'recall10_by_season_full': {int(t): float((full[qt_ == t] <= 10).mean()) for t in TEST}, 'recall10_by_position_full': {p: [int((qp_ == p).sum()), float((full[qp_ == p] <= 10).mean())] for p in sorted(set(qp_))}}
-LAB = {RN: 'Random', MV: 'Market value', RC: 'Raw cosine', BY: 'Best young performer', HZN: 'Hazard', SS: 'Shadow Squad'}; S = MT.set_index('method')
+LAB = {RN: 'Random', MV: 'Market value', VF: 'Value fit', BY: 'Best young performer', HZN: 'Hazard', SS: 'Shadow Squad'}; S = MT.set_index('method')
 fig, ax = plt.subplots(1, 2, figsize=(11.5, 3.9))
 for mth, lab_ in LAB.items():
-    y = [S.loc[mth, f'recall@{k}'] for k in KS]; ax[0].plot(KS, y, 'o-', color=MCOL[lab_], label=lab_, lw=2.6 if lab_ == 'Shadow Squad' else 1.4, zorder=3 if lab_ == 'Shadow Squad' else 2)
+    y = [S.loc[mth, f'recall@{k}'] for k in KS]; ax[0].plot(KS, y, 'o-', color=MCOL[lab_], lw=2.8 if lab_ == 'Shadow Squad' else 1.3, zorder=3 if lab_ == 'Shadow Squad' else 2); ax[0].text(KS[-1] + 1.2, y[-1], lab_, color=MCOL[lab_], fontsize=8, va='center', fontweight='bold' if lab_ == 'Shadow Squad' else 'normal')
     if lab_ in ('Shadow Squad', 'Market value'): ax[0].fill_between(KS, [S.loc[mth, f'recall@{k}_lo'] for k in KS], [S.loc[mth, f'recall@{k}_hi'] for k in KS], color=MCOL[lab_], alpha=.10, lw=0)
-ax[0].set_xticks(KS); ax[0].yaxis.set_major_formatter(lambda v, _: f'{v:.0%}'); ax[0].set_xlabel('K (length of the list)'); ax[0].set_ylabel('events with the real signing in the top K'); ax[0].legend(fontsize=7.5); ax[0].set_title(f'Replacement recall@K, {len(qids)} unseen events (bands: 95% bootstrap)')
+ax[0].set_xticks(KS); ax[0].set_xlim(3, 68); ax[0].yaxis.set_major_formatter(lambda v, _: f'{v:.0%}'); ax[0].set_xlabel('K (length of the list)'); ax[0].set_ylabel('events with the real signing in the top K'); ax[0].set_title(f'Replacement recall@K, {len(qids)} unseen events (bands: 95% bootstrap)')
 ab = [SS] + ['Ablation: ' + a for a in E.ABLATIONS]; y = [S.loc[a, 'recall@10'] for a in ab]
 ax[1].bar(range(len(ab)), y, width=.55, yerr=[[v - S.loc[a, 'recall@10_lo'] for a, v in zip(ab, y)], [S.loc[a, 'recall@10_hi'] - v for a, v in zip(ab, y)]], error_kw={'lw': 1, 'ecolor': INK2, 'capsize': 3}, color=[ORANGE] + [GREY] * 4)
 for i, v in enumerate(y): ax[1].text(i + .3, v, f'{v:.0%}', va='center', fontsize=8)
@@ -66,16 +66,17 @@ ax[1].set_xticks(range(len(ab)), ['all scores'] + list(E.ABLATIONS), fontsize=7.
 
 # %%
 EV = pd.read_parquet('lake/replacement_events'); EV['qid'] = EV['C'].astype(str) + '_' + EV['t'].astype(str) + '_' + EV['S'].astype(str); fee = EV[EV['N_in_pool']].groupby('qid')['fee'].max().reindex(qids).to_numpy()
-def tiers(fee_arr, r_eng, r_mv, r_by=None):
+def tiers(fee_arr, r_eng, r_mv, r_by=None, r_vf=None):
     med = float(np.nanmedian(fee_arr[fee_arr > 0])); out = {'median_fee_eur': med}
     for name, m in (('below median fee', (fee_arr > 0) & (fee_arr <= med)), ('above median fee', fee_arr > med), ('free or undisclosed', ~(fee_arr > 0))):
         e, v = r_eng[m], r_mv[m]; b_ = rng.integers(0, m.sum(), (4000, m.sum())); row = {'events': int(m.sum())}
-        for lab_, r in (('engine', e), ('market_value', v)) + ((('best_young', r_by[m]),) if r_by is not None else ()):
+        for lab_, r in (('engine', e), ('market_value', v)) + ((('best_young', r_by[m]),) if r_by is not None else ()) + ((('value_fit', r_vf[m]),) if r_vf is not None else ()):
             row[lab_] = {'recall@10': float((r <= 10).mean()), 'recall@10_ci95': [float(x) for x in np.percentile((r[b_] <= 10).mean(1), [2.5, 97.5])], 'recall@25': float((r <= 25).mean()), 'median_rank': float(np.median(r)), 'MRR': float((1 / r).mean())}
         for k in (10, 25): row[f'engine_minus_market@{k}'] = float((e <= k).mean() - (v <= k).mean()); row[f'engine_minus_market@{k}_ci95'] = [float(x) for x in np.percentile(((e <= k).astype(float)[b_] - (v <= k).astype(float)[b_]).mean(1), [2.5, 97.5])]; row[f'p@{k}'] = perm_p((e <= k).astype(float), (v <= k).astype(float))
+        if r_vf is not None: row['engine_minus_value_fit@10'] = float((e <= 10).mean() - (r_vf[m] <= 10).mean()); row['p_vs_value_fit@10'] = perm_p((e <= 10).astype(float), (r_vf[m] <= 10).astype(float))
         row['p_MRR'] = perm_p(1 / e, 1 / v); out[name] = row
     return out
-M['fee_tiers_replacement'] = tiers(fee, full, mvr, base)
+M['fee_tiers_replacement'] = tiers(fee, full, mvr, base, ranks[VF].to_numpy())
 # how much does one model move from seed to seed? Ten single LambdaMART models, each on its own 80% row subsample; the engine is the average of ten
 med_f = np.nanmedian(fee[fee > 0]); lo_m, hi_m = (fee > 0) & (fee <= med_f), fee > med_f; sr = []
 for s_ in range(10):
@@ -88,24 +89,24 @@ SR = pd.DataFrame(sr); M['seed_spread'] = {c: {'mean': float(SR[c].mean()), 'sd'
 # Query = (club, season, position); candidates = every 900-minute player of that position at another club; the reference profile is what the club already fields there. The model is the same LambdaMART, trained walk-forward on earlier signings.
 
 # %%
-SA = pd.read_parquet('lake/signing_events'); TA_ = PA[PA['t'].isin(TEST)]; qa = np.array(sorted(TA_['qid'].unique())); LA = rd('scores_all_signings')
-ra = {'Best young performer (composite index)': true_rank(TA_, 'composite_perf_index', idx=qa), 'Raw cosine similarity to the club profile': true_rank(TA_, 'sim_raw', idx=qa), MV: true_rank(TA_, 'value', idx=qa), HZN: true_rank(TA_, 'hazard', idx=qa), 'Shadow Squad (LambdaMART)': true_rank(LA[LA['qid'].isin(qa)], 'score', idx=qa)}
+VFA = "Value fit (closest in value to the club's player)"; SA = pd.read_parquet('lake/signing_events'); TA_ = PA[PA['t'].isin(TEST)]; qa = np.array(sorted(TA_['qid'].unique())); LA = rd('scores_all_signings')
+ra = {'Best young performer (composite index)': true_rank(TA_, 'composite_perf_index', idx=qa), 'Raw cosine similarity to the club profile': true_rank(TA_, 'sim_raw', idx=qa), MV: true_rank(TA_, 'value', idx=qa), VFA: true_rank(TA_, 'value_gap', asc=True, idx=qa), HZN: true_rank(TA_, 'hazard', idx=qa), 'Shadow Squad (LambdaMART)': true_rank(LA[LA['qid'].isin(qa)], 'score', idx=qa)}
 na = TA_.groupby('qid').size().reindex(qa).to_numpy(); npa = TA_.groupby('qid')['y'].sum().reindex(qa).to_numpy(); sima = np.array([[int(rng.integers(0, n - p + 1)) // max(p, 1) + 1 if p > 1 else int(rng.integers(1, n + 1)) for n, p in zip(na, npa)] for _ in range(300)])
 MA, bsa = table(ra, sima, 'Best young performer (composite index)', MV); MA.to_csv('outputs/master_results_all_signings.csv', index=False); display(MA[['method', 'median_rank'] + [f'recall@{k}' for k in KS] + ['MRR', 'p_vs_market_value@10']].round(3))
-qmeta = SA.groupby('qid').agg(elite_rep=('elite_replacement', 'max'), elite_club=('C_elite', 'max'), fee=('fee', 'max')).reindex(qa); ea, va, ba = ra['Shadow Squad (LambdaMART)'].to_numpy(), ra[MV].to_numpy(), ra['Best young performer (composite index)'].to_numpy(); subsets = {}
+vfa = ra[VFA].to_numpy(); qmeta = SA.groupby('qid').agg(elite_rep=('elite_replacement', 'max'), elite_club=('C_elite', 'max'), fee=('fee', 'max')).reindex(qa); ea, va, ba = ra['Shadow Squad (LambdaMART)'].to_numpy(), ra[MV].to_numpy(), ra['Best young performer (composite index)'].to_numpy(); subsets = {}
 for name, m in (('all signings', np.ones(len(qa), bool)), ('bought by an elite club', qmeta['elite_club'].to_numpy(bool)), ('elite replacements', qmeta['elite_rep'].to_numpy(bool)), ('bought by a non-elite club', ~qmeta['elite_club'].to_numpy(bool))):
-    b_ = rng.integers(0, m.sum(), (4000, m.sum())); subsets[name] = {'events': int(m.sum()), **{lab_: {'recall@10': float((r[m] <= 10).mean()), 'recall@25': float((r[m] <= 25).mean()), 'median_rank': float(np.median(r[m]))} for lab_, r in (('engine', ea), ('market_value', va), ('best_young', ba))},
+    b_ = rng.integers(0, m.sum(), (4000, m.sum())); subsets[name] = {'events': int(m.sum()), **{lab_: {'recall@10': float((r[m] <= 10).mean()), 'recall@25': float((r[m] <= 25).mean()), 'median_rank': float(np.median(r[m]))} for lab_, r in (('engine', ea), ('market_value', va), ('best_young', ba), ('value_fit', vfa))},
         'engine_minus_market@10': float((ea[m] <= 10).mean() - (va[m] <= 10).mean()), 'engine_minus_market@10_ci95': [float(x) for x in np.percentile(((ea[m] <= 10).astype(float)[b_] - (va[m] <= 10).astype(float)[b_]).mean(1), [2.5, 97.5])], 'p@10': perm_p((ea[m] <= 10).astype(float), (va[m] <= 10).astype(float)),
         'engine_minus_market@25': float((ea[m] <= 25).mean() - (va[m] <= 25).mean()), 'p@25': perm_p((ea[m] <= 25).astype(float), (va[m] <= 25).astype(float))}
-M['all_signings'] = {'test_queries': len(qa), 'mean_candidates': float(na.mean()), 'table': MA.round(4).to_dict('records'), 'subsets': subsets}; M['fee_tiers_all_signings'] = tiers(qmeta['fee'].to_numpy(float), ea, va, ba)
+M['all_signings'] = {'test_queries': len(qa), 'mean_candidates': float(na.mean()), 'table': MA.round(4).to_dict('records'), 'subsets': subsets}; M['fee_tiers_all_signings'] = tiers(qmeta['fee'].to_numpy(float), ea, va, ba, ra[VFA].to_numpy())
 for nm_, d in (('replacement', M['fee_tiers_replacement']), ('all signings', M['fee_tiers_all_signings'])):
     print(nm_, 'median fee', d['median_fee_eur'], {k: (v['events'], round(v['engine']['recall@10'], 3), round(v['market_value']['recall@10'], 3), fmt_p(v['p@10']), round(v['engine']['recall@25'], 3), round(v['market_value']['recall@25'], 3), fmt_p(v['p@25'])) for k, v in d.items() if k != 'median_fee_eur'})
 print({k: (v['events'], round(v['engine']['recall@10'], 3), round(v['market_value']['recall@10'], 3), fmt_p(v['p@10'])) for k, v in subsets.items()})
 fig, ax = plt.subplots(1, 2, figsize=(11.5, 3.8), sharey=True); tn = ['below median fee', 'above median fee', 'free or undisclosed']
 for j, (d, ttl) in enumerate(((M['fee_tiers_replacement'], f'Elite replacements ({len(qids)} events)'), (M['fee_tiers_all_signings'], f'All signings ({len(qa):,} events)'))):
-    for i, (lab_, key) in enumerate((('Shadow Squad', 'engine'), ('Market value', 'market_value'), ('Best young performer', 'best_young'))):
-        y = [d[t_][key]['recall@10'] for t_ in tn]; ax[j].bar(np.arange(3) + (i - 1) * .26, y, width=.24, color=MCOL[lab_], label=lab_)
-        for x_, v in zip(np.arange(3) + (i - 1) * .26, y): ax[j].text(x_, v + .006, f'{v:.0%}', ha='center', fontsize=7)
+    for i, (lab_, key) in enumerate((('Shadow Squad', 'engine'), ('Value fit', 'value_fit'), ('Market value', 'market_value'))):
+        y = [d[t_][key]['recall@10'] for t_ in tn]; ax[j].bar(np.arange(3) + (i - 1) * .27, y, width=.25, color=MCOL[lab_], label=lab_)
+        for x_, v in zip(np.arange(3) + (i - 1) * .27, y): ax[j].text(x_, v + .006, f'{v:.0%}', ha='center', fontsize=7.5)
     ax[j].set_xticks(range(3), [f"{t_}\n(n={d[t_]['events']})" for t_ in tn], fontsize=7.5); ax[j].yaxis.set_major_formatter(lambda v, _: f'{v:.0%}'); ax[j].set_title(ttl.split(' (')[0] + f" (median fee EUR {d['median_fee_eur'] / 1e6:.0f}m)"); ax[j].grid(axis='x', visible=False)
 ax[0].set_ylabel('recall@10'); ax[0].legend(fontsize=7.5); savefig('p5_fee_tiers')
 

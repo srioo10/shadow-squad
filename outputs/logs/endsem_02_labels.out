@@ -1,8 +1,8 @@
---[3] [club tiers + clean transfers] 36.0 s
+--[3] [club tiers + clean transfers] 27.3 s
 
 --[3] 166,335 transfers; 23,100 loan departures and 30,564 loan returns removed. Table rebuilt from results agrees with the mid-sem table on 99.1% of club-seasons (100.0% on top-6 membership).
 
---[5] [transfer outcome] 2.5 s
+--[5] [transfer outcome] 2.4 s
 
 
 
@@ -72,47 +72,47 @@ dur
 --[9] [replacement events] 1.8 s
 
 
-events (C, t, S, N): 593; distinct queries (C, t, S): 429; distinct signings: 479
-signings inside the candidate pool: 24.0% (115 of 479); from a five-league club at all: 75.4%
+events (C, t, S, N): 540; distinct queries (C, t, S): 404; distinct signings: 434
+signings inside the candidate pool: 24.0% (104 of 434); from a five-league club at all: 73.3%
 
 --[9] t                                 
-2017        43    0.233      0.860
-2018        49    0.367      0.755
-2019        40    0.175      0.700
-2020        48    0.167      0.729
-2021        72    0.250      0.833
-2022        70    0.214      0.800
-2023        68    0.221      0.691
-2024        89    0.270      0.685
+2017        39    0.256      0.846
+2018        44    0.341      0.727
+2019        37    0.189      0.676
+2020        42    0.143      0.690
+2021        61    0.246      0.820
+2022        62    0.226      0.774
+2023        62    0.242      0.677
+2024        87    0.253      0.678
 --[9] reason
-five-league club, but elite / too old / under 900 min / unmatched    246
-club outside the five leagues                                        118
+five-league club, but elite / too old / under 900 min / unmatched    214
+club outside the five leagues                                        116
 Name: count, dtype: int64
 --[9] 20 events for a manual check against known transfers:
 
---[9] 408  Atlético Madrid  2018  FB            Filipe Luís   2030           0        Kieran Trippier      Tottenham  22000000.0      False
-177    Saint-Étienne  2018  DM             Ole Selnæs   1669           0      Jean-Eudes Aholou         Monaco         0.0       True
-55         Barcelona  2019  FB          Nélson Semedo   2097         294           Sergiño Dest           Ajax  21000000.0      False
-298         Dortmund  2019  FB          Achraf Hakimi   2715           0         Thomas Meunier            PSG         0.0      False
-30        RB Leipzig  2019  FB          Konrad Laimer   2115          82      Benjamin Henrichs         Monaco  15000000.0      False
-488        Paris S-G  2020   W         Mitchel Bakker   1694           0           Lionel Messi      Barcelona         0.0      False
-424    Bayern Munich  2021  CB            Niklas Süle   1837           0       Matthijs de Ligt       Juventus  67000000.0      False
-451        Marseille  2021  CB         William Saliba   3240           0            Eric Bailly        Man Utd         0.0      False
-563           Napoli  2021   W        Lorenzo Insigne   2290           0  Khvicha Kvaratskhelia  Dinamo Batumi  13300000.0      False
-29        RB Leipzig  2021  FB               Angeliño   2298           0             David Raum     Hoffenheim  26000000.0       True
-227    Real Sociedad  2021   W          Adnan Januzaj   1625           0          Takefusa Kubo    Real Madrid   6500000.0       True
-76           Chelsea  2022  CB      César Azpilicueta   1527           0            Axel Disasi         Monaco  45000000.0      False
-184  Manchester City  2022   W           Riyad Mahrez   1920           0            Jérémy Doku  Stade Rennais  60000000.0      False
-390         Dortmund  2023  ST        Niclas Füllkrug   2212           0       Maximilian Beier     Hoffenheim  28500000.0       True
-353         Dortmund  2023  ST        Niclas Füllkrug   2212           0        Serhou Guirassy      Stuttgart  18000000.0      False
-301            Lille  2023  FB           Tiago Santos   2365         405         Thomas Meunier    Trabzonspor         0.0      False
-261   Manchester Utd  2023  CB         Raphaël Varane   1375           0              Leny Yoro          Lille  62000000.0      False
-101  Atlético Madrid  2024   W            Samuel Lino   1552           0             Álex Baena     Villarreal  42000000.0      False
-362          Chelsea  2024   W           Noni Madueke   2033           0          Jamie Gittens       Dortmund  56000000.0      False
-550             Nice  2024  CB  Youssouf Ndayishimiye   1932          72     Kojo Peprah Oppong     Norrköping   2680000.0      False
---[9] in-pool events: 138; in-pool queries: 128; by season: {2017: 12, 2018: 18, 2019: 7, 2020: 8, 2021: 18, 2022: 18, 2023: 20, 2024: 27}; by position: {'AM': 5, 'CB': 34, 'CM': 13, 'DM': 7, 'FB': 25, 'ST': 23, 'W': 21}
+--[9] 342    Bayern Munich  2017  CM      Corentin Tolisso   1575          52        Leon Goretzka  FC Schalke 04         0.0      False
+494         Juventus  2017  FB  Stephan Lichtsteiner   1704           0  Leonardo Spinazzola       Atalanta         0.0       True
+383  Atlético Madrid  2018  CB           Diego Godín   2509           0        Mario Hermoso       Espanyol  25000000.0       True
+6      Bayern Munich  2018  CB          Mats Hummels   1775           0      Benjamin Pavard      Stuttgart  35000000.0       True
+272             Roma  2018  CB        Kostas Manolas   2324           0     Gianluca Mancini       Atalanta  24000000.0      False
+195            Lille  2020  DM     Boubakary Soumaré   1919           0         Amadou Onana        Hamburg  13570000.0      False
+73         Paris S-G  2020  FB           Colin Dagba   1357         166        Achraf Hakimi          Inter  68000000.0      False
+410  Atlético Madrid  2021  ST           Luis Suárez   1835           0        Álvaro Morata       Juventus         0.0      False
+526           Rennes  2021  ST        Gaëtan Laborde   2729         251         Amine Gouiri           Nice  28000000.0      False
+101          Sevilla  2021  CB          Diego Carlos   2957           0       Tanguy Nianzou  Bayern Munich  16000000.0      False
+521       RB Leipzig  2022  ST    Christopher Nkunku   1897           0          Loïs Openda           Lens  40000000.0      False
+77     Real Sociedad  2022  FB      Andoni Gorosabel   1708           0        Hamari Traoré  Stade Rennais         0.0      False
+418   Eint Frankfurt  2023  CB         Willian Pacho   2970           0        Arthur Theate  Stade Rennais  13000000.0       True
+229             Nice  2023  CB     Jean-Clair Todibo   2651           0        Moïse Bombito       Colorado   7000000.0      False
+55              Nice  2023  CM         Morgan Sanson   1964         234      Tanguy Ndombélé      Tottenham         0.0      False
+117  Atlético Madrid  2024   W           Samuel Lino   1552           0        Thiago Almada       Botafogo  21000000.0      False
+469          Chelsea  2024  ST       Nicolas Jackson   2220           0           Liam Delap        Ipswich  35500000.0       True
+75        Leverkusen  2024  AM         Florian Wirtz   2351           0        Malik Tillman            PSV  35000000.0      False
+297            Lille  2024  ST        Jonathan David   2554           0       Olivier Giroud           LAFC         0.0      False
+86              Lyon  2024  ST   Alexandre Lacazette   2051           0      Martín Satriano           Lens   5000000.0      False
+--[9] in-pool events: 126; in-pool queries: 117; by season: {2017: 12, 2018: 16, 2019: 7, 2020: 6, 2021: 15, 2022: 17, 2023: 20, 2024: 24}; by position: {'AM': 5, 'CB': 34, 'CM': 11, 'DM': 5, 'FB': 22, 'ST': 23, 'W': 17}
 
---[11] [all-signings events] 1.4 s
-all-signings events: 1,941 signings, 1,657 (club, season, position) queries; by season {2017: 289, 2018: 259, 2019: 177, 2020: 195, 2021: 287, 2022: 250, 2023: 245, 2024: 239}; by an elite club: 760; elite replacements among them: 299
-fee recorded and above zero: 51.5%; median positive fee EUR 13.0m
+--[11] [all-signings events] 1.5 s
+all-signings events: 1,675 signings, 1,458 (club, season, position) queries; by season {2017: 253, 2018: 228, 2019: 150, 2020: 165, 2021: 246, 2022: 203, 2023: 199, 2024: 231}; by an elite club: 686; elite replacements among them: 272
+fee recorded and above zero: 59.3%; median positive fee EUR 13.0m
 

@@ -1,0 +1,105 @@
+--[1] {'player_seasons': 17672, 'seasons': '2014-15 to 2025-26', 'match_rate_900_by_season': {2014: 0.9533742331288344, 2015: 0.9993819530284301, 2016: 0.9987600743955363, 2017: 1.0, 2018: 0.9993757802746567, 2019: 0.9795265515035189, 2020: 0.9858982219497241, 2021: 0.9932639314145744, 2022: 0.9956923076923077, 2023: 0.9993777224642191, 2024: 1.0, 2025: 0.9968454258675079}, 'match_rate_900_min': 0.9533742331288344, 'events': 1529, 'signings': 1717, 'signings_by_window': {2015: 90, 2016: 100, 2017: 133, 2018: 136, 2019: 152, 2020: 116, 2021: 141, 2022: 222, 2023: 202, 2024: 200, 2025: 203, 2026: 22}, 'mean_candidates': 228.1785480706344, 'build_seconds': 28.3}
+
+--[3] 0  seller_bottom3    0.0164  1.0000           0.1269          0.1425   True
+1       hist_club    0.0064  0.9100           0.1425          0.1832   True
+2     hist_league    0.0398  1.0000           0.1832          0.2563   True
+3     same_league    0.0120  0.9925           0.2563          0.3030   True
+4       min_trend   -0.0051  0.0590           0.3030          0.3006  False
+--[5] 0                                       Random order        106.5     0.024   
+1                               Highest market value         88.5     0.022   
+2                         Best performer (composite)         90.0     0.028   
+3  Value fit (closest in value to the club's player)         67.5     0.030   
+4            Profile similarity to the club's player         90.0     0.026   
+5                                        Live engine         28.0     0.181   
+
+   recall@10  recall@25  recall@50  
+0      0.048      0.121      0.241  
+1      0.051      0.132      0.281  
+2      0.054      0.151      0.273  
+3      0.080      0.217      0.402  
+4      0.056      0.145      0.285  
+5      0.303      0.475      0.665  
+--[5] {'common_queries': 821, 'full_recall@10': 0.1364190012180268, 'full_recall@25': 0.2838002436053593, 'live_recall@10': 0.30450669914738127, 'live_recall@25': 0.4774665042630938, 'full_median_rank': 53.0, 'live_median_rank': 28.0, 'p@10': 4.999750012499375e-05, 'p@25': 4.999750012499375e-05}
+
+--[7] 0                                       Random order        111.0     0.023   
+1                               Highest market value        138.0     0.000   
+2                         Best performer (composite)        112.0     0.000   
+3  Value fit (closest in value to the club's player)         97.5     0.045   
+4            Profile similarity to the club's player         89.0     0.000   
+5                                        Live engine         22.5     0.182   
+
+   recall@10  recall@25  recall@50  p_vs_engine@25  
+0      0.046      0.115      0.229             NaN  
+1      0.000      0.091      0.182           0.012  
+2      0.000      0.091      0.136           0.002  
+3      0.045      0.182      0.273           0.021  
+4      0.091      0.091      0.318           0.006  
+5      0.364      0.545      0.636             NaN  
+--[7] 11  Ransford Königsdörffer          Hamburg          Mainz  ST         0.0   
+4              Rocco Reitz  Mönchengladbach        Leipzig  CM  20000000.0   
+12          Patrick Wimmer        Wolfsburg     Hoffenheim   W  10000000.0   
+19         Elvis Rexhbecaj         Augsburg      Wolfsburg  CM         0.0   
+10             Eric Martel        1.FC Köln          Mainz  DM         0.0   
+21             Aleix Febas         Elche CF  Celta de Vigo  CM         0.0   
+8            Juan Iglesias           Getafe     Sevilla FC  FB         0.0   
+0            Carlos Romero         Espanyol     Villarreal  FB         0.0   
+5         Adrien Thomasson             Lens  Stade Rennais  CM         0.0   
+13          Fernando López    Celta de Vigo         Wolves  AM         0.0   
+16          Tommaso Pobega          Bologna       AC Milan  CM         0.0   
+17          Grischa Prömel       Hoffenheim      Stuttgart  CM         0.0   
+1           Anthony Gordon        Newcastle      Barcelona   W  80000000.0   
+2            Marcos Senesi      Bournemouth      Tottenham  CB         0.0   
+6           Jérémy Jacquet    Stade Rennais      Liverpool  CB  63600000.0   
+3         Andrew Robertson        Liverpool      Tottenham  FB         0.0   
+15            Raúl Jiménez           Fulham         Wolves  ST         0.0   
+7               Jon Guridi           Alavés     Sevilla FC  CM         0.0   
+14         Kieran Trippier        Newcastle         Wolves  FB         0.0   
+9                  Alfonso       Villarreal          Lazio  FB         0.0   
+20              Unai Núñez         Valencia  Celta de Vigo  CB         0.0   
+18           Nicolas Cozza        FC Nantes      Wolfsburg  CB         0.0   
+
+11   5000000.0    1.0      1.0      3.0   195      126  
+4   20000000.0    2.0      2.0      2.0   220       65  
+12  12000000.0    4.0      3.0      7.0   221      116  
+19   3500000.0    4.0      4.0      7.0   220      174  
+10   8000000.0    8.0      6.0     11.0   135       70  
+21   5000000.0    9.0      6.0     16.0   219      156  
+8    5000000.0   10.0      8.0     17.0   265      150  
+0   25000000.0   10.0      8.0     20.0   266       36  
+5    4500000.0   16.0     14.0     21.0   219      163  
+13  16000000.0   19.0     16.0     32.0    91       43  
+16   8000000.0   20.0     19.0     26.0   219      124  
+17   3500000.0   25.0     18.0     48.0   221      173  
+1   60000000.0   36.0     29.0     37.0   220       14  
+2   22000000.0   36.0     15.0     56.0   323       78  
+6   55000000.0   86.0     71.0    105.0   324       13  
+3   10000000.0   92.0     80.0    105.0   266      100  
+15   4000000.0  119.0    113.0    123.0   193      137  
+7    2000000.0  151.0    145.0    160.0   221      204  
+14   2500000.0  160.0    152.0    178.0   266      204  
+9    2500000.0  164.0    153.0    182.0   265      205  
+20   3500000.0  181.0    156.0    195.0   322      258  
+18   3000000.0  266.0    257.0    273.0   322      259  
+--[7] {'frozen_at': '2026-05-31', 'signings': 22, 'queries': 22, 'mean_candidates': 236.95454545454547, 'window_dates': ['2026-06-30', '2026-07-01'], 'engine_top10': 8, 'engine_top25': 12, 'market_value_top10': 0, 'market_value_top25': 2}
+
+--[9] {'sim_profile': 0.004, 'traj_sim': 0.038, 'seller_sales': 1.06, 'log_value': 0.099, 'value_gap': 0.026, 'age': 0.008, 'composite': 0.004, 'min_share': 0.008, 'seller_bottom3': 0.0, 'hist_club': 0.0, 'hist_league': 0.485, 'same_league': 0.0}
+
+--[11] 4997    Ricardo Rodríguez         Real Betis Balompié       FB       34.2   
+6513    Antoine Griezmann          Atlético de Madrid       ST       35.7   
+15521   Randal Kolo Muani           Tottenham Hotspur       ST       27.9   
+6978     Francesco Acerbi                 Inter Milan       CB       38.8   
+9708         Paulo Dybala  Associazione Sportiva Roma       ST       33.0   
+11849  Lorenzo Pellegrini  Associazione Sportiva Roma       AM       30.4   
+8769      Clement Lenglet          Atlético de Madrid       CB       31.4   
+1846   Robert Lewandowski                FC Barcelona       ST       38.2   
+
+4997   0.85            NaN  
+6513   0.64        2027-06  
+15521  0.60        2028-06  
+6978   0.56            NaN  
+9708   0.55            NaN  
+11849  0.54            NaN  
+8769   0.52        2027-06  
+1846   0.51            NaN  
+--[11] {'elite_clubs': 32, 'starters': 368, 'risk_auc_by_season': {2020: 0.5832579640237162, 2021: 0.5712315981502695, 2022: 0.6244292237442923, 2023: 0.5823662153449387, 2024: 0.6239169351951307}, 'risk_auc_mean': 0.5970403872916694, 'base_rate_gone': 0.21966168178475118, 'starters_risk_over_0.5': 9, 'candidates_per_list': 15, 'shortlist_rows': 5520, 'mean_rank_interval_width_top5': 3.15, 'contract_known_share': 0.9483695652173914}
+

@@ -1,28 +1,28 @@
 --[3] feature rows: 11,753; by fine position: {'AM': 726, 'CB': 2746, 'CM': 1706, 'DM': 1194, 'FB': 2121, 'ST': 1673, 'W': 1587}
 
 --[5]    bucketLength  numHashTables  pairs  set_share  recall_top25  \
-0           2.0              1  19430      0.474         0.577   
-1           2.0              2  28325      0.691         0.808   
-2           2.0              4  36198      0.884         0.951   
-3           2.0              8  40134      0.980         0.997   
-4           4.0              1  20760      0.507         0.612   
-5           4.0              2  30705      0.750         0.870   
-6           4.0              4  37552      0.917         0.975   
-7           4.0              8  40446      0.987         0.999   
+0           2.0              1  18371      0.475         0.579   
+1           2.0              2  26780      0.692         0.810   
+2           2.0              4  34157      0.883         0.951   
+3           2.0              8  37897      0.980         0.997   
+4           4.0              1  19590      0.507         0.612   
+5           4.0              2  28958      0.749         0.870   
+6           4.0              4  35440      0.916         0.975   
+7           4.0              8  38190      0.987         0.999   
 
    signing_recall  seconds  
-0           0.464     0.81  
-1           0.717     0.45  
-2           0.884     0.46  
-3           0.964     0.46  
-4           0.493     0.38  
-5           0.768     0.30  
-6           0.906     0.48  
-7           0.971     0.39  
---[5] {'exact_pairs': 40967, 'queries': 429, 'mean_pool_per_query': 95.494, 'minhash_pairs': 15246, 'minhash_signing_recall': 0.457, 'minhash_recall_top25': 0.539, 'brp_minhash_jaccard': 0.369, 'union_pairs': 37577, 'union_set_share': 0.917, 'union_signing_recall': 0.913, 'union_recall_top25': 0.976, 'in_pool_signing_pairs': 138}
-chosen: {'bucketLength': 2.0, 'numHashTables': 4.0, 'pairs': 36198.0, 'set_share': 0.884, 'recall_top25': 0.951, 'signing_recall': 0.884, 'seconds': 0.46}
+0           0.429     0.96  
+1           0.698     0.61  
+2           0.873     0.53  
+3           0.960     0.68  
+4           0.460     0.48  
+5           0.754     0.52  
+6           0.897     0.66  
+7           0.968     0.63  
+--[5] {'exact_pairs': 38676, 'queries': 404, 'mean_pool_per_query': 95.733, 'minhash_pairs': 14364, 'minhash_signing_recall': 0.444, 'minhash_recall_top25': 0.538, 'brp_minhash_jaccard': 0.368, 'union_pairs': 35462, 'union_set_share': 0.917, 'union_signing_recall': 0.905, 'union_recall_top25': 0.976, 'in_pool_signing_pairs': 126}
+chosen: {'bucketLength': 2.0, 'numHashTables': 4.0, 'pairs': 34157.0, 'set_share': 0.883, 'recall_top25': 0.951, 'signing_recall': 0.873, 'seconds': 0.53}
 
---[7] [PrefixSpan] 1.2 s
+--[7] [PrefixSpan] 1.7 s
 
 --[7] {'train_sequences': 1141, 'test_sequences': 1597, 'frequent_patterns': 461, 'patterns_len2plus': 320, 'kept_rules': 159, 'kept_multi_season': 127, 'base_rate_train': 0.19106047326906223, 'base_rate_test': 0.24921728240450847, 'flagged_test': 1257, 'flagged_rate_test': 0.273667462211615, 'oot_lift': 1.0981078822913293, 'fisher_p': 4.907823819339093e-06, 'rank_corr_train_test_lift': 0.2777728914731353}
 
@@ -44,7 +44,7 @@ chosen: {'bucketLength': 2.0, 'numHashTables': 4.0, 'pairs': 36198.0, 'set_share
 304        1.89      81       1.24  
 305        1.89      78       1.23  
 430        1.83     139       1.50  
---[9] [BisectingKMeans (k chosen on seasons <= 2019, then one refit per season cut-off)] 119.9 s
+--[9] [BisectingKMeans (k chosen on seasons <= 2019, then one refit per season cut-off)] 124.1 s
 
 
 
@@ -73,7 +73,7 @@ W1          453      136         0.279     npxg +0.7, att_pen +0.7, gls +0.6
 W2          445      114         0.307           sca +1.0, kp +0.9, ppa +0.9
 --[9] 22 archetypes {'CB': 4, 'FB': 3, 'DM': 3, 'CM': 3, 'AM': 3, 'W': 3, 'ST': 3}; archetype vs moving up: chi-square p = 0.0000, Cramer's V = 0.190
 
---[11] [GraphFrames PageRank (8 seasons x 2 directions)] 24.4 s
+--[11] [GraphFrames PageRank (8 seasons x 2 directions)] 23.0 s
 
 
 
@@ -92,17 +92,17 @@ W2          445      114         0.307           sca +1.0, kp +0.9, ppa +0.9
 468          Udinese     2.61     3.28     95
 447        Sampdoria     2.57     2.16     73
 969  Indep. Santa Fe     2.55     1.42     44
---[11] [PowerIterationClustering] 12.0 s
+--[11] [PowerIterationClustering] 11.9 s
 {'edges': 62535, 'clubs': 11401, 'auc_pipeline_rank_alone': 0.582, 'auc_sales_count_alone': 0.582, 'auc_dest_rank_alone': 0.53, 'feeders_scored': 2504, 'club_level_spearman': 0.27, 'club_level_spearman_p': 0.0, 'club_seasons': 389, 'pic_clubs': 1002, 'pic_k': 8, 'pic_maxIter_chosen': 8, 'pic_modularity_by_maxIter': {'3': 0.26841159018809524, '5': 0.2794408433966645, '8': 0.33499486690840263, '12': 0.19659243587220965, '20': 0.10576787919836206}, 'pic_modularity': 0.335, 'pic_country_purity': 0.167, 'pic_known_clubs': 726, 'pic_sizes': {0: 443, 1: 48, 2: 5, 3: 163, 4: 78, 5: 3, 6: 2, 7: 260}}
 
---[13] [ALS (7 cut-offs)] 15.4 s
+--[13] [ALS (7 cut-offs)] 16.6 s
    ResultQueryStage 8
 
 
 
 --[13] {'train_signings': 560, 'test_signings': 1551, 'clubs': 144, 'archetypes': 22, 'mrr_pop': 0.668, 'mrr_own': 0.667, 'mrr_als': 0.633, 'top1_pop': 0.424, 'top1_own': 0.426, 'top1_als': 0.373, 'mrr_als_minus_pop_ci95': [-0.05169379969911885, -0.018697614442295292], 'mrr_als_minus_own_ci95': [-0.04781861164839889, -0.019557274876423815]}
 
---[15] [LinearSVC + MLP + LR walk-forward] 161.2 s
+--[15] [LinearSVC + MLP + LR walk-forward] 158.2 s
 
 
 
@@ -120,15 +120,14 @@ W2          445      114         0.307           sca +1.0, kp +0.9, ppa +0.9
 3      0.234         0.472  2.014  
 4      0.234         0.504  2.151  
 5      0.234         0.352  1.502  
---[17] [kNN outlier self-join] 2.8 s
+--[17] [kNN outlier self-join] 2.9 s
 
 
 
 --[17] {'rows_scored': 11753, 'feeders': 2738, 'spearman_score_vs_up': -0.0811, 'spearman_p': 0.0, 'gems_flagged': 114, 'gem_move_up_rate': 0.1667, 'rest_move_up_rate': 0.2275, 'gem_fisher_p': 0.9532, 'top_decile_rate': 0.1747, 'bottom_decile_rate': 0.2836, 'spearman_vs_midsem_iforest': 0.4626, 'spearman_vs_midsem_lof': 0.4892}
 
---[19] [Structured Streaming replay] 12.8 s
+--[19] [Structured Streaming replay] 11.1 s
 
 
-
---[19] {'micro_batches': 39, 'match_rows': 3504, 'teams': 96, 'teams_matched_to_final': 96, 'r_after_5_batches': 0.8001857691907376, 'r_after_10_batches': 0.8934685202782583, 'r_final': 0.9999999208306407, 'first_batch_r_ge_0.9': 12, 'mean_matches_at_r_0.9': 11.916666666666666, 'cms': {'0.1': {'width': 20, 'depth': 5, 'mean_rel_error': 2.483278094753261, 'max_rel_error': 7.408163265306122}, '0.01': {'width': 200, 'depth': 5, 'mean_rel_error': 0.0, 'max_rel_error': 0.0}}, 'total_deep_events': 23686}
+{'micro_batches': 39, 'match_rows': 3504, 'teams': 96, 'teams_matched_to_final': 96, 'r_after_5_batches': 0.8001857691907376, 'r_after_10_batches': 0.8934685202782583, 'r_final': 0.9999999208306407, 'first_batch_r_ge_0.9': 12, 'mean_matches_at_r_0.9': 11.916666666666666, 'cms': {'0.1': {'width': 20, 'depth': 5, 'mean_rel_error': 2.483278094753261, 'max_rel_error': 7.408163265306122}, '0.01': {'width': 200, 'depth': 5, 'mean_rel_error': 0.0, 'max_rel_error': 0.0}}, 'total_deep_events': 23686}
 

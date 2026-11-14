@@ -17,6 +17,10 @@ lake/*
 !lake/value_at_t.parquet
 !lake/models.pkl
 !lake/elas_wf.parquet
+!lake/pattern_match.parquet
+!lake/live_squads.parquet
+!lake/live_shortlists.parquet
+!lake/value_history.parquet
 !lake/offsets_wf.parquet
 !lake/pool_all/
 !lake/midsem/

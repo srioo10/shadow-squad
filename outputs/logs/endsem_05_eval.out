@@ -1,28 +1,30 @@
---[3] 0                         Random order of the pool         44.0     0.060      0.119      0.296      0.566  0.059                 NaN                   NaN
-1           Best young performer (composite index)         30.0     0.132      0.264      0.451      0.670  0.100                 NaN                 0.181
-2             Raw cosine similarity to the starter         30.0     0.132      0.231      0.418      0.648  0.133               0.705                 0.071
-3                             Highest market value         15.5     0.231      0.352      0.637      0.835  0.160               0.185                   NaN
-4           Shadow Squad (trained on all signings)         18.0     0.220      0.308      0.604      0.780  0.150               0.608                 0.597
-5            Shadow Squad, replacement events only         21.0     0.099      0.264      0.560      0.791  0.090               1.000                 0.230
-6   Shadow Squad fusion with Spark GBT (pointwise)         25.0     0.055      0.176      0.505      0.714  0.063               0.255                 0.023
-7                         Ablation: no translation         19.0     0.242      0.352      0.571      0.758  0.156               0.228                 1.000
-8                          Ablation: no trajectory         18.0     0.231      0.352      0.626      0.769  0.170               0.239                 1.000
-9                            Ablation: no PageRank         18.0     0.198      0.319      0.615      0.780  0.154               0.484                 0.715
-10                          Ablation: no ALS taste         18.0     0.154      0.319      0.637      0.725  0.144               0.484                 0.713
-11             Single score: translated similarity         32.0     0.143      0.242      0.396      0.637  0.113               0.837                 0.111
-12                            Single score: hazard         16.0     0.187      0.352      0.637      0.835  0.133               0.115                 1.000
-13          Single score: value gap to the starter         19.0     0.187      0.242      0.604      0.758  0.127               0.847                 0.066
---[5] single-model spread: {'recall@10': (0.275, 0.396), 'recall@25': (0.549, 0.615), 'median_rank': (16.0, 23.0), 'cheap_recall@10': (0.162, 0.378), 'dear_recall@10': (0.324, 0.514)}
+--[3] 0                         Random order of the pool        43.00     0.062      0.122      0.300      0.569  0.060                 NaN                   NaN
+1           Best young performer (composite index)        28.75     0.122      0.268      0.451      0.695  0.102                 NaN                 0.185
+2             Raw cosine similarity to the starter        31.50     0.134      0.220      0.415      0.634  0.138               0.541                 0.036
+3                             Highest market value        15.25     0.256      0.366      0.671      0.866  0.173               0.186                   NaN
+4           Shadow Squad (trained on all signings)        20.00     0.195      0.305      0.573      0.756  0.138               0.679                 0.408
+5            Shadow Squad, replacement events only        22.00     0.159      0.268      0.573      0.793  0.099               1.000                 0.212
+6   Shadow Squad fusion with Spark GBT (pointwise)        31.00     0.146      0.244      0.488      0.732  0.115               0.847                 0.133
+7                         Ablation: no translation        19.50     0.183      0.305      0.561      0.744  0.136               0.675                 0.402
+8                          Ablation: no trajectory        19.50     0.183      0.366      0.573      0.756  0.138               0.189                 1.000
+9                            Ablation: no PageRank        17.50     0.207      0.305      0.598      0.780  0.139               0.695                 0.384
+10                          Ablation: no ALS taste        21.50     0.207      0.317      0.561      0.756  0.140               0.558                 0.545
+11                      Ablation: no pattern match        17.50     0.171      0.268      0.622      0.744  0.146               1.000                 0.165
+12             Single score: translated similarity        32.50     0.159      0.232      0.390      0.622  0.118               0.664                 0.061
+13                            Single score: hazard        15.00     0.207      0.390      0.659      0.829  0.143               0.031                 0.858
+14     Value fit (closest in value to the starter)        17.75     0.195      0.256      0.622      0.768  0.136               1.000                 0.092
+--[5] single-model spread: {'recall@10': (0.207, 0.402), 'recall@25': (0.5, 0.585), 'median_rank': (20.0, 26.0), 'cheap_recall@10': (0.081, 0.297), 'dear_recall@10': (0.243, 0.486)}
 
---[7] 0                   Random order of the pool         90.0     0.028      0.058      0.144      0.286  0.032                   NaN
-1     Best young performer (composite index)         90.0     0.040      0.066      0.152      0.297  0.039                 0.014
-2  Raw cosine similarity to the club profile         90.0     0.040      0.064      0.158      0.287  0.036                 0.043
-3                       Highest market value         90.5     0.018      0.044      0.119      0.274  0.027                   NaN
-4                       Single score: hazard         77.0     0.036      0.083      0.190      0.350  0.039                 0.000
-5                  Shadow Squad (LambdaMART)         53.0     0.079      0.134      0.279      0.483  0.068                 0.000
---[7] replacement median fee 23750000.0 {'below median fee': (37, 0.243, 0.108, '0.23', 0.541, 0.459, '0.63'), 'above median fee': (37, 0.405, 0.649, '0.04', 0.649, 0.892, '0.01'), 'free or undisclosed': (17, 0.235, 0.235, '1.00', 0.647, 0.471, '0.55')}
-all signings median fee 14000000.0 {'below median fee': (301, 0.136, 0.003, '<0.001', 0.289, 0.01, '<0.001'), 'above median fee': (300, 0.19, 0.127, '0.04', 0.353, 0.303, '0.19'), 'free or undisclosed': (428, 0.093, 0.014, '<0.001', 0.22, 0.065, '<0.001')}
-{'all signings': (1029, 0.134, 0.044, '<0.001'), 'bought by an elite club': (421, 0.169, 0.107, '0.010'), 'elite replacements': (176, 0.153, 0.131, '0.64'), 'bought by a non-elite club': (608, 0.11, 0.0, '<0.001')}
+--[7] 0                           Random order of the pool        91.00     0.028      0.056      0.141      0.280  0.032                   NaN
+1             Best young performer (composite index)        88.00     0.042      0.071      0.160      0.306  0.040                 0.022
+2          Raw cosine similarity to the club profile        90.00     0.040      0.065      0.159      0.295  0.037                 0.136
+3                               Highest market value        91.00     0.020      0.048      0.126      0.273  0.028                   NaN
+4  Value fit (closest in value to the club's player)        67.25     0.029      0.079      0.212      0.395  0.036                 0.008
+5                               Single score: hazard        75.00     0.040      0.086      0.198      0.363  0.042                 0.000
+6                          Shadow Squad (LambdaMART)        54.00     0.073      0.136      0.280      0.476  0.067                 0.000
+--[7] replacement median fee 23750000.0 {'below median fee': (37, 0.216, 0.108, '0.34', 0.486, 0.459, '1.00'), 'above median fee': (37, 0.432, 0.649, '0.04', 0.649, 0.892, '0.02'), 'free or undisclosed': (8, 0.125, 0.25, '1.00', 0.625, 0.625, '1.00')}
+all signings median fee 14150000.0 {'below median fee': (298, 0.124, 0.003, '<0.001', 0.275, 0.01, '<0.001'), 'above median fee': (298, 0.195, 0.124, '0.03', 0.366, 0.299, '0.08'), 'free or undisclosed': (302, 0.089, 0.017, '<0.001', 0.199, 0.07, '<0.001')}
+{'all signings': (898, 0.136, 0.048, '<0.001'), 'bought by an elite club': (384, 0.169, 0.112, '0.03'), 'elite replacements': (163, 0.166, 0.135, '0.56'), 'bought by a non-elite club': (514, 0.111, 0.0, '<0.001')}
 
 --[9] {'person_period_rows_scored': 2569, 'discrete_time_auc_walk_forward': 0.6856510316578656, 'discrete_time_auc_by_season': {2018: 0.6694524495677233, 2019: 0.6606037151702786, 2020: 0.6845782301190271, 2021: 0.740423614240649, 2022: 0.6953336518553911, 2023: 0.6273848301535597, 2024: 0.7325007261109497}, 'cox_train_players': 803, 'cox_test_players': 1037, 'cox_test_events': 212, 'c_index_cox_test': 0.6537925730289794, 'c_index_discrete_time_test': 0.6760168913526142, 'c_index_cox_train': 0.6983728873372572, 'top_hazard_ratios': {'z_npxg': 1.1, 'z_take_on': 1.114, 'composite_perf_index': 1.148, 'min_num': 1.198}, 'bottom_hazard_ratios': {'age_num': 0.824, 'z_tklw': 0.935, 'z_clr': 0.936}, 'calibration_mean_abs_gap': 0.021146976005243224}
 
@@ -32,7 +34,7 @@ all signings median fee 14000000.0 {'below median fee': (301, 0.136, 0.003, '<0.
 2    0.2     0.8     0.825     257               0.630
 3    0.1     0.9     0.934     257               0.812
 --[11]    alpha  target  list_share_of_pool  list_length_for_mean_pool  coverage  calibration_events  test_events
-0    0.5     0.5               0.207                     19.846     0.446                  26           65
-1    0.3     0.7               0.452                     43.350     0.692                  26           65
-2    0.2     0.8               0.551                     52.871     0.738                  26           65
-3    0.1     0.9               0.919                     88.146     0.969                  26           65
+0    0.5     0.5               0.205                     19.815     0.492                  21           61
+1    0.3     0.7               0.543                     52.585     0.787                  21           61
+2    0.2     0.8               0.577                     55.839     0.803                  21           61
+3    0.1     0.9               0.901                     87.195     0.984                  21           61

@@ -1,0 +1,23 @@
+name,fn,tn,P,fee,value,rank,rank_lo,rank_hi,pool,mv_rank
+Ransford Königsdörffer,Hamburg,Mainz,ST,0.0,5000000.0,1.0,1.0,3.0,195,126
+Rocco Reitz,Mönchengladbach,Leipzig,CM,20000000.0,20000000.0,2.0,2.0,2.0,220,65
+Patrick Wimmer,Wolfsburg,Hoffenheim,W,10000000.0,12000000.0,4.0,3.0,7.0,221,116
+Elvis Rexhbecaj,Augsburg,Wolfsburg,CM,0.0,3500000.0,4.0,4.0,7.0,220,174
+Eric Martel,1.FC Köln,Mainz,DM,0.0,8000000.0,8.0,6.0,11.0,135,70
+Aleix Febas,Elche CF,Celta de Vigo,CM,0.0,5000000.0,9.0,6.0,16.0,219,156
+Juan Iglesias,Getafe,Sevilla FC,FB,0.0,5000000.0,10.0,8.0,17.0,265,150
+Carlos Romero,Espanyol,Villarreal,FB,0.0,25000000.0,10.0,8.0,20.0,266,36
+Adrien Thomasson,Lens,Stade Rennais,CM,0.0,4500000.0,16.0,14.0,21.0,219,163
+Fernando López,Celta de Vigo,Wolves,AM,0.0,16000000.0,19.0,16.0,32.0,91,43
+Tommaso Pobega,Bologna,AC Milan,CM,0.0,8000000.0,20.0,19.0,26.0,219,124
+Grischa Prömel,Hoffenheim,Stuttgart,CM,0.0,3500000.0,25.0,18.0,48.0,221,173
+Anthony Gordon,Newcastle,Barcelona,W,80000000.0,60000000.0,36.0,29.0,37.0,220,14
+Marcos Senesi,Bournemouth,Tottenham,CB,0.0,22000000.0,36.0,15.0,56.0,323,78
+Jérémy Jacquet,Stade Rennais,Liverpool,CB,63600000.0,55000000.0,86.0,71.0,105.0,324,13
+Andrew Robertson,Liverpool,Tottenham,FB,0.0,10000000.0,92.0,80.0,105.0,266,100
+Raúl Jiménez,Fulham,Wolves,ST,0.0,4000000.0,119.0,113.0,123.0,193,137
+Jon Guridi,Alavés,Sevilla FC,CM,0.0,2000000.0,151.0,145.0,160.0,221,204
+Kieran Trippier,Newcastle,Wolves,FB,0.0,2500000.0,160.0,152.0,178.0,266,204
+Alfonso,Villarreal,Lazio,FB,0.0,2500000.0,164.0,153.0,182.0,265,205
+Unai Núñez,Valencia,Celta de Vigo,CB,0.0,3500000.0,181.0,156.0,195.0,322,258
+Nicolas Cozza,FC Nantes,Wolfsburg,CB,0.0,3000000.0,266.0,257.0,273.0,322,259

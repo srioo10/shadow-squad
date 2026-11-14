@@ -6,3 +6,4 @@ pyarrow==26.0.1
 scikit-learn==1.9.1
 shap==0.54.1
 streamlit==1.67.0
+pulp==2.9.0

@@ -131,7 +131,7 @@ with timed('replacement events', RT):
                CASE p.sub_position WHEN 'Centre-Back' THEN 'CB' WHEN 'Left-Back' THEN 'FB' WHEN 'Right-Back' THEN 'FB' WHEN 'Defensive Midfield' THEN 'DM' WHEN 'Central Midfield' THEN 'CM' WHEN 'Attacking Midfield' THEN 'AM'
                     WHEN 'Centre-Forward' THEN 'ST' WHEN 'Second Striker' THEN 'ST' WHEN 'Goalkeeper' THEN NULL ELSE 'W' END AS P
         FROM tc t JOIN tm_players p ON p.player_id = t.player_id JOIN tm_club_minutes m ON m.player_id = t.player_id AND m.club_id = t.c AND m.season = year(t.d)
-        WHERE month(t.d) BETWEEN 6 AND 10 AND NOT (month(t.d) = 10 AND day(t.d) > 10) AND NOT t.loan_return AND NOT t.from_youth AND m.minutes >= {SIGNING_MIN_MIN})
+        WHERE month(t.d) BETWEEN 6 AND 10 AND NOT (month(t.d) = 10 AND day(t.d) > 10) AND NOT t.loan_return AND NOT t.loan_out AND NOT t.from_youth AND m.minutes >= {SIGNING_MIN_MIN})
       SELECT g.*, s.N, s.N_name, s.N_from, s.N_from_id, s.fee, s.N_value, s.N_date, s.N_is_loan, s.N_min_next, (q.player_id IS NOT NULL) AS N_in_pool, q.squad AS N_pool_club, q.comp AS N_pool_league, q.age_num AS N_age,
              fk.league AS N_from_league
       FROM gone g JOIN sign s ON s.C = g.C AND s.t = g.t AND s.P = g.P
@@ -165,7 +165,7 @@ with timed('all-signings events', RT):
       FROM tc t JOIN club_xref x ON x.club_id = t.c JOIN club_season k ON k.club_id = t.c AND k.season = year(t.d)
       JOIN allp q ON q.player_id = t.player_id AND q.yr = year(t.d) - 1 AND q.club_id <> t.c
       LEFT JOIN club_season k0 ON k0.club_id = t.c AND k0.season = year(t.d) - 1
-      WHERE month(t.d) BETWEEN 6 AND 10 AND NOT (month(t.d) = 10 AND day(t.d) > 10) AND NOT t.loan_return AND NOT t.from_youth""")
+      WHERE month(t.d) BETWEEN 6 AND 10 AND NOT (month(t.d) = 10 AND day(t.d) > 10) AND NOT t.loan_return AND NOT t.loan_out AND NOT t.from_youth""")
     sg_all = sg_all.withColumn('r', F.row_number().over(W.partitionBy('C', 't', 'N').orderBy('N_date', F.desc_nulls_last('fee')))).filter('r = 1').drop('r')      # one row per signing, chosen the same way on every run
     rep = sp.read.parquet('lake/replacement_events').select('C', 't', F.col('N')).distinct().withColumn('elite_replacement', F.lit(True))
     sg_all = sg_all.join(rep, ['C', 't', 'N'], 'left').fillna(False, ['elite_replacement']).withColumn('qid', F.concat_ws('_', 'C', 't', 'P')); sg_all.write.mode('overwrite').parquet('lake/signing_events')

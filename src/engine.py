@@ -6,8 +6,8 @@ from common import ROOT, MID, SEED
 
 AF = MID['active_features']; MET = [f[:-4] for f in AF]; RAW = [f.replace('_p90', '_p90raw') for f in AF]; ZC = ['z_' + m for m in MET]
 EPS = np.array([MID['EPS_C'][f] for f in AF]); Z0 = np.zeros(len(MET))
-FEATS = ['sim_translated', 'traj_sim', 'pipeline_rank', 'club_taste', 'hazard', 'log_value', 'value_gap', 'age_num', 'composite_perf_index']
-ABLATIONS = {'no translation': ('sim_translated', 'sim_neutral'), 'no trajectory': ('traj_sim', None), 'no PageRank': ('pipeline_rank', None), 'no ALS taste': ('club_taste', None)}
+FEATS = ['sim_translated', 'traj_sim', 'pipeline_rank', 'club_taste', 'hazard', 'log_value', 'value_gap', 'age_num', 'composite_perf_index', 'pattern_match']
+ABLATIONS = {'no translation': ('sim_translated', 'sim_neutral'), 'no trajectory': ('traj_sim', None), 'no PageRank': ('pipeline_rank', None), 'no ALS taste': ('club_taste', None), 'no pattern match': ('pattern_match', None)}
 L = lambda name: f'{ROOT}/lake/{name}'
 
 
@@ -36,6 +36,7 @@ class Lake:
         self.TA = pd.read_parquet(L('club_taste.parquet'))
         self.HZ = pd.read_parquet(L('hazard.parquet')) if os.path.exists(L('hazard.parquet')) else pd.DataFrame(columns=['player_id', 'yr', 'hazard'])
         self.hz = self.HZ.set_index(['player_id', 'yr'])['hazard']
+        self.PM = pd.read_parquet(L('pattern_match.parquet'))[['player_id', 'yr', 'pattern_match', 'n_maximal_matched', 'n_maximal_total', 'maximal_matched']] if os.path.exists(L('pattern_match.parquet')) else None
         # club x season x position centroids (minutes-weighted): what the club already fields at that position
         w = F['min_num'].to_numpy(float); key = F[['club_id', 'yr', 'fine_pos']].copy(); key['g'] = key.groupby(['club_id', 'yr', 'fine_pos']).ngroup(); ng = int(key['g'].max()) + 1; gi = key['g'].to_numpy()
         ws = np.bincount(gi, w, ng)[:, None]; agg = lambda V: np.stack([np.bincount(gi, w * V[:, j], ng) for j in range(V.shape[1])], 1) / ws
@@ -69,6 +70,8 @@ class Lake:
         P = P.merge(self.PR.rename(columns={'pr_pipe': 'pipeline_rank'}), on=['club_id', 't'], how='left'); P['pipeline_rank'] = np.log(P['pipeline_rank'].fillna(self.pr_min))
         P = P.merge(self.TA.rename(columns={'club_id': 'C', 'taste': 'club_taste'}), on=['C', 't', 'archetype'], how='left'); P['club_taste'] = P['club_taste'].fillna(0.0)
         P = P.merge(self.HZ, on=['player_id', 'yr'], how='left')
+        if self.PM is not None: P = P.merge(self.PM, on=['player_id', 'yr'], how='left'); P['pattern_match'] = P['pattern_match'].fillna(0.0)      # closed signing patterns the candidate's traits satisfy, weighted by log-lift
+        else: P['pattern_match'] = 0.0
         P['log_value'] = np.log10(P['value']); P['S_value'] = ref_value; P['value_gap'] = np.abs(P['log_value'] - np.log10(ref_value))
         return pd.concat([P, pd.DataFrame(tr, columns=['tr_' + m for m in MET], index=P.index)], axis=1)
 

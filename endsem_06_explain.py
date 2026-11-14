@@ -39,7 +39,7 @@ for kind, row in [('hit', r) for r in hits.itertuples()] + [('miss', r) for r in
         viz.radar(lake, who, row.S, row.t).savefig(f'outputs/figs/case_{tag}_{lab_}_radar.png'); plt.close('all'); viz.waterfall(models[row.t], X, int(who.name)).savefig(f'outputs/figs/case_{tag}_{lab_}_shap.png'); plt.close('all')
     cases.append({'kind': kind, 'tag': tag, 'club': row.club, 'league': row.league, 'season': int(row.t), 'starter': row.S_name, 'position': row.P, 'signed': row.N_name, 'from': row.N_from, 'fee': None if pd.isna(row.fee) else float(row.fee), 'rank': int(me['rank']), 'pool': len(X),
                   'signed_feature_percentile_in_pool': {k: round(v, 2) for k, v in pct.items()}, 'signed_values': {f: (None if pd.isna(me[f]) else round(float(me[f]), 3)) for f in E.FEATS}, 'starter_value': None if pd.isna(me['S_value']) else float(me['S_value']), 'signed_value': float(me['value']),
-                  'top5': X.head(5)[['player', 'squad', 'age_num', 'value', 'score']].round(3).to_dict('records'), 'url': f"?league={row.league}&club={row.club}&t={row.t}&S={row.S}&X={row.player_id}".replace(' ', '%20')})
+                  'top5': X.head(5)[['player', 'squad', 'age_num', 'value', 'score']].round(3).to_dict('records'), 'C': int(row.C), 'S': int(row.S), 'N': int(row.player_id), 'rank_lo': None})
     print(f"{kind.upper()}: {row.club} {row.t}-{str(row.t + 1)[2:]}, {row.S_name} ({row.P}) -> {row.N_name} from {row.N_from}; ranked {int(me['rank'])} of {len(X)}; percentiles {cases[-1]['signed_feature_percentile_in_pool']}")
 M['cases'] = cases
 
@@ -48,7 +48,9 @@ M['cases'] = cases
 
 # %%
 import json
-json.dump([{'tag': c['tag'], 'url': c['url']} for c in cases], open('outputs/screens/cases.json', 'w'))
+sq = pd.read_parquet('lake/live_squads.parquet'); lr = sq[sq['age_today'] < 30].nlargest(1, 'risk').iloc[0]
+jobs = [{'tag': c['tag'], 'season': c['season'], 'club': c['club'], 'starter': c['S'], 'cand': c['N'], 'kind': c['kind']} for c in cases] + [{'tag': 'live', 'season': 'live', 'club': lr['club'], 'starter': int(lr['player_id']), 'cand': None, 'kind': 'live'}]
+json.dump(jobs, open('outputs/screens/cases.json', 'w')); M['live_example'] = {'club': lr['club'], 'starter': lr['name'], 'risk': float(lr['risk']), 'position': lr['fine_pos']}
 out = subprocess.run([sys.executable, 'src/screens.py', 'outputs/screens/cases.json'], capture_output=True, text=True); print(out.stderr[-800:]); shots = out.stdout.split()
-assert len(shots) == 2 * len(cases), 'screenshots missing'
+assert len(shots) >= 3 * len(cases), 'screenshots missing'
 M['screens'] = shots; print(shots); _ = put_metrics('phase6', M)

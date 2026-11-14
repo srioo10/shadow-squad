@@ -1,0 +1,83 @@
+--[1] 1,654 transactions (one per signed player: his top-quartile traits and his position), 23 items, mean length 5.2
+
+--[3] min_support                     0.1   0.05   0.02
+closed                          103    531   2172
+maximal                          38    162    287
+aclose_equals_charm            True   True   True
+pincer_equals_genmax           True   True   True
+maximal_equals_max_of_closed   True   True   True
+aclose_passes                     5      8     10
+aclose_candidates               340    968   3008
+aclose_s                       1.13   2.03    2.3
+charm_intersections             327   1007   3058
+charm_s                       0.005  0.014  0.031
+pincer_passes                     4      6      9
+pincer_candidates               348   1011   3146
+pincer_saved_by_mfs               0      7     18
+pincer_s                       0.95   1.33   2.28
+genmax_intersections            342   1087   2731
+genmax_pruned                    32    166    554
+genmax_s                      0.005  0.006  0.016
+--[3] largest closed sets with 3+ items at 5%: [('{prgc, take_on, att_pen}', 276), ('{kp, sca, ppa}', 243), ('{ast, kp, sca}', 224)]
+longest maximal sets at 5%: ['{ast, kp, sca, ppa, prgc, take_on, att_pen}', '{sh, kp, sca, prgc, take_on, att_pen}', '{sh, kp, sca, ppa, prgc, att_pen}']
+
+--[7]    min_support  longest_length  lfi_count  maximal_count  \
+0         0.10               4          8             38   
+1         0.05               7          1            162   
+2         0.02               9          8            287   
+
+   direct_equals_longest_maximal  intersections  branches_cut_by_length  \
+0                           True            332                      54   
+1                           True           1100                     237   
+2                           True           3615                     746   
+
+   seconds                                            example  
+0    0.001                                {ast, kp, sca, ppa}  
+1    0.003        {ast, kp, sca, ppa, prgc, take_on, att_pen}  
+2    0.008  {gls, npxg, sh, ast, kp, sca, ppa, prgc, att_pen}  
+--[9] {'patterns': 8721, 'maximal_patterns': 1055, 'cutoffs': 7, 'rows_scored': 10184, 'seconds': 0.6, 'auc_signed_next_summer': 0.5063429482784939, 'auc_feeder_moves_up': 0.5393105203825594, 'signed_rate_top_quintile': 0.14334806087383406, 'signed_rate_rest': 0.13489628083957284}
+
+--[9]   fine_pos                                 pattern  support  lift
+0       FB      {kp, sca, ppa, prgc, take_on, int}       14  2.67
+1       CM                         {sh, ast, prgc}       12  2.64
+2       FB  {kp, sca, prgc, take_on, att_pen, int}       14  2.56
+3       CM                            {prgc, tklw}       15  2.55
+4       FB              {prgp, prgc, take_on, int}       16  2.54
+5       FB              {prgp, take_on, tklw, int}       14  2.45
+--[11]   fine_pos     n    eps  clusters_spark  clusters_sklearn  noise_spark  \
+0       CB  2746  1.355               1                 1        0.086   
+1       FB  2121  1.540               1                 1        0.080   
+2       DM  1194  1.649               1                 1        0.072   
+3       CM  1706  1.556               1                 1        0.055   
+4       AM   726  1.971               1                 1        0.067   
+5        W  1587  1.667               1                 1        0.075   
+6       ST  1673  1.660               1                 1        0.065   
+
+   noise_sklearn  core_identical  ari_spark_vs_sklearn  ari_core_points  \
+0          0.086            True                   1.0              1.0   
+1          0.080            True                   1.0              1.0   
+2          0.072            True                   1.0              1.0   
+3          0.055            True                   1.0              1.0   
+4          0.067            True                   1.0              1.0   
+5          0.075            True                   1.0              1.0   
+6          0.065            True                   1.0              1.0   
+
+   halo_share  merges  spark_s  sklearn_s  hdbscan_clusters  hdbscan_noise  \
+0       1.409       4     3.46      0.027                 2          0.932   
+1       1.380       3     0.54      0.023                 0          1.000   
+2       1.502       4     0.35      0.009                 0          1.000   
+3       1.348       3     0.44      0.013                 2          0.912   
+4       1.683       3     0.31      0.009                 0          1.000   
+5       1.463       3     0.39      0.012                 0          1.000   
+6       1.445       3     0.38      0.012                 0          1.000   
+
+   ari_hdbscan_vs_dbscan  
+0                 -0.069  
+1                  0.000  
+2                  0.000  
+3                 -0.063  
+4                  0.000  
+5                  0.000  
+6                  0.000  
+--[11] {'min_pts': 8, 'all_core_identical': True, 'min_ari': 1.0, 'min_ari_core': 1.0, 'mean_noise': 0.07141262819421697, 'mean_hdbscan_noise': 0.9776588300114794, 'mean_ari_hdbscan': -0.01881496273083969, 'seconds': 7.5, 'unique_flag': {'feeders': 2334, 'unique_share': 0.05912596401028278, 'move_up_unique': 0.2391304347826087, 'move_up_rest': 0.22859744990892533, 'fisher_p': 0.7549012611620298, 'signed_unique': 0.14782608695652175, 'signed_rest': 0.14020825721592986}}
+

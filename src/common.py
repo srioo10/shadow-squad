@@ -64,7 +64,7 @@ try:
 except ImportError:
     pass
 # a method keeps its colour in every figure
-MCOL = {'Shadow Squad': ORANGE, 'Market value': BLUE, 'Best young performer': GREEN, 'Random': GREY, 'Hazard': VIOLET, 'Raw cosine': PINK, 'Under-priced (hedonic)': AMBER}
+MCOL = {'Shadow Squad': ORANGE, 'Market value': BLUE, 'Best young performer': GREEN, 'Random': GREY, 'Hazard': VIOLET, 'Raw cosine': PINK, 'Under-priced (hedonic)': AMBER, 'Value fit': AMBER}
 def fmt_p(p):
     """p-values the way the report prints them: 0.97, 0.04, <0.001."""
     return '<0.001' if p < 0.001 else (f'{p:.3f}' if p < 0.01 else f'{p:.2f}')
