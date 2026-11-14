@@ -50,4 +50,4 @@ The whole run takes about 40 minutes on a laptop. Reruns give identical numbers.
 | `outputs/figs/`, `outputs/screens/` | figures and dashboard screenshots used in the report |
 | `midsem_frozen.ipynb` | the mid-semester notebook, unchanged |
 
-Every model that ranks a season is fitted on earlier seasons only. `data/`, most of `lake/`, the lecture slides and the report PDFs are not in the repository.
+Every model that ranks a season is fitted on earlier seasons only. `data/`, most of `lake/`.
