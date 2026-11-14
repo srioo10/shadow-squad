@@ -2,8 +2,6 @@
 
 Player replacement scouting for Europe's top five leagues: given a club and a departing starter (or a position), rank the players who could replace him, and check the list against what clubs really did.
 
-End-semester project, Analysis and Systems of Big Data, IIITDM Kancheepuram.
-
 ## Try the dashboard (no data download needed)
 
 The small tables the app reads are in the repository.
