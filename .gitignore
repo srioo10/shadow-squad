@@ -31,3 +31,10 @@ lake/midsem/*
 !lake/midsem/config.json
 *.crc
 _SUCCESS
+
+# kept on this machine only
+mid sem topics/
+*.pdf
+report/endsem.*
+spark-warehouse/
+outputs/logs/*.log
