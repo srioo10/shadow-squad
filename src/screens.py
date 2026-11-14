@@ -9,13 +9,13 @@ def shot(pg, url, sel, path, wait):
 try:
     time.sleep(8)
     with sync_playwright() as p:
-        br = p.chromium.launch(); pg = br.new_page(viewport={'width': 1180, 'height': 2400}, device_scale_factor=2)
+        br = p.chromium.launch(); pg = br.new_page(viewport={'width': 1060, 'height': 2400}, device_scale_factor=2)
         for c in cases:
             base = f"?season={c['season']}&club={quote(c['club'])}&starter={c['starter']}"; t = f"outputs/screens/{c['tag']}"
-            shot(pg, base + '&view=Squad', '[data-testid="stMainBlockContainer"]', t + '_squad.png', '.st-key-pitch svg')
+            shot(pg, base + '&view=Squad', '[data-testid="stVerticalBlock"]', t + '_squad.png', '.st-key-pitch svg')
             shot(pg, base + '&view=Shadow%20list', '.st-key-cards', t + '_cards.png', '.st-key-cards .card')
             if c['kind'] != 'miss':
-                shot(pg, base + '&view=Compare' + (f"&cand={c['cand']}" if c['cand'] else ''), '[data-testid="stMainBlockContainer"]', t + '_compare.png', '.st-key-radar img')
+                shot(pg, base + '&view=Compare' + (f"&cand={c['cand']}" if c['cand'] else ''), '[data-testid="stVerticalBlock"]', t + '_compare.png', '.st-key-radar img')
             if c['kind'] == 'live': shot(pg, base + '&view=Budget%20rebuild', '[data-testid="stMainBlockContainer"]', t + '_rebuild.png', '[data-testid="stDataFrame"]')
         br.close()
 finally: srv.terminate()

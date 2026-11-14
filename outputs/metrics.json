@@ -4065,7 +4065,7 @@
     "pairs": 142
    },
    "distinct_twins": 142,
-   "lsh_seconds": 2.26,
+   "lsh_seconds": 2.39,
    "matched_pairs": 142,
    "caliper_logit": 0.17531660713375422,
    "balance": {
@@ -4288,8 +4288,8 @@
      "treated": 190,
      "cate": -0.007935046258472762,
      "ci95": [
-      -0.09035818732900221,
-      0.07448809481205668
+      -0.09035818732900222,
+      0.07448809481205669
      ],
      "p": 0.8503359570718718
     },
@@ -4308,10 +4308,10 @@
      "treated": 25,
      "cate": -0.010129946807631117,
      "ci95": [
-      -0.09446865610905013,
-      0.07420876249378787
+      -0.09446865610905011,
+      0.07420876249378786
      ],
-     "p": 0.8138890957337496
+     "p": 0.8138890957337495
     },
     "23-24": {
      "n": 642,
@@ -4326,7 +4326,7 @@
     "DF": {
      "n": 536,
      "treated": 71,
-     "cate": -0.0012102720309214055,
+     "cate": -0.0012102720309214061,
      "ci95": [
       -0.08501799763021713,
       0.0825974535683743
@@ -4346,7 +4346,7 @@
     "FW": {
      "n": 292,
      "treated": 49,
-     "cate": -0.010939870916951021,
+     "cate": -0.01093987091695102,
      "ci95": [
       -0.09413972826631446,
       0.07225998643241241
@@ -4431,7 +4431,7 @@
     "19": 0.16,
     "20": 0.087
    },
-   "search_seconds": 17.8,
+   "search_seconds": 17.9,
    "hardened": {
     "test_queries": 82,
     "recall10_before": 0.3048780487804878,
@@ -4531,7 +4531,7 @@
       "size": 80
      }
     ],
-    "seconds": 57.0
+    "seconds": 57.2
    }
   },
   "D": {
@@ -4541,9 +4541,9 @@
    "mean_ratio_to_optimum": 0.9996621027642505,
    "min_ratio": 0.9950426914221756,
    "share_reaching_optimum": 0.891566265060241,
-   "mean_ga_seconds": 0.025286496403705644,
-   "mean_ilp_seconds": 0.0056074872074357,
-   "mean_ga_spark_seconds": 2.99143705368042,
+   "mean_ga_seconds": 0.026458478835691888,
+   "mean_ilp_seconds": 0.005956175815628235,
+   "mean_ga_spark_seconds": 3.004340386390686,
    "spark_instances": 10,
    "spark_equals_local": true,
    "median_generation_of_best": 8.0,
@@ -4566,16 +4566,16 @@
      "maximal_equals_max_of_closed": true,
      "aclose_passes": 5,
      "aclose_candidates": 340,
-     "aclose_s": 1.13,
+     "aclose_s": 1.02,
      "charm_intersections": 327,
-     "charm_s": 0.005,
+     "charm_s": 0.002,
      "pincer_passes": 4,
      "pincer_candidates": 348,
      "pincer_saved_by_mfs": 0,
-     "pincer_s": 0.95,
+     "pincer_s": 0.75,
      "genmax_intersections": 342,
      "genmax_pruned": 32,
-     "genmax_s": 0.005
+     "genmax_s": 0.001
     },
     {
      "min_support": 0.05,
@@ -4586,16 +4586,16 @@
      "maximal_equals_max_of_closed": true,
      "aclose_passes": 8,
      "aclose_candidates": 968,
-     "aclose_s": 2.03,
+     "aclose_s": 1.44,
      "charm_intersections": 1007,
-     "charm_s": 0.014,
+     "charm_s": 0.006,
      "pincer_passes": 6,
      "pincer_candidates": 1011,
      "pincer_saved_by_mfs": 7,
-     "pincer_s": 1.33,
+     "pincer_s": 1.06,
      "genmax_intersections": 1087,
      "genmax_pruned": 166,
-     "genmax_s": 0.006
+     "genmax_s": 0.005
     },
     {
      "min_support": 0.02,
@@ -4606,16 +4606,16 @@
      "maximal_equals_max_of_closed": true,
      "aclose_passes": 10,
      "aclose_candidates": 3008,
-     "aclose_s": 2.3,
+     "aclose_s": 1.85,
      "charm_intersections": 3058,
-     "charm_s": 0.031,
+     "charm_s": 0.019,
      "pincer_passes": 9,
      "pincer_candidates": 3146,
      "pincer_saved_by_mfs": 18,
-     "pincer_s": 2.28,
+     "pincer_s": 1.66,
      "genmax_intersections": 2731,
      "genmax_pruned": 554,
-     "genmax_s": 0.016
+     "genmax_s": 0.014
     }
    ],
    "example_closed": [
@@ -4658,7 +4658,7 @@
    "maximal_patterns": 1055,
    "cutoffs": 7,
    "rows_scored": 10184,
-   "seconds": 0.6,
+   "seconds": 0.5,
    "auc_signed_next_summer": 0.5063429482784939,
    "auc_feeder_moves_up": 0.5393105203825594,
    "signed_rate_top_quintile": 0.14334806087383406,
@@ -4718,8 +4718,8 @@
      "ari_core_points": 1.0,
      "halo_share": 1.4093,
      "merges": 4,
-     "spark_s": 3.46,
-     "sklearn_s": 0.027,
+     "spark_s": 3.28,
+     "sklearn_s": 0.025,
      "hdbscan_clusters": 2,
      "hdbscan_noise": 0.9315,
      "ari_hdbscan_vs_dbscan": -0.0692
@@ -4737,8 +4737,8 @@
      "ari_core_points": 1.0,
      "halo_share": 1.3795,
      "merges": 3,
-     "spark_s": 0.54,
-     "sklearn_s": 0.023,
+     "spark_s": 0.39,
+     "sklearn_s": 0.021,
      "hdbscan_clusters": 0,
      "hdbscan_noise": 1.0,
      "ari_hdbscan_vs_dbscan": 0.0
@@ -4756,8 +4756,8 @@
      "ari_core_points": 1.0,
      "halo_share": 1.5017,
      "merges": 4,
-     "spark_s": 0.35,
-     "sklearn_s": 0.009,
+     "spark_s": 0.32,
+     "sklearn_s": 0.008,
      "hdbscan_clusters": 0,
      "hdbscan_noise": 1.0,
      "ari_hdbscan_vs_dbscan": 0.0
@@ -4775,8 +4775,8 @@
      "ari_core_points": 1.0,
      "halo_share": 1.3476,
      "merges": 3,
-     "spark_s": 0.44,
-     "sklearn_s": 0.013,
+     "spark_s": 0.33,
+     "sklearn_s": 0.02,
      "hdbscan_clusters": 2,
      "hdbscan_noise": 0.9121,
      "ari_hdbscan_vs_dbscan": -0.0625
@@ -4794,8 +4794,8 @@
      "ari_core_points": 1.0,
      "halo_share": 1.6832,
      "merges": 3,
-     "spark_s": 0.31,
-     "sklearn_s": 0.009,
+     "spark_s": 0.28,
+     "sklearn_s": 0.004,
      "hdbscan_clusters": 0,
      "hdbscan_noise": 1.0,
      "ari_hdbscan_vs_dbscan": 0.0
@@ -4813,8 +4813,8 @@
      "ari_core_points": 1.0,
      "halo_share": 1.4631,
      "merges": 3,
-     "spark_s": 0.39,
-     "sklearn_s": 0.012,
+     "spark_s": 0.38,
+     "sklearn_s": 0.011,
      "hdbscan_clusters": 0,
      "hdbscan_noise": 1.0,
      "ari_hdbscan_vs_dbscan": 0.0
@@ -4832,8 +4832,8 @@
      "ari_core_points": 1.0,
      "halo_share": 1.4447,
      "merges": 3,
-     "spark_s": 0.38,
-     "sklearn_s": 0.012,
+     "spark_s": 0.3,
+     "sklearn_s": 0.011,
      "hdbscan_clusters": 0,
      "hdbscan_noise": 1.0,
      "ari_hdbscan_vs_dbscan": 0.0
@@ -5141,7 +5141,7 @@
    "mean_noise": 0.07141262819421697,
    "mean_hdbscan_noise": 0.9776588300114794,
    "mean_ari_hdbscan": -0.01881496273083969,
-   "seconds": 7.5,
+   "seconds": 6.8,
    "unique_flag": {
     "feeders": 2334,
     "unique_share": 0.05912596401028278,

@@ -1,5 +1,5 @@
 """Shadow Squad: a scouting dossier. Run: streamlit run app/shadow_squad.py"""
-import os, sys
+import io, os, sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'src'))
 import numpy as np, pandas as pd, streamlit as st, matplotlib
 matplotlib.use('Agg')
@@ -140,7 +140,7 @@ elif view == 'Compare':
         else:
             t = int(season); fp = [r['fine_pos']]; xi, si = lake.idx[(cid, t)], lake.idx[(sid, t)]; z = lambda v: lake.zraw(np.asarray(v, float)[None, :], fp, t)[0]
             fig = radar(E.MET, [(f'{srow["player"]} at the club', z(lake.RAWV[si]), CHALK, '-', 2.2), (f'{r["player"]}, raw', z(lake.RAWV[xi]), MUTE, '--', 1.3), (f'{r["player"]}, translated into the club', z([r['tr_' + m] for m in E.MET]), GOLD, '-', 2.2)])
-        st.pyplot(fig, alt=f'Radar comparing {srow["player"]} and {r["player"]}'); plt.close(fig); st.html('<div class="note">Per-90 numbers in standard deviations for the position; further out is more.</div>')
+        buf = io.BytesIO(); fig.savefig(buf, format='png', dpi=150, facecolor=PITCH); plt.close(fig); st.image(buf, alt=f'Radar comparing {srow["player"]} and {r["player"]}'); st.html('<div class="note">Per-90 numbers in standard deviations for the position; further out is more.</div>')
     with b.container(key='why'):
         st.html(f'<div class="big">{r["player"]}<small>{r["squad"]}, age {r["age"]:.0f}. Rank {int(r["rank"])} ({int(r["rank_lo"])} to {int(r["rank_hi"])})</small></div><div class="why" style="margin:16px 0 6px;font-size:16px;line-height:1.55;max-width:60ch">{r["why"]}</div>' + (f'<div class="note">{r["patterns"]}</div>' if r['patterns'] else ''))
         m1, m2 = st.columns(2); m1.html(f'<div class="big">{eur(r["value"])}<small>his market value</small></div>'); m2.html(f'<div class="big">{eur(r["ref_value"])}<small>the starter\'s</small></div>'); st.markdown('<div style="margin-top:18px">' + spark(int(cid)) + '</div>', unsafe_allow_html=True)

@@ -87,7 +87,7 @@ for j, (key, pmk, ttl) in enumerate((('median_return', 1, 'Median two-year retur
         lo_n, hi_n = np.percentile(PMN[o][pmk], [2.5, 97.5]); ax[j].bar(i, hi_n - lo_n, bottom=lo_n, width=.62, color='#eceae4', zorder=1); ax[j].hlines(PMN[o][pmk].mean(), i - .31, i + .31, color=GREY, lw=1.2, zorder=2)
         v = res[o][key]; ax[j].scatter(i, v, s=95, color=ORANGE if o.startswith('Under') else INK2, zorder=3); ax[j].text(i + .2, v, f'{v:+.0%}', va='center', fontsize=9, color=INK, fontweight='bold' if o.startswith('Under') else 'normal')
     ax[j].axhline(0, color=INK2, lw=.7); ax[j].set_xticks(range(len(order)), [o.replace(' (hedonic)', '').replace('Best young ', 'Best young\n').replace('Market ', 'Market\n').replace('Shadow ', 'Shadow\n') for o in order], fontsize=8); ax[j].yaxis.set_major_formatter(lambda v, _: f'{v:+.0%}'); ax[j].set_title(ttl); ax[j].grid(axis='x', visible=False)
-ax[0].text(0.02, 0.97, 'dot: the portfolio\ngrey band: 95% of random portfolios bought at the same prices', transform=ax[0].transAxes, fontsize=7.5, color=INK2, va='top'); savefig('p4b_portfolio')
+ax[1].text(0.98, 0.97, 'dot: the portfolio\ngrey band: 95% of random portfolios\nbought at the same prices', transform=ax[1].transAxes, fontsize=7.5, color=INK2, va='top', ha='right'); savefig('p4b_portfolio')
 fig, ax = plt.subplots(1, 2, figsize=(11, 3.9), gridspec_kw={'width_ratios': [1, 1.5]}); L4 = list(lg1)
 for i, (d, lab_, c) in enumerate(((lg1, 'price today (value model)', BLUE), (lg2, 'return over the next 24 months', ORANGE))):
     ax[0].errorbar([d[k]['coef'] for k in L4], np.arange(len(L4)) + (i - .5) * .28, xerr=[[d[k]['coef'] - d[k]['lo'] for k in L4], [d[k]['hi'] - d[k]['coef'] for k in L4]], fmt='o', color=c, label=lab_, capsize=2, lw=1.2)

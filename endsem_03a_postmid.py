@@ -47,10 +47,10 @@ fig, ax = plt.subplots(1, 2, figsize=(11, 3.4)); x = np.arange(len(IT)); lab = [
 for i, (c, nm, col) in enumerate((('closed', 'closed', BLUE), ('maximal', 'maximal', ORANGE))):
     ax[0].bar(x + (i - .5) * .36, IT[c], width=.34, color=col)
     for xx, v in zip(x + (i - .5) * .36, IT[c]): ax[0].text(xx, v, f'{v:,}', ha='center', va='bottom', fontsize=8)
-ax[0].text(x[-1] - .18, IT['closed'].iloc[-1] * .55, 'closed', color=BLUE, ha='center', fontsize=9, fontweight='bold', rotation=90, va='center'); ax[0].text(x[0] + .18, IT['maximal'].iloc[0] * 1.9 + 30, 'maximal', color=ORANGE, ha='center', fontsize=9, fontweight='bold')
+ax[0].text(0.03, 0.9, 'closed', color=BLUE, fontsize=10, fontweight='bold', transform=ax[0].transAxes); ax[0].text(0.03, 0.81, 'maximal', color=ORANGE, fontsize=10, fontweight='bold', transform=ax[0].transAxes)
 ax[0].set_xticks(x, lab); ax[0].set_xlabel('minimum support'); ax[0].set_title('Closed and maximal itemsets of signed players'); ax[0].grid(axis='x', visible=False)
 for i, (c, nm, col) in enumerate((('aclose_candidates', 'A-Close (Spark)', BLUE), ('pincer_candidates', 'Pincer-Search (Spark)', ORANGE))):
-    ax[1].plot(x, IT[c], 'o-', color=col); ax[1].text(x[-1] + .06, IT[c].iloc[-1], nm, color=col, va='center', fontsize=8.5)
+    ax[1].plot(x, IT[c], 'o-' if i == 0 else 's--', color=col, ms=6 if i == 0 else 4); ax[1].text(0.04, 0.9 - 0.09 * i, nm, color=col, fontsize=9, fontweight='bold', transform=ax[1].transAxes)
 ax[1].set_xticks(x, lab); ax[1].set_xlim(-.2, len(IT) - .2 + .9); ax[1].set_yscale('log'); ax[1].set_xlabel('minimum support'); ax[1].set_title('Candidates counted by the Spark jobs'); savefig('p3a_itemsets')
 
 # %% [markdown]
@@ -134,7 +134,7 @@ for P, g in SE.groupby('fine_pos'):
     ax[0].plot(g['kdist_quantile'], g['noise'], 'o-', color=GREY, lw=1.2, ms=3); ax[0].text(0.955, g['noise'].iloc[-1], P, fontsize=7, color=INK2, va='center')
 ax[0].axvline(0.8, color=ORANGE, lw=1.2); ax[0].text(0.805, ax[0].get_ylim()[1] * .93, 'eps used', color=ORANGE, fontsize=8); ax[0].yaxis.set_major_formatter(lambda v, _: f'{v:.0%}'); ax[0].set_xlabel('eps, as a quantile of the 8th-nearest-neighbour distance'); ax[0].set_ylabel('points labelled noise'); ax[0].set_title('DBSCAN is sensitive to eps'); ax[0].set_xlim(.48, 1.0)
 xx = np.arange(len(DT)); ax[1].bar(xx - .2, DT['noise_spark'], width=.38, color=BLUE); ax[1].bar(xx + .2, DT['hdbscan_noise'], width=.38, color=ORANGE)
-ax[1].text(xx[0] - .2, DT['noise_spark'].iloc[0] + .01, 'DBSCAN\n(Spark)', color=BLUE, ha='center', fontsize=7.5); ax[1].text(xx[0] + .28, DT['hdbscan_noise'].iloc[0] + .01, 'HDBSCAN', color=ORANGE, ha='left', fontsize=7.5)
+ax[1].text(0.45, 1.06, 'DBSCAN (Spark)', color=BLUE, fontsize=9, fontweight='bold', transform=ax[1].transAxes, va='top'); ax[1].text(0.75, 1.06, 'HDBSCAN', color=ORANGE, fontsize=9, fontweight='bold', transform=ax[1].transAxes, va='top')
 ax[1].set_xticks(xx, [f"{p}\nARI {a:.2f}" for p, a in zip(DT['fine_pos'], DT['ari_spark_vs_sklearn'])], fontsize=7.5); ax[1].yaxis.set_major_formatter(lambda v, _: f'{v:.0%}'); ax[1].set_ylim(0, max(DT['noise_spark'].max(), DT['hdbscan_noise'].max()) * 1.3)
-ax[1].set_title('Share of unique (noise) players; ARI = Spark DBSCAN vs sklearn'); ax[1].grid(axis='x', visible=False); savefig('p3a_dbscan')
+ax[1].set_title('Players labelled noise, by position', pad=18); ax[1].grid(axis='x', visible=False); savefig('p3a_dbscan')
 _ = put_metrics('phase3a', M)

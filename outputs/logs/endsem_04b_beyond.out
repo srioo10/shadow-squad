@@ -51,7 +51,7 @@ under-priced: [('z_sca', 0.048, 0.0028), ('z_gls', 0.0431, 0.0), ('z_npxg', 0.04
 {'all': (-0.008, [-0.09, 0.074]), '21 or under': (-0.01, [-0.091, 0.071]), '22': (-0.01, [-0.094, 0.074]), '23-24': (-0.005, [-0.088, 0.077]), 'DF': (-0.001, [-0.085, 0.083]), 'MF': (-0.013, [-0.094, 0.068]), 'FW': (-0.011, [-0.094, 0.072])}
 {'21 or under | d_min': (60, 0.072, [-0.035, 0.177]), '21 or under | d_out': (33, -0.915, [-5.164, 3.567]), '22 | d_min': (19, 0.032, [-0.129, 0.202]), '22 | d_out': (13, 1.892, [-3.546, 7.485]), '23-24 | d_min': (63, -0.037, [-0.118, 0.046]), '23-24 | d_out': (33, 0.061, [-4.403, 4.767]), 'DF | d_min': (54, 0.065, [-0.034, 0.165]), 'DF | d_out': (32, -3.244, [-7.609, 1.263]), 'MF | d_min': (53, -0.026, [-0.118, 0.066]), 'MF | d_out': (29, -0.769, [-5.09, 3.631]), 'FW | d_min': (35, 0.014, [-0.121, 0.145]), 'FW | d_out': (18, 6.806, [0.915, 12.567]), 'buyer less dominant | d_min': (72, 0.001, [-0.082, 0.08]), 'buyer less dominant | d_out': (37, 0.086, [-4.316, 4.573]), 'buyer more dominant | d_min': (70, 0.036, [-0.057, 0.133]), 'buyer more dominant | d_out': (42, -0.162, [-3.862, 3.719])}
 
---[9] {'queries': 150, 'near_miss_players': 1500, 'cheap': ['sh', 'take_on', 'clr', 'prgc'], 'gameability': 0.274, 'gameability_ci95': [0.2539304235090752, 0.2940014851485148], 'median_steps': 1.0, 'median_change_share_of_range': 0.05000000000000003, 'most_used_metric': 'sh', 'share_of_gamers_using_it': 0.3722627737226277, 'median_added_per90': {'sh': 0.1201500000000002, 'take_on': 0.14814999999999978, 'clr': 0.14125500000000007, 'prgc': 0.15604000000000018}, 'median_relative_increase': {'sh': 0.09497472194135487, 'take_on': 0.1373762116845689, 'clr': 0.08788716497008824, 'prgc': 0.11019774011299432}, 'gamed_with_one_metric_alone': {'sh': 0.06933333333333333, 'take_on': 0.04933333333333333, 'clr': 0.059333333333333335, 'prgc': 0.03933333333333333}, 'search_seconds': 17.8}
+--[9] {'queries': 150, 'near_miss_players': 1500, 'cheap': ['sh', 'take_on', 'clr', 'prgc'], 'gameability': 0.274, 'gameability_ci95': [0.2539304235090752, 0.2940014851485148], 'median_steps': 1.0, 'median_change_share_of_range': 0.05000000000000003, 'most_used_metric': 'sh', 'share_of_gamers_using_it': 0.3722627737226277, 'median_added_per90': {'sh': 0.1201500000000002, 'take_on': 0.14814999999999978, 'clr': 0.14125500000000007, 'prgc': 0.15604000000000018}, 'median_relative_increase': {'sh': 0.09497472194135487, 'take_on': 0.1373762116845689, 'clr': 0.08788716497008824, 'prgc': 0.11019774011299432}, 'gamed_with_one_metric_alone': {'sh': 0.06933333333333333, 'take_on': 0.04933333333333333, 'clr': 0.059333333333333335, 'prgc': 0.03933333333333333}, 'search_seconds': 17.9}
 
 --[11] {'test_queries': 82, 'recall10_before': 0.3048780487804878, 'recall10_after': 0.3170731707317073, 'recall10_change_ci95': [-0.06097560975609756, 0.08536585365853659], 'recall25_before': 0.573170731707317, 'recall25_after': 0.5853658536585366, 'median_rank_before': 20.0, 'median_rank_after': 18.0}
 
@@ -65,23 +65,23 @@ budget
 8        0.400     0.412
 16       0.512     0.612
 --[15]    club     t  slots  budget_m    ilp     ga  feasible   ga_s  ilp_s  \
-0     5  2022      3      41.0  2.988  2.988      True  0.025  0.017   
-1     5  2023      4      36.0  4.000  4.000      True  0.025  0.006   
-2     5  2024      5     142.0  4.988  4.979      True  0.050  0.011   
-3    11  2020      3      60.0  3.000  3.000      True  0.024  0.009   
-4    11  2021      3      65.0  3.000  3.000      True  0.024  0.006   
-5    12  2023      3      53.0  2.993  2.993      True  0.055  0.007   
+0     5  2022      3      41.0  2.988  2.988      True  0.024  0.017   
+1     5  2023      4      36.0  4.000  4.000      True  0.025  0.007   
+2     5  2024      5     142.0  4.988  4.979      True  0.025  0.007   
+3    11  2020      3      60.0  3.000  3.000      True  0.063  0.022   
+4    11  2021      3      65.0  3.000  3.000      True  0.050  0.009   
+5    12  2023      3      53.0  2.993  2.993      True  0.024  0.013   
 6    12  2024      2      45.0  2.000  2.000      True  0.024  0.005   
-7    13  2023      4      55.5  4.000  4.000      True  0.054  0.010   
+7    13  2023      4      55.5  4.000  4.000      True  0.072  0.010   
 
    gens_to_best  ga_spark_s spark_equals_local  ratio  
-0            19       3.937               True  1.000  
-1            20       3.035               True  1.000  
-2            18       2.919               True  0.998  
-3            18       2.870               True  1.000  
-4             7       2.846               True  1.000  
-5            10       2.883               True  1.000  
-6             1       2.872               True  1.000  
-7            37       2.898               True  1.000  
---[15] {'instances': 83, 'mean_slots': 2.963855421686747, 'ga_feasible_share': 1.0, 'mean_ratio_to_optimum': 0.9996621027642505, 'min_ratio': 0.9950426914221756, 'share_reaching_optimum': 0.891566265060241, 'mean_ga_seconds': 0.025286496403705644, 'mean_ilp_seconds': 0.0056074872074357, 'mean_ga_spark_seconds': 2.99143705368042, 'spark_instances': 10, 'spark_equals_local': True, 'median_generation_of_best': 8.0, 'search_space_per_slot': 16, 'population': 60, 'generations': 40}
+0            19       3.927               True  1.000  
+1            20       3.021               True  1.000  
+2            18       3.050               True  0.998  
+3            18       2.885               True  1.000  
+4             7       2.975               True  1.000  
+5            10       2.850               True  1.000  
+6             1       2.865               True  1.000  
+7            37       2.824               True  1.000  
+--[15] {'instances': 83, 'mean_slots': 2.963855421686747, 'ga_feasible_share': 1.0, 'mean_ratio_to_optimum': 0.9996621027642505, 'min_ratio': 0.9950426914221756, 'share_reaching_optimum': 0.891566265060241, 'mean_ga_seconds': 0.026458478835691888, 'mean_ilp_seconds': 0.005956175815628235, 'mean_ga_spark_seconds': 3.004340386390686, 'spark_instances': 10, 'spark_equals_local': True, 'median_generation_of_best': 8.0, 'search_space_per_slot': 16, 'population': 60, 'generations': 40}
 
