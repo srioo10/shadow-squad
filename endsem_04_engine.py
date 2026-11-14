@@ -80,7 +80,7 @@ ax.set_xticks(x, piv.index, rotation=60, fontsize=7); ax.set_ylabel('MAE at the 
 
 # %%
 EV = pd.read_parquet('lake/replacement_events'); EV['qid'] = EV['C'].astype(str) + '_' + EV['t'].astype(str) + '_' + EV['S'].astype(str)
-Q = EV[['qid', 'C', 't', 'S', 'P', 'club', 'S_name']].drop_duplicates('qid')
+Q = EV.sort_values(['qid', 'N'])[['qid', 'C', 't', 'S', 'P', 'club', 'S_name']].drop_duplicates('qid')
 with timed('pair features', RT): PF = lake.pair_features(Q)
 CA = pd.read_parquet('lake/candidates.parquet')[['qid', 'player_id', 'dist', 'candidate', 'in_brp', 'in_minhash']]; PF = PF.merge(CA, on=['qid', 'player_id'], how='left'); PF['candidate'] = PF['candidate'].fillna(False).astype(bool)
 pos_ = EV[EV['N_in_pool']][['qid', 'N']].drop_duplicates().assign(y=1).rename(columns={'N': 'player_id'}); PF = PF.merge(pos_, on=['qid', 'player_id'], how='left'); PF['y'] = PF['y'].fillna(0).astype(int)
@@ -123,7 +123,7 @@ print(M['trajectory'])
 # Query = (club, season, position). The reference profile is what the club fielded at that position that season (minutes-weighted), and the candidates are all 900-minute players of that position at other clubs.
 
 # %%
-SA = pd.read_parquet('lake/signing_events'); QA = SA[['qid', 'C', 't', 'P', 'league', 'club']].drop_duplicates('qid')
+SA = pd.read_parquet('lake/signing_events').sort_values(['qid', 'N']); QA = SA[['qid', 'C', 't', 'P', 'league', 'club']].drop_duplicates('qid')
 with timed('pair features, all signings', RT): PA = lake.pair_features_club(QA)
 PA = PA.merge(SA[['qid', 'N']].drop_duplicates().assign(y=1).rename(columns={'N': 'player_id'}), on=['qid', 'player_id'], how='left'); PA['y'] = PA['y'].fillna(0).astype(int); PA['q_in_pool'] = PA.groupby('qid')['y'].transform('max') == 1
 PA = PA[PA['q_in_pool']].drop(columns=[c for c in PA.columns if c.startswith('tr_')]); PA.to_parquet('lake/pairs_all.parquet', index=False)
@@ -155,7 +155,7 @@ def quick(R):
     R = R[R.groupby('qid')['y'].transform('max') == 1].copy(); R['r'] = R.groupby('qid')['score'].rank(ascending=False, method='average'); r = R[R['y'] == 1].groupby('qid')['r'].min()
     return {'queries': len(r), 'median_rank': float(r.median()), **{f'recall@{k}': float((r <= k).mean()) for k in (5, 10, 25)}}
 LG.to_parquet('lake/scores_lgbm.parquet', index=False); GB.drop(columns='candidate').to_parquet('lake/scores_gbt.parquet', index=False)
-imp = pd.Series(models_rep['all'].booster_.feature_importance('gain'), index=E.FEATS); imp = (imp / imp.sum()).sort_values(ascending=False)
+imp = pd.Series(np.mean([m_.booster_.feature_importance('gain') for m_ in models['all'].ms], axis=0), index=E.FEATS); imp = (imp / imp.sum()).sort_values(ascending=False)
 M['fusion'] = {'test_seasons': list(TEST), 'train_queries_first_fold': int(PF[(PF['t'] <= TEST[0] - 1) & PF['q_in_pool']]['qid'].nunique()), 'lgbm': quick(LG), 'lgbm_trained_on_all_signings': quick(LV), 'all_signings_task': quick(LA), 'gbt_spark': quick(GB), 'train_queries_first_fold_all_signings': int(PA[PA['t'] <= TEST[0] - 1]['qid'].nunique()), 'gain_share_all_events_model': imp.round(4).to_dict(), 'features': E.FEATS}
 print(M['fusion'])
 ex = EV[(EV['N_in_pool']) & (EV['t'] >= 2020)].iloc[0]; top = E.rank(lake, models, ex['C'], ex['t'], ex['S'], ex['P'], top=10)

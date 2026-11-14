@@ -98,22 +98,28 @@ class Lake:
         return self._common(P, nan(self.CENV[ci], ok), tr)
 
 
-def fit_ranker(train, feats, seed=SEED):
-    """LambdaMART: one group per event query, label 1 for the player actually signed."""
+class Ens:
+    """Average of several LambdaMART models trained on different bootstrap-style subsamples (bagging). One model alone moves by a few points of recall from seed to seed on this little data."""
+    def __init__(self, ms): self.ms = ms
+    def predict(self, X): return np.mean([m.predict(X) for m in self.ms], axis=0)
+
+
+def fit_ranker(train, feats, seed=SEED, n_models=10):
+    """LambdaMART: one group per event query, label 1 for the player actually signed. Rows are put in a fixed order first, so a rerun gives the same model."""
     import lightgbm as lgb
-    train = train.sort_values('qid'); grp = train.groupby('qid', sort=False).size().to_numpy()
-    return lgb.LGBMRanker(objective='lambdarank', n_estimators=150, learning_rate=0.05, num_leaves=7, min_child_samples=10, subsample=1.0, colsample_bytree=1.0, random_state=seed, deterministic=True, force_row_wise=True,
-                          n_jobs=1, verbose=-1).fit(train[feats], train['y'], group=grp)
+    train = train.sort_values(['qid', 'player_id'], kind='mergesort'); grp = train.groupby('qid', sort=False).size().to_numpy()
+    return Ens([lgb.LGBMRanker(objective='lambdarank', n_estimators=150, learning_rate=0.05, num_leaves=7, min_child_samples=10, subsample=0.8, subsample_freq=1, colsample_bytree=0.8, random_state=seed + i, deterministic=True,
+                               force_row_wise=True, n_jobs=1, verbose=-1).fit(train[feats], train['y'], group=grp) for i in range(n_models)])
 
 
-def walk_forward(pairs, feats, test_seasons=(2020, 2021, 2022, 2023, 2024), keep_models=False, train_pairs=None, use_candidates=True):
+def walk_forward(pairs, feats, test_seasons=(2020, 2021, 2022, 2023, 2024), keep_models=False, train_pairs=None, use_candidates=True, n_models=10, seed=SEED):
     """Train on events with t <= Y-1, score every candidate of the events at t = Y. `train_pairs` lets a model learn from another event set (all signings) and rank replacement queries.
     With use_candidates, training rows are the LSH candidate set and non-candidates get the lowest score."""
     src = pairs if train_pairs is None else train_pairs; out, models = [], {}
     for Y in test_seasons:
         tr = src[(src['t'] <= Y - 1) & src['q_in_pool']]
         if use_candidates and train_pairs is None: tr = tr[tr['candidate']]
-        tr = tr[tr.groupby('qid')['y'].transform('max') == 1]; te = pairs[pairs['t'] == Y].copy(); m = fit_ranker(tr, feats); sc = m.predict(te[feats])
+        tr = tr[tr.groupby('qid')['y'].transform('max') == 1]; te = pairs[pairs['t'] == Y].sort_values(['qid', 'player_id'], kind='mergesort').copy(); m = fit_ranker(tr, feats, seed=seed, n_models=n_models); sc = m.predict(te[feats])
         te['score'] = np.where(te['candidate'], sc, -1e9) if (use_candidates and 'candidate' in te) else sc; out.append(te[['qid', 'player_id', 't', 'y', 'score']]); models[Y] = m
     res = pd.concat(out)
     return (res, models) if keep_models else res

@@ -11,16 +11,16 @@
 7           4.0              8  40446      0.987         0.999   
 
    signing_recall  seconds  
-0           0.464     0.87  
-1           0.717     0.47  
-2           0.884     0.55  
-3           0.964     0.53  
-4           0.493     0.35  
-5           0.768     0.45  
-6           0.906     0.41  
-7           0.971     0.55  
+0           0.464     0.81  
+1           0.717     0.45  
+2           0.884     0.46  
+3           0.964     0.46  
+4           0.493     0.38  
+5           0.768     0.30  
+6           0.906     0.48  
+7           0.971     0.39  
 --[5] {'exact_pairs': 40967, 'queries': 429, 'mean_pool_per_query': 95.494, 'minhash_pairs': 15246, 'minhash_signing_recall': 0.457, 'minhash_recall_top25': 0.539, 'brp_minhash_jaccard': 0.369, 'union_pairs': 37577, 'union_set_share': 0.917, 'union_signing_recall': 0.913, 'union_recall_top25': 0.976, 'in_pool_signing_pairs': 138}
-chosen: {'bucketLength': 2.0, 'numHashTables': 4.0, 'pairs': 36198.0, 'set_share': 0.884, 'recall_top25': 0.951, 'signing_recall': 0.884, 'seconds': 0.55}
+chosen: {'bucketLength': 2.0, 'numHashTables': 4.0, 'pairs': 36198.0, 'set_share': 0.884, 'recall_top25': 0.951, 'signing_recall': 0.884, 'seconds': 0.46}
 
 --[7] [PrefixSpan] 1.2 s
 
@@ -44,7 +44,7 @@ chosen: {'bucketLength': 2.0, 'numHashTables': 4.0, 'pairs': 36198.0, 'set_share
 304        1.89      81       1.24  
 305        1.89      78       1.23  
 430        1.83     139       1.50  
---[9] [BisectingKMeans (k chosen on seasons <= 2019, then one refit per season cut-off)] 130.8 s
+--[9] [BisectingKMeans (k chosen on seasons <= 2019, then one refit per season cut-off)] 119.9 s
 
 
 
@@ -73,7 +73,7 @@ W1          453      136         0.279     npxg +0.7, att_pen +0.7, gls +0.6
 W2          445      114         0.307           sca +1.0, kp +0.9, ppa +0.9
 --[9] 22 archetypes {'CB': 4, 'FB': 3, 'DM': 3, 'CM': 3, 'AM': 3, 'W': 3, 'ST': 3}; archetype vs moving up: chi-square p = 0.0000, Cramer's V = 0.190
 
---[11] [GraphFrames PageRank (8 seasons x 2 directions)] 23.1 s
+--[11] [GraphFrames PageRank (8 seasons x 2 directions)] 24.4 s
 
 
 
@@ -83,7 +83,7 @@ W2          445      114         0.307           sca +1.0, kp +0.9, ppa +0.9
 145       Olympiacos     3.05     3.66    100
 726     Boca Juniors     2.95     1.63     69
 739          Benfica     2.93     2.59    110
-755      Shakhtar D.     2.75     2.12     79
+754      Shakhtar D.     2.75     2.12     79
 93        Chelsea FC     2.72     2.98     97
 520          AS Roma     2.69     3.16    108
 76         Genoa CFC     2.64     3.74    106
@@ -92,17 +92,17 @@ W2          445      114         0.307           sca +1.0, kp +0.9, ppa +0.9
 468          Udinese     2.61     3.28     95
 447        Sampdoria     2.57     2.16     73
 969  Indep. Santa Fe     2.55     1.42     44
---[11] [PowerIterationClustering] 12.2 s
+--[11] [PowerIterationClustering] 12.0 s
 {'edges': 62535, 'clubs': 11401, 'auc_pipeline_rank_alone': 0.582, 'auc_sales_count_alone': 0.582, 'auc_dest_rank_alone': 0.53, 'feeders_scored': 2504, 'club_level_spearman': 0.27, 'club_level_spearman_p': 0.0, 'club_seasons': 389, 'pic_clubs': 1002, 'pic_k': 8, 'pic_maxIter_chosen': 8, 'pic_modularity_by_maxIter': {'3': 0.26841159018809524, '5': 0.2794408433966645, '8': 0.33499486690840263, '12': 0.19659243587220965, '20': 0.10576787919836206}, 'pic_modularity': 0.335, 'pic_country_purity': 0.167, 'pic_known_clubs': 726, 'pic_sizes': {0: 443, 1: 48, 2: 5, 3: 163, 4: 78, 5: 3, 6: 2, 7: 260}}
 
---[13] [ALS (7 cut-offs)] 16.4 s
+--[13] [ALS (7 cut-offs)] 15.4 s
    ResultQueryStage 8
 
 
 
 --[13] {'train_signings': 560, 'test_signings': 1551, 'clubs': 144, 'archetypes': 22, 'mrr_pop': 0.668, 'mrr_own': 0.667, 'mrr_als': 0.633, 'top1_pop': 0.424, 'top1_own': 0.426, 'top1_als': 0.373, 'mrr_als_minus_pop_ci95': [-0.05169379969911885, -0.018697614442295292], 'mrr_als_minus_own_ci95': [-0.04781861164839889, -0.019557274876423815]}
 
---[15] [LinearSVC + MLP + LR walk-forward] 188.2 s
+--[15] [LinearSVC + MLP + LR walk-forward] 161.2 s
 
 
 
@@ -120,14 +120,15 @@ W2          445      114         0.307           sca +1.0, kp +0.9, ppa +0.9
 3      0.234         0.472  2.014  
 4      0.234         0.504  2.151  
 5      0.234         0.352  1.502  
---[17] [kNN outlier self-join] 3.1 s
+--[17] [kNN outlier self-join] 2.8 s
 
 
 
 --[17] {'rows_scored': 11753, 'feeders': 2738, 'spearman_score_vs_up': -0.0811, 'spearman_p': 0.0, 'gems_flagged': 114, 'gem_move_up_rate': 0.1667, 'rest_move_up_rate': 0.2275, 'gem_fisher_p': 0.9532, 'top_decile_rate': 0.1747, 'bottom_decile_rate': 0.2836, 'spearman_vs_midsem_iforest': 0.4626, 'spearman_vs_midsem_lof': 0.4892}
 
---[19] [Structured Streaming replay] 10.7 s
+--[19] [Structured Streaming replay] 12.8 s
 
 
-{'micro_batches': 39, 'match_rows': 3504, 'teams': 96, 'teams_matched_to_final': 96, 'r_after_5_batches': 0.8001857691907376, 'r_after_10_batches': 0.8934685202782583, 'r_final': 0.9999999208306407, 'first_batch_r_ge_0.9': 12, 'mean_matches_at_r_0.9': 11.916666666666666, 'cms': {'0.1': {'width': 20, 'depth': 5, 'mean_rel_error': 2.483278094753261, 'max_rel_error': 7.408163265306122}, '0.01': {'width': 200, 'depth': 5, 'mean_rel_error': 0.0, 'max_rel_error': 0.0}}, 'total_deep_events': 23686}
+
+--[19] {'micro_batches': 39, 'match_rows': 3504, 'teams': 96, 'teams_matched_to_final': 96, 'r_after_5_batches': 0.8001857691907376, 'r_after_10_batches': 0.8934685202782583, 'r_final': 0.9999999208306407, 'first_batch_r_ge_0.9': 12, 'mean_matches_at_r_0.9': 11.916666666666666, 'cms': {'0.1': {'width': 20, 'depth': 5, 'mean_rel_error': 2.483278094753261, 'max_rel_error': 7.408163265306122}, '0.01': {'width': 200, 'depth': 5, 'mean_rel_error': 0.0, 'max_rel_error': 0.0}}, 'total_deep_events': 23686}
 

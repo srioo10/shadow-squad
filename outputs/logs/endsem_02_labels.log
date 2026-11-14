@@ -5,5 +5,5 @@ WARNING: package sun.security.action not in java.base
 Using Spark's default log4j profile: org/apache/spark/log4j2-defaults.properties
 Setting default log level to "WARN".
 To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
-26/11/14 01:49:33 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
-[NbConvertApp] Writing 280986 bytes to endsem_02_labels.ipynb
+26/11/14 10:26:22 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+[NbConvertApp] Writing 281203 bytes to endsem_02_labels.ipynb

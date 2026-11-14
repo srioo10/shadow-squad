@@ -16,6 +16,9 @@ lake/*
 !lake/hazard.parquet
 !lake/value_at_t.parquet
 !lake/models.pkl
+!lake/elas_wf.parquet
+!lake/offsets_wf.parquet
+!lake/pool_all/
 !lake/midsem/
 lake/midsem/*
 !lake/midsem/elas.parquet

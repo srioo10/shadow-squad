@@ -1,0 +1,13 @@
+--[3] {'club_taste': 0.0184, 'pipeline_rank': 0.0193, 'sim_translated': 0.0222, 'composite_perf_index': 0.0263, 'traj_sim': 0.0287, 'hazard': 0.0354, 'log_value': 0.0426, 'age_num': 0.0565, 'value_gap': 0.342}
+
+--[5] HIT: Manchester City 2024-25, Rico Lewis (FB) -> Rayan Aït-Nouri from Wolves; ranked 1 of 103; percentiles {'sim_translated': 0.39, 'traj_sim': 0.2, 'pipeline_rank': 0.4, 'club_taste': 0.33, 'hazard': 0.99, 'log_value': 0.96, 'value_gap': 0.01, 'age_num': 0.27, 'composite_perf_index': 0.91}
+
+--[5] HIT: Rennes 2022-23, Flavien Tait (CM) -> Enzo Le Fée from FC Lorient; ranked 1 of 89; percentiles {'sim_translated': 0.91, 'traj_sim': 0.92, 'pipeline_rank': 0.74, 'club_taste': 0.47, 'hazard': 0.98, 'log_value': 0.74, 'value_gap': 0.55, 'age_num': 0.16, 'composite_perf_index': 0.99}
+
+--[5] HIT: Marseille 2021-22, Pol Lirola (FB) -> Issa Kaboré from Man City; ranked 1 of 111; percentiles {'sim_translated': 0.93, 'traj_sim': 0.97, 'pipeline_rank': 0.32, 'club_taste': 0.63, 'hazard': 0.8, 'log_value': 0.32, 'value_gap': 0.46, 'age_num': 0.08, 'composite_perf_index': 0.19}
+
+--[5] MISS: Chelsea 2023-24, Thiago Silva (CB) -> Tosin Adarabioyo from Fulham; ranked 131 of 141; percentiles {'sim_translated': 0.84, 'traj_sim': 0.85, 'pipeline_rank': 0.19, 'club_taste': 0.28, 'hazard': 0.38, 'log_value': 0.87, 'value_gap': 0.87, 'age_num': 0.67, 'composite_perf_index': 0.6}
+
+--[7] 
+['outputs/screens/hit_ManchesterCity_2024_Aït-Nouri_list.png', 'outputs/screens/hit_ManchesterCity_2024_Aït-Nouri_panels.png', 'outputs/screens/hit_Rennes_2022_Fée_list.png', 'outputs/screens/hit_Rennes_2022_Fée_panels.png', 'outputs/screens/hit_Marseille_2021_Kaboré_list.png', 'outputs/screens/hit_Marseille_2021_Kaboré_panels.png', 'outputs/screens/miss_Chelsea_2023_Adarabioyo_list.png', 'outputs/screens/miss_Chelsea_2023_Adarabioyo_panels.png']
+

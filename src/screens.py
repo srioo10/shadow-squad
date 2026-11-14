@@ -6,9 +6,11 @@ srv = subprocess.Popen([sys.executable, '-m', 'streamlit', 'run', 'app/shadow_sq
 try:
     time.sleep(8)
     with sync_playwright() as p:
-        br = p.chromium.launch(); pg = br.new_page(viewport={'width': 1500, 'height': 1750})
+        br = p.chromium.launch(); pg = br.new_page(viewport={'width': 1040, 'height': 1900}, device_scale_factor=2)
         for c in cases:
             pg.goto('http://localhost:8765/' + c['url']); pg.wait_for_selector('text=Why this rank', timeout=90000); pg.wait_for_function("document.querySelectorAll('img').length >= 2", timeout=90000); time.sleep(3)
-            pg.screenshot(path=f"outputs/screens/{c['tag']}.png", full_page=True); print(f"outputs/screens/{c['tag']}.png")
+            # two readable crops instead of the whole page: the ranked list, and the radar + SHAP + value panels
+            pg.locator('[data-testid="stDataFrame"]').first.screenshot(path=f"outputs/screens/{c['tag']}_list.png"); print(f"outputs/screens/{c['tag']}_list.png")
+            pg.locator('[data-testid="stHorizontalBlock"]').last.screenshot(path=f"outputs/screens/{c['tag']}_panels.png"); print(f"outputs/screens/{c['tag']}_panels.png")
         br.close()
 finally: srv.terminate()

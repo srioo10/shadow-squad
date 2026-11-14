@@ -1,6 +1,6 @@
---[3] [value at t] 3.9 s
+--[3] [value at t] 3.6 s
 
---[3] [discrete-time hazard, Spark LR, 7 refits] 18.0 s
+--[3] [discrete-time hazard, Spark LR, 7 refits] 17.0 s
 
 
 value known for 11,745 of 11,753 player-seasons; hazard scored for 10,265 player-seasons (2018-2024; no earlier season to learn from for 2017)
@@ -22,45 +22,44 @@ age_num                     22.457              23.221
 composite_perf_index        53.572              48.688
 sim_raw                      0.084              -0.017
 sim_neutral                  0.089              -0.002
---[9] [trajectory LSH self-join] 11.0 s
+--[9] [trajectory LSH self-join] 9.6 s
 
 --[9] [DTW on in-pool events] 0.3 s
 {'two_season_vectors': 6848, 'lsh_pairs': 5274478, 'lsh_pair_share': 0.6939905392162539, 'lsh_recall_top10': 0.8776666666666667, 'spearman_traj_vs_dtw': 0.45086603737645714, 'median_rank_true_signing_traj_sim': 37.0, 'median_rank_true_signing_dtw': 41.0, 'recall10_traj_sim': 0.17391304347826086, 'recall10_dtw': 0.15942028985507245}
 
---[11] [pair features, all signings] 6.8 s
+--[11] [pair features, all signings] 7.3 s
 
 --[11] {'rows': 375959, 'queries': 1657, 'positives': 1941, 'mean_candidates': 226.89136994568497, 'reference_profile_missing': 0.17489407089602857}
 
---[13] [LGBMRanker walk-forward] 0.7 s
+--[13] [LGBMRanker walk-forward] 5.4 s
 
---[13] [LGBMRanker trained on all signings, walk-forward] 27.2 s
+--[13] [LGBMRanker trained on all signings, walk-forward] 278.1 s
 
---[13] [Spark GBTClassifier walk-forward] 64.8 s
+--[13] [Spark GBTClassifier walk-forward] 64.3 s
 
 
-{'test_seasons': [2020, 2021, 2022, 2023, 2024], 'train_queries_first_fold': 37, 'lgbm': {'queries': 91, 'median_rank': 27.0, 'recall@5': 0.08791208791208792, 'recall@10': 0.21978021978021978, 'recall@25': 0.4725274725274725}, 'lgbm_trained_on_all_signings': {'queries': 91, 'median_rank': 19.0, 'recall@5': 0.17582417582417584, 'recall@10': 0.2967032967032967, 'recall@25': 0.5824175824175825}, 'all_signings_task': {'queries': 1029, 'median_rank': 56.0, 'recall@5': 0.06608357628765792, 'recall@10': 0.11564625850340136, 'recall@25': 0.26433430515063167}, 'gbt_spark': {'queries': 91, 'median_rank': 25.0, 'recall@5': 0.054945054945054944, 'recall@10': 0.17582417582417584, 'recall@25': 0.5054945054945055}, 'train_queries_first_fold_all_signings': 628, 'gain_share_all_events_model': {'hazard': 0.1579, 'log_value': 0.1568, 'pipeline_rank': 0.129, 'club_taste': 0.1283, 'composite_perf_index': 0.1101, 'value_gap': 0.0963, 'sim_translated': 0.0861, 'age_num': 0.0762, 'traj_sim': 0.0593}, 'features': ['sim_translated', 'traj_sim', 'pipeline_rank', 'club_taste', 'hazard', 'log_value', 'value_gap', 'age_num', 'composite_perf_index']}
+{'test_seasons': [2020, 2021, 2022, 2023, 2024], 'train_queries_first_fold': 37, 'lgbm': {'queries': 91, 'median_rank': 21.0, 'recall@5': 0.0989010989010989, 'recall@10': 0.26373626373626374, 'recall@25': 0.5604395604395604}, 'lgbm_trained_on_all_signings': {'queries': 91, 'median_rank': 18.0, 'recall@5': 0.21978021978021978, 'recall@10': 0.3076923076923077, 'recall@25': 0.6043956043956044}, 'all_signings_task': {'queries': 1029, 'median_rank': 53.0, 'recall@5': 0.07871720116618076, 'recall@10': 0.13411078717201166, 'recall@25': 0.2789115646258503}, 'gbt_spark': {'queries': 91, 'median_rank': 25.0, 'recall@5': 0.054945054945054944, 'recall@10': 0.17582417582417584, 'recall@25': 0.5054945054945055}, 'train_queries_first_fold_all_signings': 628, 'gain_share_all_events_model': {'age_num': 0.4684, 'value_gap': 0.1675, 'hazard': 0.0978, 'pipeline_rank': 0.0585, 'sim_translated': 0.0518, 'log_value': 0.051, 'traj_sim': 0.0454, 'composite_perf_index': 0.0331, 'club_taste': 0.0264}, 'features': ['sim_translated', 'traj_sim', 'pipeline_rank', 'club_taste', 'hazard', 'log_value', 'value_gap', 'age_num', 'composite_perf_index']}
+example: Atalanta 2024-25, replacing Mateo Retegui (ST); real signing Nikola Krstović; model 2024
 
---[13] example: Manchester Utd 2024-25, replacing Rasmus Højlund (ST); real signing Matheus Cunha; model 2024
-
---[13] 0    Emanuel Emegha    Strasbourg     21.0  20000000.0           0.313   
-1        Liam Delap  Ipswich Town     21.0  40000000.0           0.475   
-2    Matthis Abline        Nantes     21.0  12000000.0           0.436   
-3    Mohamed Amoura     Wolfsburg     24.0  32000000.0          -0.363   
-4        João Pedro      Brighton     22.0  50000000.0          -0.385   
-5   Ange-Yoan Bonny         Parma     20.0  20000000.0           0.422   
-6  Georginio Rutter      Brighton     22.0  32000000.0          -0.613   
-7       Loïs Openda    RB Leipzig     24.0  60000000.0           0.405   
-8     Lorenzo Lucca       Udinese     23.0  22000000.0           0.547   
-9              Beto       Everton     26.0  22000000.0           0.168   
+--[13] 0            João Pedro      Brighton     22.0  50000000.0          -0.096   
+1            Liam Delap  Ipswich Town     21.0  40000000.0           0.124   
+2         Matheus Cunha        Wolves     25.0  60000000.0           0.029   
+3           Loïs Openda    RB Leipzig     24.0  60000000.0          -0.023   
+4        Emanuel Emegha    Strasbourg     21.0  20000000.0           0.287   
+5       Santiago Castro       Bologna     19.0  35000000.0           0.426   
+6  Valentín Castellanos         Lazio     25.0  25000000.0           0.589   
+7             Evanilson   Bournemouth     24.0  35000000.0           0.540   
+8         Lorenzo Lucca       Udinese     23.0  22000000.0           0.243   
+9        Mohamed Amoura     Wolfsburg     24.0  32000000.0          -0.159   
 
    traj_sim  hazard  score  
-0     0.346   0.298  0.892  
-1     0.462   0.210  0.836  
-2     0.204   0.307  0.827  
-3    -0.455   0.133  0.813  
-4    -0.431   0.192  0.813  
-5     0.401   0.162  0.799  
-6    -0.251   0.152  0.796  
-7     0.371   0.166  0.792  
-8     0.398   0.117  0.785  
-9     0.132   0.097  0.780  
+0    -0.433   0.192  0.469  
+1     0.137   0.210  0.448  
+2    -0.409   0.301  0.420  
+3    -0.086   0.166  0.407  
+4     0.575   0.298  0.405  
+5     0.434   0.191  0.398  
+6     0.551   0.170  0.392  
+7     0.562   0.114  0.387  
+8     0.637   0.117  0.386  
+9    -0.365   0.133  0.378  

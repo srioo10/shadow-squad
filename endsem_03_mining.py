@@ -74,7 +74,7 @@ M['lsh'] = {'grid': grid.to_dict('records'), 'chosen': best.to_dict(), 'exact_pa
 print({k: (round(v, 3) if isinstance(v, float) else v) for k, v in M['lsh'].items() if k not in ('grid', 'chosen')}); print('chosen:', best.round(3).to_dict())
 fig, ax = plt.subplots(figsize=(5.2, 3.4))
 for B, g in grid.groupby('bucketLength'): ax.plot(g['set_share'], g['recall_top25'], 'o-', label=f'top-25 neighbours kept, bucket {B:g}'); ax.plot(g['set_share'], g['signing_recall'], 's--', label=f'real signings kept, bucket {B:g}')
-ax.plot([0, 1], [0, 1], ':', color=GREY); ax.set_xlabel('share of same-position pairs compared'); ax.set_ylabel('recall'); ax.set_title('Euclidean LSH: work saved vs recall'); ax.legend(fontsize=7); savefig('p3_lsh_tradeoff')
+ax.plot([0, 1], [0, 1], ':', color=GREY); ax.set_xlabel('share of same-position pairs compared'); ax.set_ylabel('recall'); ax.set_title('Euclidean LSH: work saved vs recall'); ax.legend(fontsize=7, loc='lower right'); savefig('p3_lsh_tradeoff')
 
 # %% [markdown]
 # ## 2. Sequential pattern mining: PrefixSpan
@@ -114,7 +114,7 @@ M['prefixspan'] = {'train_sequences': len(TR), 'test_sequences': len(TE), 'frequ
                    'top': keep.head(8)[['pattern', 'n_train', 'lift_train', 'n_test', 'lift_test']].round(2).to_dict('records'), 'top_multi_season': multi.head(8)[['pattern', 'n_train', 'lift_train', 'n_test', 'lift_test']].round(2).to_dict('records')}
 print({k: v for k, v in M['prefixspan'].items() if not k.startswith('top')}); pd.set_option('display.max_colwidth', 120); display(multi.head(8)[['pattern', 'n_train', 'lift_train', 'n_test', 'lift_test']].round(2))
 top = (multi if len(multi) >= 5 else keep).head(10).iloc[::-1]; fig, ax = plt.subplots(figsize=(8, 3.6)); y = np.arange(len(top))
-ax.barh(y - .2, top['lift_train'], .4, label=f'train (t <= {T0})'); ax.barh(y + .2, top['lift_test'], .4, label='later seasons'); ax.axvline(1, color=GREY, ls=':'); ax.set_yticks(y, top['pattern'], fontsize=6); ax.set_xlabel('lift for moving up'); ax.legend(fontsize=7); ax.set_title('Career sequences that precede a move up'); savefig('p3_prefixspan')
+ax.barh(y - .2, top['lift_train'], .4, label=f'train (t <= {T0})'); ax.barh(y + .2, top['lift_test'], .4, label='later seasons'); ax.axvline(1, color=GREY, ls=':'); ax.set_yticks(y, top['pattern'], fontsize=6); ax.set_xlabel('lift for moving up'); ax.legend(fontsize=7, loc='lower right'); ax.grid(axis='y', visible=False); ax.set_title('Career sequences that precede a move up'); savefig('p3_prefixspan')
 
 # %% [markdown]
 # ## 3. Clustering: bisecting k-means per fine position
@@ -149,7 +149,7 @@ print(f"{AR['archetype'].nunique()} archetypes {kbest}; archetype vs moving up: 
 fig, ax = plt.subplots(1, 2, figsize=(11, 3.6), gridspec_kw={'width_ratios': [1, 1.6]})
 for P, g in sil.groupby('fine_pos'): ax[0].plot(g['k'], g['silhouette'], 'o-', label=P)
 ax[0].set_xlabel('k'); ax[0].set_ylabel('silhouette (squared Euclidean)'); ax[0].legend(fontsize=7, ncol=2); ax[0].set_title('Bisecting k-means: choosing k')
-im = ax[1].imshow(cen.values.T, cmap=DIV, vmin=-1.5, vmax=1.5, aspect='auto'); ax[1].set_xticks(range(len(cen)), cen.index, rotation=90, fontsize=6); ax[1].set_yticks(range(len(MET)), MET, fontsize=6); ax[1].set_title('Archetype centroids (z within position)'); fig.colorbar(im, ax=ax[1]); savefig('p3_bisecting')
+im = ax[1].imshow(cen.values.T, cmap=DIV, vmin=-1.5, vmax=1.5, aspect='auto'); ax[1].grid(False); ax[1].set_xticks(range(len(cen)), cen.index, rotation=90, fontsize=6); ax[1].set_yticks(range(len(MET)), MET, fontsize=6); ax[1].set_title('Archetype centroids (z within position)'); fig.colorbar(im, ax=ax[1]); savefig('p3_bisecting')
 
 # %% [markdown]
 # ## 4. Link analysis: PageRank on the transfer graph, and power-iteration clustering
@@ -201,8 +201,8 @@ M['graph'] = {'edges': int(tcl.count()), 'clubs': int(len(names)), 'auc_pipeline
               'pic_sizes': pic['cluster'].value_counts().sort_index().to_dict()}
 print({k: (round(v, 3) if isinstance(v, float) else v) for k, v in M['graph'].items() if k != 'top_pipeline_2023'})
 fig, ax = plt.subplots(1, 2, figsize=(11, 3.8)); tp = top_pipe.iloc[::-1]; ax[0].barh(tp['club'], tp['pr_pipe']); ax[0].set_title('Talent-pipeline PageRank, transfers up to June 2025'); ax[0].tick_params(labelsize=7)
-im = ax[1].imshow(np.log1p(comp_tab.values), cmap=SEQ, aspect='auto'); ax[1].set_xticks(range(comp_tab.shape[1]), comp_tab.columns, rotation=90, fontsize=6); ax[1].set_yticks(range(len(comp_tab)), [f'community {i}' for i in comp_tab.index], fontsize=7)
-ax[1].set_title(f'PIC transfer communities by league (purity {purity:.0%}, modularity {modularity:.2f})'); savefig('p3_graph')
+im = ax[1].imshow(np.log1p(comp_tab.values), cmap=SEQ, aspect='auto'); ax[1].grid(False); ax[0].grid(axis='y', visible=False); ax[1].set_xticks(range(comp_tab.shape[1]), comp_tab.columns, rotation=90, fontsize=6); ax[1].set_yticks(range(len(comp_tab)), [f'community {i}' for i in comp_tab.index], fontsize=7)
+ax[1].set_title(f'Transfer communities (PIC) by league, modularity {modularity:.2f}'); savefig('p3_graph')
 
 # %% [markdown]
 # ## 5. Recommendation: ALS on the club x archetype matrix

@@ -23,15 +23,15 @@ t = pick('Season', sorted(s2['yr'].unique(), reverse=True), 't', lambda y: f'{y}
 S = pick('Departing starter', s3['player_id'].tolist(), 'S', lambda i: f"{s3.set_index('player_id').loc[i, 'player']} ({s3.set_index('player_id').loc[i, 'fine_pos']})", col=c4)
 srow = s3.set_index('player_id').loc[S]; C = int(srow['club_id']); P = srow['fine_pos']
 R = E.rank(lake, models, C, int(t), int(S), P, top=10 ** 6); R['rank'] = range(1, len(R) + 1)
-note = 'trained only on replacement events before this season' if R['out_of_time'].iat[0] else 'trained on events that include this season (shown for illustration, not an out-of-time prediction)'
-st.caption(f"Replacing {srow['player']} ({P}, {int(srow['min_num'])} min, age {int(srow['age_num'])}) at {club}. Pool: {len(R)} players. Ranking model: LambdaMART, {note}.")
+note = 'using only signings made before this season' if R['out_of_time'].iat[0] else 'whose training data includes this season (shown for illustration, not an out-of-time prediction)'
+st.caption(f"Replacing {srow['player']} ({P}, {int(srow['min_num'])} min, age {int(srow['age_num'])}) at {club}. Pool: {len(R)} players. Ranking model: LambdaMART trained on all five-league signings, {note}.")
 real = EV[(EV['C'] == C) & (EV['t'] == t) & (EV['S'] == S)]
 if len(real):
     bits = [f"{r.N_name} from {r.N_from}" + (f" (ranked {int(R.loc[R['player_id'] == r.N, 'rank'].iat[0])} of {len(R)})" if (R['player_id'] == r.N).any() else ' (outside the candidate pool)') for r in real.itertuples()]
     st.info('What the club actually did: signed ' + '; '.join(bits) + '.')
-show = R.head(15)[['rank', 'player', 'squad', 'comp', 'age_num', 'value', 'score', 'sim_translated', 'traj_sim', 'hazard', 'pipeline_rank', 'club_taste', 'archetype']].rename(
-    columns={'squad': 'club', 'comp': 'league', 'age_num': 'age', 'value': 'market value (EUR)', 'sim_translated': 'translated similarity', 'traj_sim': 'trajectory similarity', 'pipeline_rank': 'pipeline rank', 'club_taste': 'club taste'})
-st.dataframe(show.style.format({'market value (EUR)': '{:,.0f}', 'age': '{:.0f}', 'score': '{:.2f}', 'translated similarity': '{:.2f}', 'trajectory similarity': '{:.2f}', 'hazard': '{:.2f}', 'pipeline rank': '{:.2f}', 'club taste': '{:.2f}'}), hide_index=True)
+show = R.head(10)[['rank', 'player', 'squad', 'age_num', 'value', 'score', 'sim_translated', 'traj_sim', 'hazard']].rename(
+    columns={'squad': 'club', 'age_num': 'age', 'value': 'value (EUR)', 'sim_translated': 'translated sim.', 'traj_sim': 'trajectory sim.', 'hazard': 'hazard'})
+st.dataframe(show.style.format({'value (EUR)': '{:,.0f}', 'age': '{:.0f}', 'score': '{:.2f}', 'translated sim.': '{:.2f}', 'trajectory sim.': '{:.2f}', 'hazard': '{:.0%}'}), hide_index=True)
 who = pick('Explain candidate', R.head(15)['player_id'].tolist() + [n for n in real['N'] if (R['player_id'] == n).any() and n not in set(R.head(15)['player_id'])], 'X', lambda i: f"{int(R.loc[R['player_id'] == i, 'rank'].iat[0])}. {R.loc[R['player_id'] == i, 'player'].iat[0]}")
 i = int(R.index[R['player_id'] == who][0]); row = R.loc[i]
 a, b, c = st.columns([1.1, 1.5, 0.7])

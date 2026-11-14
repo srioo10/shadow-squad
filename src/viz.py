@@ -19,7 +19,12 @@ def radar(lake, row, S, t):
     fig.tight_layout(); return fig
 
 
+def explain(model, X):
+    """SHAP explanation of the bagged ranker: the mean of its members' TreeExplainer values."""
+    exs = [shap.TreeExplainer(m)(X) for m in model.ms]; ex = exs[0]; ex.values = np.mean([e.values for e in exs], axis=0); ex.base_values = np.mean([e.base_values for e in exs], axis=0); return ex
+
+
 def waterfall(model, X, i):
     """SHAP waterfall of one candidate's ranking score (TreeExplainer on the LambdaMART model)."""
-    ex = shap.TreeExplainer(model)(X[E.FEATS]); ex.feature_names = [NICE[f] for f in E.FEATS]
+    ex = explain(model, X[E.FEATS]); ex.feature_names = [NICE[f] for f in E.FEATS]
     plt.figure(); shap.plots.waterfall(ex[i], max_display=9, show=False); fig = plt.gcf(); fig.set_size_inches(6.4, 3.8); fig.tight_layout(); return fig

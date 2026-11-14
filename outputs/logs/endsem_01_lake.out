@@ -9,18 +9,18 @@
 --[3] lake/tm_club_minutes: 38,935 rows
 
 --[3] lake/tm_tables: 1,366 rows
-[write lake] 19.8 s
+[write lake] 19.5 s
 
 
 
---[5] [entity resolution] 8.5 s
+--[5] [entity resolution] 8.6 s
 
 
 
 --[5] 149 FBref clubs mapped one-to-one to Transfermarkt clubs (lowest vote share 0.82); 19,166 of 19,507 outfield player-club-seasons linked
 
 --[7] lake/fbref: 11,792 rows
-[walk-forward style model] 3.5 s
+[walk-forward style model] 3.6 s
 player-seasons: 11,792 (1,437 from 2024-25); raw per-90 identical to the mid-sem table on 100% of metrics; walk-forward neutral values correlate 0.996 with the mid-sem all-season fit
 2023-24 overlap of the two FBref sources (1600 players): lowest per-metric correlation 1.000; supported elasticities by cut-off: {2017: 31, 2018: 40, 2019: 42, 2020: 42, 2021: 48, 2022: 50, 2023: 47, 2024: 47}
 

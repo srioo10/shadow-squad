@@ -152,10 +152,10 @@ print(f'Transfermarkt ids carrying more than one FBref spelling: {(same_id > 1).
 
 # %%
 import matplotlib; matplotlib.use('Agg'); import matplotlib.pyplot as plt
-fig, ax = plt.subplots(figsize=(7.6, 2.6)); im = ax.imshow(rate_900.values, vmin=0.9, vmax=1, cmap=SEQ); ax.set_xticks(range(rate_900.shape[1]), rate_900.columns); ax.set_yticks(range(len(rate_900)), rate_900.index)
+fig, ax = plt.subplots(figsize=(7.6, 2.6)); im = ax.imshow(rate_900.values, vmin=0.9, vmax=1, cmap=SEQ); ax.grid(False); ax.set_xticks(range(rate_900.shape[1]), rate_900.columns); ax.set_yticks(range(len(rate_900)), rate_900.index)
 for i in range(rate_900.shape[0]):
-    for j in range(rate_900.shape[1]): ax.text(j, i, f'{rate_900.values[i, j]:.0%}', ha='center', va='center', fontsize=8, color='white' if rate_900.values[i, j] > .96 else 'black')
-ax.set_title('FBref to Transfermarkt match rate (players with >= 900 min)'); fig.colorbar(im, shrink=.8); os.makedirs('outputs/figs', exist_ok=True); fig.savefig('outputs/figs/p1_match_rate.png', bbox_inches='tight'); plt.show()
+    for j in range(rate_900.shape[1]): ax.text(j, i, f'{rate_900.values[i, j]:.0%}', ha='center', va='center', fontsize=8, color='white' if rate_900.values[i, j] > .955 else INK)
+ax.set_title('FBref to Transfermarkt match rate, players with 900+ minutes'); fig.colorbar(im, shrink=.8); os.makedirs('outputs/figs', exist_ok=True); fig.savefig('outputs/figs/p1_match_rate.png', bbox_inches='tight'); plt.show()
 _ = put_metrics('phase1', {'seasons': '2017-18 to 2024-25', 'player_seasons': len(FE), 'player_seasons_2024': int((FE['yr'] == 2024).sum()), 'source_overlap_players': n_chk, 'source_overlap_min_corr': min(src_agree.values()), 'raw_identical_share': raw_same, 'wf_neutral_corr_with_midsem': neu_corr, 'supported_elasticities_by_cutoff': {int(k): int(v) for k, v in sup.items()}, 'lake_rows': rows, 'runtime_s': RT, 'clubs_mapped': len(club_x), 'club_vote_share_min': float(club_x['share'].min()), 'rows_linked': len(X), 'rows_total': len(FB),
                        'match_rate_all': float(FBm['matched'].mean()), 'match_rate_900': float(FBm.loc[FBm['min_num'] >= 900, 'matched'].mean()), 'match_rate_900_min_cell': float(np.nanmin(rate_900.values)),
                        'pass3_rows': len(P3), 'pass3_players': int(P3['player'].nunique()), 'feeders_total': len(Lf), 'feeders_unmatched': len(unm), 'mean_confidence': float(X['confidence'].mean()), 'ids_multi_spelling': int((same_id > 1).sum()), 'names_multi_id': int((same_name > 1).sum())})

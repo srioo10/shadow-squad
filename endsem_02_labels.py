@@ -165,7 +165,8 @@ with timed('all-signings events', RT):
       FROM tc t JOIN club_xref x ON x.club_id = t.c JOIN club_season k ON k.club_id = t.c AND k.season = year(t.d)
       JOIN allp q ON q.player_id = t.player_id AND q.yr = year(t.d) - 1 AND q.club_id <> t.c
       LEFT JOIN club_season k0 ON k0.club_id = t.c AND k0.season = year(t.d) - 1
-      WHERE month(t.d) BETWEEN 6 AND 10 AND NOT (month(t.d) = 10 AND day(t.d) > 10) AND NOT t.loan_return AND NOT t.from_youth""").dropDuplicates(['C', 't', 'N'])
+      WHERE month(t.d) BETWEEN 6 AND 10 AND NOT (month(t.d) = 10 AND day(t.d) > 10) AND NOT t.loan_return AND NOT t.from_youth""")
+    sg_all = sg_all.withColumn('r', F.row_number().over(W.partitionBy('C', 't', 'N').orderBy('N_date', F.desc_nulls_last('fee')))).filter('r = 1').drop('r')      # one row per signing, chosen the same way on every run
     rep = sp.read.parquet('lake/replacement_events').select('C', 't', F.col('N')).distinct().withColumn('elite_replacement', F.lit(True))
     sg_all = sg_all.join(rep, ['C', 't', 'N'], 'left').fillna(False, ['elite_replacement']).withColumn('qid', F.concat_ws('_', 'C', 't', 'P')); sg_all.write.mode('overwrite').parquet('lake/signing_events')
 SA = pd.read_parquet('lake/signing_events')
@@ -179,7 +180,7 @@ c = conf.reindex(index=range(4), columns=range(4), fill_value=0); im = ax[0].ims
 for i in range(4):
     for j in range(4): ax[0].text(j, i, int(c.values[i, j]), ha='center', va='center', fontsize=9)
 ax[0].set_xlabel('transfer-based tier'); ax[0].set_ylabel('mid-sem tier'); ax[0].set_xticks(range(4)); ax[0].set_yticks(range(4)); ax[0].set_title('Label v1 vs v2 (labelled feeders)')
-ax[1].bar(cov.index - .2, cov['from_top5'], .4, label='from a five-league club'); ax[1].bar(cov.index + .2, cov['in_pool'], .4, label='inside candidate pool'); ax[1].set_ylim(0, 1); ax[1].legend(fontsize=8); ax[1].set_title('Coverage of real replacement signings'); ax[1].set_xlabel('season t')
+ax[1].bar(cov.index - .2, cov['from_top5'], .4, label='from a five-league club'); ax[1].bar(cov.index + .2, cov['in_pool'], .4, label='inside candidate pool'); ax[1].set_ylim(0, 1.18); ax[1].legend(fontsize=7.5, loc='upper center', ncol=2); ax[1].grid(axis='x', visible=False); ax[1].set_title('Coverage of real replacement signings'); ax[1].set_xlabel('season t')
 fig.tight_layout(); fig.savefig('outputs/figs/p2_labels_events.png'); 
 _ = put_metrics('phase2', {'runtime_s': RT, 'transfers_clean': n_t, 'inferred_moves': n_inf, 'inferred_move_players': n_inf_players, 'loan_out_removed': n_loan, 'loan_return_removed': n_ret, 'table_agreement': tab_agree, 'top6_agreement': top6_agree,
     'feeders_with_transfer_record': float(FE['has_transfer_record'].mean()), 'label_midsem_only_no_record': int((~only_old['has_transfer_record']).sum()), 'label_compare_n': len(cmp_), 'label_agreement_up': float(((cmp_['best_tier'] >= 1) == (cmp_['up_tier'] >= 1)).mean()), 'label_midsem_only': len(only_old), 'label_transfer_only': len(only_new),

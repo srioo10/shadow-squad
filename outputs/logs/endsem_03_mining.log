@@ -6,11 +6,11 @@ WARNING: package sun.security.action not in java.base
 Ivy Default Cache set to: /home/srioo/.ivy2.5.2/cache
 The jars for the packages stored in: /home/srioo/.ivy2.5.2/jars
 io.graphframes#graphframes-spark4_2.13 added as a dependency
-:: resolving dependencies :: org.apache.spark#spark-submit-parent-2a985ccb-7ebe-433d-8bd6-d9e7e26e65d8;1.0
+:: resolving dependencies :: org.apache.spark#spark-submit-parent-06122dea-4bc4-467f-81f1-9ec174d40ba8;1.0
 	confs: [default]
 	found io.graphframes#graphframes-spark4_2.13;0.10.0 in central
 	found io.graphframes#graphframes-graphx-spark4_2.13;0.10.0 in central
-:: resolution report :: resolve 78ms :: artifacts dl 2ms
+:: resolution report :: resolve 63ms :: artifacts dl 2ms
 	:: modules in use:
 	io.graphframes#graphframes-graphx-spark4_2.13;0.10.0 from central in [default]
 	io.graphframes#graphframes-spark4_2.13;0.10.0 from central in [default]
@@ -20,13 +20,13 @@ io.graphframes#graphframes-spark4_2.13 added as a dependency
 	---------------------------------------------------------------------
 	|      default     |   2   |   0   |   0   |   0   ||   2   |   0   |
 	---------------------------------------------------------------------
-:: retrieving :: org.apache.spark#spark-submit-parent-2a985ccb-7ebe-433d-8bd6-d9e7e26e65d8
+:: retrieving :: org.apache.spark#spark-submit-parent-06122dea-4bc4-467f-81f1-9ec174d40ba8
 	confs: [default]
 	0 artifacts copied, 2 already retrieved (0kB/3ms)
-26/11/14 01:50:21 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+26/11/14 09:49:08 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
 Using Spark's default log4j profile: org/apache/spark/log4j2-defaults.properties
 Setting default log level to "WARN".
 To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
 netlib-blas: JNI_OnLoad: dlopen(libblas.so.3) failed: libblas.so.3: cannot open shared object file: No such file or directory
 netlib-lapack: JNI_OnLoad: dlopen(liblapack.so.3) failed: liblapack.so.3: cannot open shared object file: No such file or directory
-[NbConvertApp] Writing 323902 bytes to endsem_03_mining.ipynb
+[NbConvertApp] Writing 324120 bytes to endsem_03_mining.ipynb

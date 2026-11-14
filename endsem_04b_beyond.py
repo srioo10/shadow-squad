@@ -80,7 +80,7 @@ fig.suptitle(f'Top-25 portfolios bought each summer {SEAS[0]}-{SEAS[-1]}, held 2
 fig, ax = plt.subplots(1, 2, figsize=(11, 3.9), gridspec_kw={'width_ratios': [1, 1.5]}); L4 = list(lg1)
 for i, (d, lab_, c) in enumerate(((lg1, 'price today (value model)', BLUE), (lg2, 'return over the next 24 months', ORANGE))):
     ax[0].errorbar([d[k]['coef'] for k in L4], np.arange(len(L4)) + (i - .5) * .28, xerr=[[d[k]['coef'] - d[k]['lo'] for k in L4], [d[k]['hi'] - d[k]['coef'] for k in L4]], fmt='o', color=c, label=lab_, capsize=2, lw=1.2)
-ax[0].axvline(0, color=INK2, lw=.8); ax[0].set_yticks(range(len(L4)), L4); ax[0].set_xlabel('log difference from the Premier League, like-for-like player'); ax[0].set_title('League: priced lower, and does it come back?'); ax[0].legend(fontsize=7, loc='lower left'); ax[0].grid(axis='y', visible=False)
+ax[0].axvline(0, color=INK2, lw=.8); ax[0].set_yticks(range(len(L4)), L4); ax[0].set_xlabel('log difference from the Premier League, like-for-like player'); ax[0].set_title('League: priced lower, and does it come back?'); ax[0].legend(fontsize=7, loc='upper center', bbox_to_anchor=(0.5, -0.2), ncol=1); ax[0].grid(axis='y', visible=False)
 ms = [k for k, _ in under]
 for i, (d, lab_, c) in enumerate(((z1, 'price today, per SD of the metric', BLUE), (z2, 'return over the next 24 months', ORANGE))):
     ax[1].errorbar(np.arange(len(ms)) + (i - .5) * .28, [d[k]['coef'] for k in ms], yerr=[[d[k]['coef'] - d[k]['lo'] for k in ms], [d[k]['hi'] - d[k]['coef'] for k in ms]], fmt='o', color=c, label=lab_, capsize=2, lw=1.2)
@@ -151,14 +151,14 @@ M['B'] = {'feeders': len(D), 'treated': int(D['T'].sum()), 'stayers': int((D['T'
 print({k: v for k, v in M['B'].items() if k in ('feeders', 'treated', 'matched_pairs', 'matching_chosen', 'distinct_twins', 'max_abs_smd_before', 'max_abs_smd_after', 'covariates_over_0.1_after', 'att')}); print({k: (round(v['cate'], 3), [round(x, 3) for x in v['ci95']]) for k, v in CF.items()}); print({k: (v['pairs'], round(v['att'], 3), [round(x, 3) for x in v['ci95']]) for k, v in sub.items()})
 fig, ax = plt.subplots(1, 3, figsize=(12.5, 3.9), gridspec_kw={'width_ratios': [1.15, 1, 1.25]}); o = BAL['before'].abs().sort_values().index
 ax[0].scatter(BAL.loc[o, 'before'].abs(), range(len(o)), color=GREY, label='before matching', s=22); ax[0].scatter(BAL.loc[o, 'after'].abs(), range(len(o)), color=BLUE, label='after matching', s=22); ax[0].axvline(0.1, color=INK2, lw=.8, ls=':')
-ax[0].set_yticks(range(len(o)), [c.replace('z_', '').replace('_num', '').replace('composite_perf_index', 'composite').replace('lv', 'log value') for c in o], fontsize=6.5); ax[0].set_xlabel('|standardised mean difference|'); ax[0].set_title('Balance of the twins'); ax[0].legend(fontsize=7, loc='lower right'); ax[0].grid(axis='y', visible=False)
+ax[0].set_yticks(range(len(o)), [c.replace('z_', '').replace('_num', '').replace('composite_perf_index', 'composite').replace('lv', 'log value') for c in o], fontsize=6.5); ax[0].set_xlabel('|standardised mean difference|'); ax[0].set_title('Balance of the twins'); ax[0].legend(fontsize=7, loc='upper center', bbox_to_anchor=(0.5, -0.17), ncol=2); ax[0].grid(axis='y', visible=False)
 gs = ['all', '21 or under', '22', '23-24', 'DF', 'MF', 'FW']; y = np.arange(len(gs))[::-1]
 ax[1].errorbar([CF[g]['cate'] for g in gs], y, xerr=[[CF[g]['cate'] - CF[g]['ci95'][0] for g in gs], [CF[g]['ci95'][1] - CF[g]['cate'] for g in gs]], fmt='o', color=ORANGE, capsize=2, lw=1.2); ax[1].axvline(0, color=INK2, lw=.8)
 ax[1].set_yticks(y, [f"{g} (n={CF[g]['treated']})" for g in gs], fontsize=7.5); ax[1].xaxis.set_major_formatter(lambda v, _: f'{v:+.0%}'); ax[1].set_xlabel('effect on share of league minutes, t to t+2'); ax[1].set_title('Causal forest: who pays the price?'); ax[1].grid(axis='y', visible=False)
 lab2 = [('minutes_share', 'share of league\nminutes'), ('neutral_output_index', 'style-neutral\noutput index / 100')]; sc2 = [1, 100]
 for i, ((k, lb), sc_) in enumerate(zip(lab2, sc2)):
-    r = RB[k]; ax[2].bar([i - .2, i + .2], [r['treated_mean_change'] / sc_, r['twin_mean_change'] / sc_], width=.36, color=[ORANGE, GREY]); ax[2].text(i, max(r['treated_mean_change'], r['twin_mean_change'], 0) / sc_ + .012, f"difference {r['att'] / sc_:+.2f}\n(p {fmt_p(r['p_sign_flip'])})", ha='center', fontsize=7.5)
-ax[2].bar([0], [0], color=ORANGE, label='moved to an elite club'); ax[2].bar([0], [0], color=GREY, label='matched twin who stayed'); ax[2].axhline(0, color=INK2, lw=.8); ax[2].set_xticks([0, 1], [l for _, l in lab2], fontsize=7.5); ax[2].set_title('Change from season t to t+2'); ax[2].legend(fontsize=7, loc='lower left'); ax[2].grid(axis='x', visible=False); savefig('p4b_sliding_doors')
+    r = RB[k]; ax[2].bar([i - .2, i + .2], [r['treated_mean_change'] / sc_, r['twin_mean_change'] / sc_], width=.36, color=[ORANGE, GREY]); ax[2].text(i, 0.008, f"difference {r['att'] / sc_:+.3f} (p {fmt_p(r['p_sign_flip'])})", ha='center', va='bottom', fontsize=7.5)
+ax[2].bar([0], [0], color=ORANGE, label='moved to an elite club'); ax[2].bar([0], [0], color=GREY, label='matched twin who stayed'); ax[2].axhline(0, color=INK2, lw=.8); ax[2].set_xticks([0, 1], [l for _, l in lab2], fontsize=7.5); ax[2].set_ylim(min(RB['minutes_share']['treated_mean_change'], RB['minutes_share']['twin_mean_change']) * 1.35, 0.045); ax[2].set_title('Change from season t to t+2'); ax[2].legend(fontsize=7, loc='lower right'); ax[2].grid(axis='x', visible=False); savefig('p4b_sliding_doors')
 
 # %% [markdown]
 # ## C. Red-team the scout: can a player game the model?
@@ -246,5 +246,5 @@ ax[1].xaxis.set_major_formatter(lambda v, _: f'{v:.0%}'); ax[1].set_xlim(0, max(
 ax[2].bar([0, 1], [C['gameability'], 0.0], width=.5, color=[ORANGE, GREEN]); ax[2].bar([2.4, 3.4], [C['hardened']['recall10_before'], C['hardened']['recall10_after']], width=.5, color=[ORANGE, GREEN])
 for x_, v in zip([0, 1, 2.4, 3.4], [C['gameability'], 0.0, C['hardened']['recall10_before'], C['hardened']['recall10_after']]): ax[2].text(x_, v + .01, f'{v:.0%}', ha='center', fontsize=8)
 ax[2].set_xticks([0, 1, 2.4, 3.4], ['engine', 'hardened', 'engine', 'hardened'], fontsize=7.5); ax[2].text(.5, -0.13, 'gameability', ha='center', transform=ax[2].get_xaxis_transform(), fontsize=8, color=INK2); ax[2].text(2.9, -0.13, 'recall@10', ha='center', transform=ax[2].get_xaxis_transform(), fontsize=8, color=INK2)
-ax[2].yaxis.set_major_formatter(lambda v, _: f'{v:.0%}'); ax[2].set_title('Hardening: what it removes and what it costs'); ax[2].grid(axis='x', visible=False); savefig('p4b_redteam')
+ax[2].yaxis.set_major_formatter(lambda v, _: f'{v:.0%}'); ax[2].set_title('Hardening: effect and cost'); ax[2].grid(axis='x', visible=False); savefig('p4b_redteam')
 _ = put_metrics('phase4b', M)
